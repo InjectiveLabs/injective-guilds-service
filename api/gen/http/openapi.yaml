@@ -16,32 +16,32 @@ paths:
   /guilds:
     get:
       tags:
-      - GuildService
-      summary: GetAllGuilds GuildService
+      - GuildsService
+      summary: GetAllGuilds GuildsService
       description: Get all guilds
-      operationId: GuildService#GetAllGuilds
+      operationId: GuildsService#GetAllGuilds
       responses:
         "5":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetAllGuildsNotFoundResponseBody'
+            $ref: '#/definitions/GuildsServiceGetAllGuildsNotFoundResponseBody'
         "13":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetAllGuildsInternalResponseBody'
+            $ref: '#/definitions/GuildsServiceGetAllGuildsInternalResponseBody'
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/GuildServiceGetAllGuildsResponseBody'
+            $ref: '#/definitions/GuildsServiceGetAllGuildsResponseBody'
       schemes:
       - http
   /guilds/{guildID}:
     get:
       tags:
-      - GuildService
-      summary: GetSingleGuild GuildService
+      - GuildsService
+      summary: GetSingleGuild GuildsService
       description: Get a single guild
-      operationId: GuildService#GetSingleGuild
+      operationId: GuildsService#GetSingleGuild
       parameters:
       - name: guildID
         in: path
@@ -51,23 +51,23 @@ paths:
         "5":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetSingleGuildNotFoundResponseBody'
+            $ref: '#/definitions/GuildsServiceGetSingleGuildNotFoundResponseBody'
         "13":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetSingleGuildInternalResponseBody'
+            $ref: '#/definitions/GuildsServiceGetSingleGuildInternalResponseBody'
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/GuildServiceGetSingleGuildResponseBody'
+            $ref: '#/definitions/GuildsServiceGetSingleGuildResponseBody'
       schemes:
       - http
   /guilds/{guildID}/default-guild-member:
     get:
       tags:
-      - GuildService
-      summary: GetGuildDefaultMember GuildService
-      operationId: GuildService#GetGuildDefaultMember
+      - GuildsService
+      summary: GetGuildDefaultMember GuildsService
+      operationId: GuildsService#GetGuildDefaultMember
       parameters:
       - name: guildID
         in: path
@@ -77,24 +77,24 @@ paths:
         "5":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildDefaultMemberNotFoundResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildDefaultMemberNotFoundResponseBody'
         "13":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildDefaultMemberInternalResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildDefaultMemberInternalResponseBody'
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildDefaultMemberResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildDefaultMemberResponseBody'
       schemes:
       - http
   /guilds/{guildID}/guild-master:
     get:
       tags:
-      - GuildService
-      summary: GetGuildMasterAddress GuildService
+      - GuildsService
+      summary: GetGuildMasterAddress GuildsService
       description: Get master address of given guild
-      operationId: GuildService#GetGuildMasterAddress
+      operationId: GuildsService#GetGuildMasterAddress
       parameters:
       - name: guildID
         in: path
@@ -104,23 +104,23 @@ paths:
         "5":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildMasterAddressNotFoundResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildMasterAddressNotFoundResponseBody'
         "13":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildMasterAddressInternalResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildMasterAddressInternalResponseBody'
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildMasterAddressResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildMasterAddressResponseBody'
       schemes:
       - http
   /guilds/{guildID}/markets:
     get:
       tags:
-      - GuildService
-      summary: GetGuildMarkets GuildService
-      operationId: GuildService#GetGuildMarkets
+      - GuildsService
+      summary: GetGuildMarkets GuildsService
+      operationId: GuildsService#GetGuildMarkets
       parameters:
       - name: guildID
         in: path
@@ -130,23 +130,23 @@ paths:
         "5":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildMarketsNotFoundResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildMarketsNotFoundResponseBody'
         "13":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildMarketsInternalResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildMarketsInternalResponseBody'
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildMarketsResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildMarketsResponseBody'
       schemes:
       - http
   /guilds/{guildID}/member:
     post:
       tags:
-      - GuildService
-      summary: EnterGuild GuildService
-      operationId: GuildService#EnterGuild
+      - GuildsService
+      summary: EnterGuild GuildsService
+      operationId: GuildsService#EnterGuild
       parameters:
       - name: guildID
         in: path
@@ -156,27 +156,27 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/GuildServiceEnterGuildRequestBody'
+          $ref: '#/definitions/GuildsServiceEnterGuildRequestBody'
       responses:
         "5":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceEnterGuildNotFoundResponseBody'
+            $ref: '#/definitions/GuildsServiceEnterGuildNotFoundResponseBody'
         "13":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceEnterGuildInternalResponseBody'
+            $ref: '#/definitions/GuildsServiceEnterGuildInternalResponseBody'
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/GuildServiceEnterGuildResponseBody'
+            $ref: '#/definitions/GuildsServiceEnterGuildResponseBody'
       schemes:
       - http
     delete:
       tags:
-      - GuildService
-      summary: LeaveGuild GuildService
-      operationId: GuildService#LeaveGuild
+      - GuildsService
+      summary: LeaveGuild GuildsService
+      operationId: GuildsService#LeaveGuild
       parameters:
       - name: guildID
         in: path
@@ -186,29 +186,29 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/GuildServiceLeaveGuildRequestBody'
+          $ref: '#/definitions/GuildsServiceLeaveGuildRequestBody'
       responses:
         "5":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceLeaveGuildNotFoundResponseBody'
+            $ref: '#/definitions/GuildsServiceLeaveGuildNotFoundResponseBody'
         "13":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceLeaveGuildInternalResponseBody'
+            $ref: '#/definitions/GuildsServiceLeaveGuildInternalResponseBody'
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/GuildServiceLeaveGuildResponseBody'
+            $ref: '#/definitions/GuildsServiceLeaveGuildResponseBody'
       schemes:
       - http
   /guilds/{guildID}/members:
     get:
       tags:
-      - GuildService
-      summary: GetGuildMembers GuildService
+      - GuildsService
+      summary: GetGuildMembers GuildsService
       description: Get members
-      operationId: GuildService#GetGuildMembers
+      operationId: GuildsService#GetGuildMembers
       parameters:
       - name: guildID
         in: path
@@ -218,23 +218,23 @@ paths:
         "5":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildMembersNotFoundResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildMembersNotFoundResponseBody'
         "13":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildMembersInternalResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildMembersInternalResponseBody'
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/GuildServiceGetGuildMembersResponseBody'
+            $ref: '#/definitions/GuildsServiceGetGuildMembersResponseBody'
       schemes:
       - http
   /guilds/{guildID}/portfolio:
     get:
       tags:
-      - GuildService
-      summary: GetAccountPortfolios GuildService
-      operationId: GuildService#GetAccountPortfolios
+      - GuildsService
+      summary: GetAccountPortfolio GuildsService
+      operationId: GuildsService#GetAccountPortfolio
       parameters:
       - name: injective_address
         in: query
@@ -248,15 +248,45 @@ paths:
         "5":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetAccountPortfoliosNotFoundResponseBody'
+            $ref: '#/definitions/GuildsServiceGetAccountPortfolioNotFoundResponseBody'
         "13":
           description: ' response.'
           schema:
-            $ref: '#/definitions/GuildServiceGetAccountPortfoliosInternalResponseBody'
+            $ref: '#/definitions/GuildsServiceGetAccountPortfolioInternalResponseBody'
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/GuildServiceGetAccountPortfoliosResponseBody'
+            $ref: '#/definitions/GuildsServiceGetAccountPortfolioResponseBody'
+      schemes:
+      - http
+  /guilds/{guildID}/portfolios:
+    get:
+      tags:
+      - GuildsService
+      summary: GetAccountPortfolios GuildsService
+      operationId: GuildsService#GetAccountPortfolios
+      parameters:
+      - name: injective_address
+        in: query
+        required: true
+        type: string
+      - name: guildID
+        in: path
+        required: true
+        type: string
+      responses:
+        "5":
+          description: ' response.'
+          schema:
+            $ref: '#/definitions/GuildsServiceGetAccountPortfoliosNotFoundResponseBody'
+        "13":
+          description: ' response.'
+          schema:
+            $ref: '#/definitions/GuildsServiceGetAccountPortfoliosInternalResponseBody'
+        "200":
+          description: OK response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetAccountPortfoliosResponseBody'
       schemes:
       - http
 definitions:
@@ -429,7 +459,7 @@ definitions:
     - spot_quote_requirement
     - staking_requirement
     - capacity
-  GuildServiceEnterGuildInternalResponseBody:
+  GuildsServiceEnterGuildInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -474,7 +504,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceEnterGuildNotFoundResponseBody:
+  GuildsServiceEnterGuildNotFoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -519,8 +549,8 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceEnterGuildRequestBody:
-    title: GuildServiceEnterGuildRequestBody
+  GuildsServiceEnterGuildRequestBody:
+    title: GuildsServiceEnterGuildRequestBody
     type: object
     properties:
       message:
@@ -536,8 +566,8 @@ definitions:
       message: Est porro omnis beatae.
       public_key: Delectus asperiores minima.
       signature: Quia minima enim ut.
-  GuildServiceEnterGuildResponseBody:
-    title: GuildServiceEnterGuildResponseBody
+  GuildsServiceEnterGuildResponseBody:
+    title: GuildsServiceEnterGuildResponseBody
     type: object
     properties:
       join_status:
@@ -545,7 +575,7 @@ definitions:
         example: Alias et illum est aut.
     example:
       join_status: Nihil vel qui iste qui magnam.
-  GuildServiceGetAccountPortfolioInternalResponseBody:
+  GuildsServiceGetAccountPortfolioInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -590,7 +620,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetAccountPortfolioNotFoundResponseBody:
+  GuildsServiceGetAccountPortfolioNotFoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -635,8 +665,8 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetAccountPortfolioResponseBody:
-    title: GuildServiceGetAccountPortfolioResponseBody
+  GuildsServiceGetAccountPortfolioResponseBody:
+    title: GuildsServiceGetAccountPortfolioResponseBody
     type: object
     properties:
       data:
@@ -650,7 +680,7 @@ definitions:
         total_balance: Quos id itaque velit.
         unrealized_pnl: Nihil dignissimos consequatur cupiditate adipisci iste.
         updated_at: "1992-11-07T22:49:37Z"
-  GuildServiceGetAccountPortfoliosInternalResponseBody:
+  GuildsServiceGetAccountPortfoliosInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -695,7 +725,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetAccountPortfoliosNotFoundResponseBody:
+  GuildsServiceGetAccountPortfoliosNotFoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -740,8 +770,8 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetAccountPortfoliosResponseBody:
-    title: GuildServiceGetAccountPortfoliosResponseBody
+  GuildsServiceGetAccountPortfoliosResponseBody:
+    title: GuildsServiceGetAccountPortfoliosResponseBody
     type: object
     properties:
       data:
@@ -762,7 +792,7 @@ definitions:
           total_balance: Repellendus ex sit consequatur.
           unrealized_pnl: Voluptas culpa.
           updated_at: "1977-02-05T21:09:14Z"
-  GuildServiceGetAllGuildsInternalResponseBody:
+  GuildsServiceGetAllGuildsInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -807,7 +837,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetAllGuildsNotFoundResponseBody:
+  GuildsServiceGetAllGuildsNotFoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -852,8 +882,8 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetAllGuildsResponseBody:
-    title: GuildServiceGetAllGuildsResponseBody
+  GuildsServiceGetAllGuildsResponseBody:
+    title: GuildsServiceGetAllGuildsResponseBody
     type: object
     properties:
       guilds:
@@ -918,7 +948,7 @@ definitions:
         spot_base_requirement: Dolor commodi soluta dolores aut.
         spot_quote_requirement: Voluptates est.
         staking_requirement: Et placeat id.
-  GuildServiceGetGuildDefaultMemberInternalResponseBody:
+  GuildsServiceGetGuildDefaultMemberInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -963,7 +993,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetGuildDefaultMemberNotFoundResponseBody:
+  GuildsServiceGetGuildDefaultMemberNotFoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1008,8 +1038,8 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetGuildDefaultMemberResponseBody:
-    title: GuildServiceGetGuildDefaultMemberResponseBody
+  GuildsServiceGetGuildDefaultMemberResponseBody:
+    title: GuildsServiceGetGuildDefaultMemberResponseBody
     type: object
     properties:
       default_member:
@@ -1018,7 +1048,7 @@ definitions:
       default_member:
         injective_address: Provident odio deserunt.
         is_default_guild_member: false
-  GuildServiceGetGuildMarketsInternalResponseBody:
+  GuildsServiceGetGuildMarketsInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1063,7 +1093,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetGuildMarketsNotFoundResponseBody:
+  GuildsServiceGetGuildMarketsNotFoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1108,8 +1138,8 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetGuildMarketsResponseBody:
-    title: GuildServiceGetGuildMarketsResponseBody
+  GuildsServiceGetGuildMarketsResponseBody:
+    title: GuildsServiceGetGuildMarketsResponseBody
     type: object
     properties:
       markets:
@@ -1135,7 +1165,7 @@ definitions:
         market_id: Necessitatibus at magni doloribus consequuntur.
       - is_perpetual: true
         market_id: Necessitatibus at magni doloribus consequuntur.
-  GuildServiceGetGuildMasterAddressInternalResponseBody:
+  GuildsServiceGetGuildMasterAddressInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1180,7 +1210,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetGuildMasterAddressNotFoundResponseBody:
+  GuildsServiceGetGuildMasterAddressNotFoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1225,8 +1255,8 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetGuildMasterAddressResponseBody:
-    title: GuildServiceGetGuildMasterAddressResponseBody
+  GuildsServiceGetGuildMasterAddressResponseBody:
+    title: GuildsServiceGetGuildMasterAddressResponseBody
     type: object
     properties:
       master_address:
@@ -1234,7 +1264,7 @@ definitions:
         example: Accusamus vel sit libero vitae neque eveniet.
     example:
       master_address: Et rerum facilis quibusdam repellat.
-  GuildServiceGetGuildMembersInternalResponseBody:
+  GuildsServiceGetGuildMembersInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1279,7 +1309,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetGuildMembersNotFoundResponseBody:
+  GuildsServiceGetGuildMembersNotFoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1324,8 +1354,8 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetGuildMembersResponseBody:
-    title: GuildServiceGetGuildMembersResponseBody
+  GuildsServiceGetGuildMembersResponseBody:
+    title: GuildsServiceGetGuildMembersResponseBody
     type: object
     properties:
       members:
@@ -1348,7 +1378,7 @@ definitions:
         is_default_guild_member: false
       - injective_address: Provident odio deserunt.
         is_default_guild_member: false
-  GuildServiceGetSingleGuildInternalResponseBody:
+  GuildsServiceGetSingleGuildInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1393,7 +1423,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetSingleGuildNotFoundResponseBody:
+  GuildsServiceGetSingleGuildNotFoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1438,8 +1468,8 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceGetSingleGuildResponseBody:
-    title: GuildServiceGetSingleGuildResponseBody
+  GuildsServiceGetSingleGuildResponseBody:
+    title: GuildsServiceGetSingleGuildResponseBody
     type: object
     properties:
       guild:
@@ -1455,7 +1485,7 @@ definitions:
         spot_base_requirement: Dolor commodi soluta dolores aut.
         spot_quote_requirement: Voluptates est.
         staking_requirement: Et placeat id.
-  GuildServiceLeaveGuildInternalResponseBody:
+  GuildsServiceLeaveGuildInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1500,7 +1530,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceLeaveGuildNotFoundResponseBody:
+  GuildsServiceLeaveGuildNotFoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -1545,8 +1575,8 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildServiceLeaveGuildRequestBody:
-    title: GuildServiceLeaveGuildRequestBody
+  GuildsServiceLeaveGuildRequestBody:
+    title: GuildsServiceLeaveGuildRequestBody
     type: object
     properties:
       message:
@@ -1562,8 +1592,8 @@ definitions:
       message: Quia est reprehenderit eos.
       public_key: Dolorum doloribus aut aut.
       signature: Rem blanditiis nostrum dolores aut quae recusandae.
-  GuildServiceLeaveGuildResponseBody:
-    title: GuildServiceLeaveGuildResponseBody
+  GuildsServiceLeaveGuildResponseBody:
+    title: GuildsServiceLeaveGuildResponseBody
     type: object
     properties:
       leave_status:

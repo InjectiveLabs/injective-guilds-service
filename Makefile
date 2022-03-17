@@ -9,7 +9,7 @@ dev-docker-off:
 	docker kill mongo redis 
 	docker rm mongo redis
 install:
-	go install github.com/InjectiveLabs/injective-asset-price/cmd/injective-guilds-service/...
+	go install github.com/InjectiveLabs/injective-guilds-service/cmd/injective-guilds/...
 dev:
 	mkdir -p var/mongo/
 	mongod --dbpath ./var/mongo > var/mongo/output.txt & echo $$! > var/mongo/mongod.pid

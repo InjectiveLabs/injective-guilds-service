@@ -9,10 +9,10 @@ paths:
   /guilds:
     get:
       tags:
-      - GuildService
-      summary: GetAllGuilds GuildService
+      - GuildsService
+      summary: GetAllGuilds GuildsService
       description: Get all guilds
-      operationId: GuildService#GetAllGuilds
+      operationId: GuildsService#GetAllGuilds
       responses:
         "5":
           description: ' response.'
@@ -63,10 +63,10 @@ paths:
   /guilds/{guildID}:
     get:
       tags:
-      - GuildService
-      summary: GetSingleGuild GuildService
+      - GuildsService
+      summary: GetSingleGuild GuildsService
       description: Get a single guild
-      operationId: GuildService#GetSingleGuild
+      operationId: GuildsService#GetSingleGuild
       parameters:
       - name: guildID
         in: path
@@ -116,9 +116,9 @@ paths:
   /guilds/{guildID}/default-guild-member:
     get:
       tags:
-      - GuildService
-      summary: GetGuildDefaultMember GuildService
-      operationId: GuildService#GetGuildDefaultMember
+      - GuildsService
+      summary: GetGuildDefaultMember GuildsService
+      operationId: GuildsService#GetGuildDefaultMember
       parameters:
       - name: guildID
         in: path
@@ -161,10 +161,10 @@ paths:
   /guilds/{guildID}/guild-master:
     get:
       tags:
-      - GuildService
-      summary: GetGuildMasterAddress GuildService
+      - GuildsService
+      summary: GetGuildMasterAddress GuildsService
       description: Get master address of given guild
-      operationId: GuildService#GetGuildMasterAddress
+      operationId: GuildsService#GetGuildMasterAddress
       parameters:
       - name: guildID
         in: path
@@ -205,9 +205,9 @@ paths:
   /guilds/{guildID}/markets:
     get:
       tags:
-      - GuildService
-      summary: GetGuildMarkets GuildService
-      operationId: GuildService#GetGuildMarkets
+      - GuildsService
+      summary: GetGuildMarkets GuildsService
+      operationId: GuildsService#GetGuildMarkets
       parameters:
       - name: guildID
         in: path
@@ -256,9 +256,9 @@ paths:
   /guilds/{guildID}/member:
     delete:
       tags:
-      - GuildService
-      summary: LeaveGuild GuildService
-      operationId: GuildService#LeaveGuild
+      - GuildsService
+      summary: LeaveGuild GuildsService
+      operationId: GuildsService#LeaveGuild
       parameters:
       - name: guildID
         in: path
@@ -308,9 +308,9 @@ paths:
                 leave_status: Nobis ab.
     post:
       tags:
-      - GuildService
-      summary: EnterGuild GuildService
-      operationId: GuildService#EnterGuild
+      - GuildsService
+      summary: EnterGuild GuildsService
+      operationId: GuildsService#EnterGuild
       parameters:
       - name: guildID
         in: path
@@ -361,10 +361,10 @@ paths:
   /guilds/{guildID}/members:
     get:
       tags:
-      - GuildService
-      summary: GetGuildMembers GuildService
+      - GuildsService
+      summary: GetGuildMembers GuildsService
       description: Get members
-      operationId: GuildService#GetGuildMembers
+      operationId: GuildsService#GetGuildMembers
       parameters:
       - name: guildID
         in: path
@@ -411,9 +411,68 @@ paths:
   /guilds/{guildID}/portfolio:
     get:
       tags:
-      - GuildService
-      summary: GetAccountPortfolios GuildService
-      operationId: GuildService#GetAccountPortfolios
+      - GuildsService
+      summary: GetAccountPortfolio GuildsService
+      operationId: GuildsService#GetAccountPortfolio
+      parameters:
+      - name: injective_address
+        in: query
+        allowEmptyValue: true
+        required: true
+        schema:
+          type: string
+          example: Rerum quia.
+        example: Sit rerum repellendus aspernatur deserunt.
+      - name: guildID
+        in: path
+        required: true
+        schema:
+          type: string
+          example: Culpa rerum molestias deleniti nihil sit.
+        example: Totam itaque.
+      responses:
+        "5":
+          description: ' response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "13":
+          description: ' response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "200":
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAccountPortfolioResponseBody'
+              example:
+                data:
+                  available_balance: Ratione minus qui.
+                  denom: Qui et est iste qui consequatur.
+                  injective_address: In odio est dolorem sint eos.
+                  margin_hold: Esse cupiditate exercitationem distinctio.
+                  total_balance: Quos id itaque velit.
+                  unrealized_pnl: Nihil dignissimos consequatur cupiditate adipisci
+                    iste.
+                  updated_at: "1992-11-07T22:49:37Z"
+  /guilds/{guildID}/portfolios:
+    get:
+      tags:
+      - GuildsService
+      summary: GetAccountPortfolios GuildsService
+      operationId: GuildsService#GetAccountPortfolios
       parameters:
       - name: injective_address
         in: query
@@ -939,5 +998,5 @@ components:
       - margin_hold
       - updated_at
 tags:
-- name: GuildService
+- name: GuildsService
   description: Service supports trading guild queries

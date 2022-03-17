@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"os"
 
-	guildservicec "github.com/InjectiveLabs/injective-guilds-service/api/gen/http/guild_service/client"
+	guildsservicec "github.com/InjectiveLabs/injective-guilds-service/api/gen/http/guilds_service/client"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
@@ -23,13 +23,13 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `guild-service (get-all-guilds|get-single-guild|get-guild-members|get-guild-master-address|get-guild-default-member|enter-guild|leave-guild|get-guild-markets|get-account-portfolio|get-account-portfolios)
+	return `guilds-service (get-all-guilds|get-single-guild|get-guild-members|get-guild-master-address|get-guild-default-member|enter-guild|leave-guild|get-guild-markets|get-account-portfolio|get-account-portfolios)
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` guild-service get-all-guilds` + "\n" +
+	return os.Args[0] + ` guilds-service get-all-guilds` + "\n" +
 		""
 }
 
@@ -43,52 +43,52 @@ func ParseEndpoint(
 	restore bool,
 ) (goa.Endpoint, interface{}, error) {
 	var (
-		guildServiceFlags = flag.NewFlagSet("guild-service", flag.ContinueOnError)
+		guildsServiceFlags = flag.NewFlagSet("guilds-service", flag.ContinueOnError)
 
-		guildServiceGetAllGuildsFlags = flag.NewFlagSet("get-all-guilds", flag.ExitOnError)
+		guildsServiceGetAllGuildsFlags = flag.NewFlagSet("get-all-guilds", flag.ExitOnError)
 
-		guildServiceGetSingleGuildFlags       = flag.NewFlagSet("get-single-guild", flag.ExitOnError)
-		guildServiceGetSingleGuildGuildIDFlag = guildServiceGetSingleGuildFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceGetSingleGuildFlags       = flag.NewFlagSet("get-single-guild", flag.ExitOnError)
+		guildsServiceGetSingleGuildGuildIDFlag = guildsServiceGetSingleGuildFlags.String("guild-id", "REQUIRED", "")
 
-		guildServiceGetGuildMembersFlags       = flag.NewFlagSet("get-guild-members", flag.ExitOnError)
-		guildServiceGetGuildMembersGuildIDFlag = guildServiceGetGuildMembersFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceGetGuildMembersFlags       = flag.NewFlagSet("get-guild-members", flag.ExitOnError)
+		guildsServiceGetGuildMembersGuildIDFlag = guildsServiceGetGuildMembersFlags.String("guild-id", "REQUIRED", "")
 
-		guildServiceGetGuildMasterAddressFlags       = flag.NewFlagSet("get-guild-master-address", flag.ExitOnError)
-		guildServiceGetGuildMasterAddressGuildIDFlag = guildServiceGetGuildMasterAddressFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceGetGuildMasterAddressFlags       = flag.NewFlagSet("get-guild-master-address", flag.ExitOnError)
+		guildsServiceGetGuildMasterAddressGuildIDFlag = guildsServiceGetGuildMasterAddressFlags.String("guild-id", "REQUIRED", "")
 
-		guildServiceGetGuildDefaultMemberFlags       = flag.NewFlagSet("get-guild-default-member", flag.ExitOnError)
-		guildServiceGetGuildDefaultMemberGuildIDFlag = guildServiceGetGuildDefaultMemberFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceGetGuildDefaultMemberFlags       = flag.NewFlagSet("get-guild-default-member", flag.ExitOnError)
+		guildsServiceGetGuildDefaultMemberGuildIDFlag = guildsServiceGetGuildDefaultMemberFlags.String("guild-id", "REQUIRED", "")
 
-		guildServiceEnterGuildFlags       = flag.NewFlagSet("enter-guild", flag.ExitOnError)
-		guildServiceEnterGuildBodyFlag    = guildServiceEnterGuildFlags.String("body", "REQUIRED", "")
-		guildServiceEnterGuildGuildIDFlag = guildServiceEnterGuildFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceEnterGuildFlags       = flag.NewFlagSet("enter-guild", flag.ExitOnError)
+		guildsServiceEnterGuildBodyFlag    = guildsServiceEnterGuildFlags.String("body", "REQUIRED", "")
+		guildsServiceEnterGuildGuildIDFlag = guildsServiceEnterGuildFlags.String("guild-id", "REQUIRED", "")
 
-		guildServiceLeaveGuildFlags       = flag.NewFlagSet("leave-guild", flag.ExitOnError)
-		guildServiceLeaveGuildBodyFlag    = guildServiceLeaveGuildFlags.String("body", "REQUIRED", "")
-		guildServiceLeaveGuildGuildIDFlag = guildServiceLeaveGuildFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceLeaveGuildFlags       = flag.NewFlagSet("leave-guild", flag.ExitOnError)
+		guildsServiceLeaveGuildBodyFlag    = guildsServiceLeaveGuildFlags.String("body", "REQUIRED", "")
+		guildsServiceLeaveGuildGuildIDFlag = guildsServiceLeaveGuildFlags.String("guild-id", "REQUIRED", "")
 
-		guildServiceGetGuildMarketsFlags       = flag.NewFlagSet("get-guild-markets", flag.ExitOnError)
-		guildServiceGetGuildMarketsGuildIDFlag = guildServiceGetGuildMarketsFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceGetGuildMarketsFlags       = flag.NewFlagSet("get-guild-markets", flag.ExitOnError)
+		guildsServiceGetGuildMarketsGuildIDFlag = guildsServiceGetGuildMarketsFlags.String("guild-id", "REQUIRED", "")
 
-		guildServiceGetAccountPortfolioFlags                = flag.NewFlagSet("get-account-portfolio", flag.ExitOnError)
-		guildServiceGetAccountPortfolioGuildIDFlag          = guildServiceGetAccountPortfolioFlags.String("guild-id", "REQUIRED", "")
-		guildServiceGetAccountPortfolioInjectiveAddressFlag = guildServiceGetAccountPortfolioFlags.String("injective-address", "REQUIRED", "")
+		guildsServiceGetAccountPortfolioFlags                = flag.NewFlagSet("get-account-portfolio", flag.ExitOnError)
+		guildsServiceGetAccountPortfolioGuildIDFlag          = guildsServiceGetAccountPortfolioFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceGetAccountPortfolioInjectiveAddressFlag = guildsServiceGetAccountPortfolioFlags.String("injective-address", "REQUIRED", "")
 
-		guildServiceGetAccountPortfoliosFlags                = flag.NewFlagSet("get-account-portfolios", flag.ExitOnError)
-		guildServiceGetAccountPortfoliosGuildIDFlag          = guildServiceGetAccountPortfoliosFlags.String("guild-id", "REQUIRED", "")
-		guildServiceGetAccountPortfoliosInjectiveAddressFlag = guildServiceGetAccountPortfoliosFlags.String("injective-address", "REQUIRED", "")
+		guildsServiceGetAccountPortfoliosFlags                = flag.NewFlagSet("get-account-portfolios", flag.ExitOnError)
+		guildsServiceGetAccountPortfoliosGuildIDFlag          = guildsServiceGetAccountPortfoliosFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceGetAccountPortfoliosInjectiveAddressFlag = guildsServiceGetAccountPortfoliosFlags.String("injective-address", "REQUIRED", "")
 	)
-	guildServiceFlags.Usage = guildServiceUsage
-	guildServiceGetAllGuildsFlags.Usage = guildServiceGetAllGuildsUsage
-	guildServiceGetSingleGuildFlags.Usage = guildServiceGetSingleGuildUsage
-	guildServiceGetGuildMembersFlags.Usage = guildServiceGetGuildMembersUsage
-	guildServiceGetGuildMasterAddressFlags.Usage = guildServiceGetGuildMasterAddressUsage
-	guildServiceGetGuildDefaultMemberFlags.Usage = guildServiceGetGuildDefaultMemberUsage
-	guildServiceEnterGuildFlags.Usage = guildServiceEnterGuildUsage
-	guildServiceLeaveGuildFlags.Usage = guildServiceLeaveGuildUsage
-	guildServiceGetGuildMarketsFlags.Usage = guildServiceGetGuildMarketsUsage
-	guildServiceGetAccountPortfolioFlags.Usage = guildServiceGetAccountPortfolioUsage
-	guildServiceGetAccountPortfoliosFlags.Usage = guildServiceGetAccountPortfoliosUsage
+	guildsServiceFlags.Usage = guildsServiceUsage
+	guildsServiceGetAllGuildsFlags.Usage = guildsServiceGetAllGuildsUsage
+	guildsServiceGetSingleGuildFlags.Usage = guildsServiceGetSingleGuildUsage
+	guildsServiceGetGuildMembersFlags.Usage = guildsServiceGetGuildMembersUsage
+	guildsServiceGetGuildMasterAddressFlags.Usage = guildsServiceGetGuildMasterAddressUsage
+	guildsServiceGetGuildDefaultMemberFlags.Usage = guildsServiceGetGuildDefaultMemberUsage
+	guildsServiceEnterGuildFlags.Usage = guildsServiceEnterGuildUsage
+	guildsServiceLeaveGuildFlags.Usage = guildsServiceLeaveGuildUsage
+	guildsServiceGetGuildMarketsFlags.Usage = guildsServiceGetGuildMarketsUsage
+	guildsServiceGetAccountPortfolioFlags.Usage = guildsServiceGetAccountPortfolioUsage
+	guildsServiceGetAccountPortfoliosFlags.Usage = guildsServiceGetAccountPortfoliosUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -105,8 +105,8 @@ func ParseEndpoint(
 	{
 		svcn = flag.Arg(0)
 		switch svcn {
-		case "guild-service":
-			svcf = guildServiceFlags
+		case "guilds-service":
+			svcf = guildsServiceFlags
 		default:
 			return nil, nil, fmt.Errorf("unknown service %q", svcn)
 		}
@@ -122,37 +122,37 @@ func ParseEndpoint(
 	{
 		epn = svcf.Arg(0)
 		switch svcn {
-		case "guild-service":
+		case "guilds-service":
 			switch epn {
 			case "get-all-guilds":
-				epf = guildServiceGetAllGuildsFlags
+				epf = guildsServiceGetAllGuildsFlags
 
 			case "get-single-guild":
-				epf = guildServiceGetSingleGuildFlags
+				epf = guildsServiceGetSingleGuildFlags
 
 			case "get-guild-members":
-				epf = guildServiceGetGuildMembersFlags
+				epf = guildsServiceGetGuildMembersFlags
 
 			case "get-guild-master-address":
-				epf = guildServiceGetGuildMasterAddressFlags
+				epf = guildsServiceGetGuildMasterAddressFlags
 
 			case "get-guild-default-member":
-				epf = guildServiceGetGuildDefaultMemberFlags
+				epf = guildsServiceGetGuildDefaultMemberFlags
 
 			case "enter-guild":
-				epf = guildServiceEnterGuildFlags
+				epf = guildsServiceEnterGuildFlags
 
 			case "leave-guild":
-				epf = guildServiceLeaveGuildFlags
+				epf = guildsServiceLeaveGuildFlags
 
 			case "get-guild-markets":
-				epf = guildServiceGetGuildMarketsFlags
+				epf = guildsServiceGetGuildMarketsFlags
 
 			case "get-account-portfolio":
-				epf = guildServiceGetAccountPortfolioFlags
+				epf = guildsServiceGetAccountPortfolioFlags
 
 			case "get-account-portfolios":
-				epf = guildServiceGetAccountPortfoliosFlags
+				epf = guildsServiceGetAccountPortfoliosFlags
 
 			}
 
@@ -176,39 +176,39 @@ func ParseEndpoint(
 	)
 	{
 		switch svcn {
-		case "guild-service":
-			c := guildservicec.NewClient(scheme, host, doer, enc, dec, restore)
+		case "guilds-service":
+			c := guildsservicec.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
 			case "get-all-guilds":
 				endpoint = c.GetAllGuilds()
 				data = nil
 			case "get-single-guild":
 				endpoint = c.GetSingleGuild()
-				data, err = guildservicec.BuildGetSingleGuildPayload(*guildServiceGetSingleGuildGuildIDFlag)
+				data, err = guildsservicec.BuildGetSingleGuildPayload(*guildsServiceGetSingleGuildGuildIDFlag)
 			case "get-guild-members":
 				endpoint = c.GetGuildMembers()
-				data, err = guildservicec.BuildGetGuildMembersPayload(*guildServiceGetGuildMembersGuildIDFlag)
+				data, err = guildsservicec.BuildGetGuildMembersPayload(*guildsServiceGetGuildMembersGuildIDFlag)
 			case "get-guild-master-address":
 				endpoint = c.GetGuildMasterAddress()
-				data, err = guildservicec.BuildGetGuildMasterAddressPayload(*guildServiceGetGuildMasterAddressGuildIDFlag)
+				data, err = guildsservicec.BuildGetGuildMasterAddressPayload(*guildsServiceGetGuildMasterAddressGuildIDFlag)
 			case "get-guild-default-member":
 				endpoint = c.GetGuildDefaultMember()
-				data, err = guildservicec.BuildGetGuildDefaultMemberPayload(*guildServiceGetGuildDefaultMemberGuildIDFlag)
+				data, err = guildsservicec.BuildGetGuildDefaultMemberPayload(*guildsServiceGetGuildDefaultMemberGuildIDFlag)
 			case "enter-guild":
 				endpoint = c.EnterGuild()
-				data, err = guildservicec.BuildEnterGuildPayload(*guildServiceEnterGuildBodyFlag, *guildServiceEnterGuildGuildIDFlag)
+				data, err = guildsservicec.BuildEnterGuildPayload(*guildsServiceEnterGuildBodyFlag, *guildsServiceEnterGuildGuildIDFlag)
 			case "leave-guild":
 				endpoint = c.LeaveGuild()
-				data, err = guildservicec.BuildLeaveGuildPayload(*guildServiceLeaveGuildBodyFlag, *guildServiceLeaveGuildGuildIDFlag)
+				data, err = guildsservicec.BuildLeaveGuildPayload(*guildsServiceLeaveGuildBodyFlag, *guildsServiceLeaveGuildGuildIDFlag)
 			case "get-guild-markets":
 				endpoint = c.GetGuildMarkets()
-				data, err = guildservicec.BuildGetGuildMarketsPayload(*guildServiceGetGuildMarketsGuildIDFlag)
+				data, err = guildsservicec.BuildGetGuildMarketsPayload(*guildsServiceGetGuildMarketsGuildIDFlag)
 			case "get-account-portfolio":
 				endpoint = c.GetAccountPortfolio()
-				data, err = guildservicec.BuildGetAccountPortfolioPayload(*guildServiceGetAccountPortfolioGuildIDFlag, *guildServiceGetAccountPortfolioInjectiveAddressFlag)
+				data, err = guildsservicec.BuildGetAccountPortfolioPayload(*guildsServiceGetAccountPortfolioGuildIDFlag, *guildsServiceGetAccountPortfolioInjectiveAddressFlag)
 			case "get-account-portfolios":
 				endpoint = c.GetAccountPortfolios()
-				data, err = guildservicec.BuildGetAccountPortfoliosPayload(*guildServiceGetAccountPortfoliosGuildIDFlag, *guildServiceGetAccountPortfoliosInjectiveAddressFlag)
+				data, err = guildsservicec.BuildGetAccountPortfoliosPayload(*guildsServiceGetAccountPortfoliosGuildIDFlag, *guildsServiceGetAccountPortfoliosInjectiveAddressFlag)
 			}
 		}
 	}
@@ -219,12 +219,12 @@ func ParseEndpoint(
 	return endpoint, data, nil
 }
 
-// guild-serviceUsage displays the usage of the guild-service command and its
+// guilds-serviceUsage displays the usage of the guilds-service command and its
 // subcommands.
-func guildServiceUsage() {
+func guildsServiceUsage() {
 	fmt.Fprintf(os.Stderr, `Service supports trading guild queries
 Usage:
-    %[1]s [globalflags] guild-service COMMAND [flags]
+    %[1]s [globalflags] guilds-service COMMAND [flags]
 
 COMMAND:
     get-all-guilds: Get all guilds
@@ -239,72 +239,72 @@ COMMAND:
     get-account-portfolios: GetAccountPortfolios implements GetAccountPortfolios.
 
 Additional help:
-    %[1]s guild-service COMMAND --help
+    %[1]s guilds-service COMMAND --help
 `, os.Args[0])
 }
-func guildServiceGetAllGuildsUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guild-service get-all-guilds
+func guildsServiceGetAllGuildsUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-all-guilds
 
 Get all guilds
 
 Example:
-    %[1]s guild-service get-all-guilds
+    %[1]s guilds-service get-all-guilds
 `, os.Args[0])
 }
 
-func guildServiceGetSingleGuildUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guild-service get-single-guild -guild-id STRING
+func guildsServiceGetSingleGuildUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-single-guild -guild-id STRING
 
 Get a single guild
     -guild-id STRING: 
 
 Example:
-    %[1]s guild-service get-single-guild --guild-id "Alias at magnam ut magnam."
+    %[1]s guilds-service get-single-guild --guild-id "Alias at magnam ut magnam."
 `, os.Args[0])
 }
 
-func guildServiceGetGuildMembersUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guild-service get-guild-members -guild-id STRING
+func guildsServiceGetGuildMembersUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-guild-members -guild-id STRING
 
 Get members
     -guild-id STRING: 
 
 Example:
-    %[1]s guild-service get-guild-members --guild-id "Iste eaque nesciunt."
+    %[1]s guilds-service get-guild-members --guild-id "Iste eaque nesciunt."
 `, os.Args[0])
 }
 
-func guildServiceGetGuildMasterAddressUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guild-service get-guild-master-address -guild-id STRING
+func guildsServiceGetGuildMasterAddressUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-guild-master-address -guild-id STRING
 
 Get master address of given guild
     -guild-id STRING: 
 
 Example:
-    %[1]s guild-service get-guild-master-address --guild-id "Labore incidunt molestiae cum error voluptatem."
+    %[1]s guilds-service get-guild-master-address --guild-id "Labore incidunt molestiae cum error voluptatem."
 `, os.Args[0])
 }
 
-func guildServiceGetGuildDefaultMemberUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guild-service get-guild-default-member -guild-id STRING
+func guildsServiceGetGuildDefaultMemberUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-guild-default-member -guild-id STRING
 
 GetGuildDefaultMember implements GetGuildDefaultMember.
     -guild-id STRING: 
 
 Example:
-    %[1]s guild-service get-guild-default-member --guild-id "Molestias iusto."
+    %[1]s guilds-service get-guild-default-member --guild-id "Molestias iusto."
 `, os.Args[0])
 }
 
-func guildServiceEnterGuildUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guild-service enter-guild -body JSON -guild-id STRING
+func guildsServiceEnterGuildUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service enter-guild -body JSON -guild-id STRING
 
 EnterGuild implements EnterGuild.
     -body JSON: 
     -guild-id STRING: 
 
 Example:
-    %[1]s guild-service enter-guild --body '{
+    %[1]s guilds-service enter-guild --body '{
       "message": "Magnam dolorem nostrum velit non ipsa.",
       "public_key": "Nulla et ipsum autem inventore sed maxime.",
       "signature": "Autem est sit nesciunt ea et velit."
@@ -312,15 +312,15 @@ Example:
 `, os.Args[0])
 }
 
-func guildServiceLeaveGuildUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guild-service leave-guild -body JSON -guild-id STRING
+func guildsServiceLeaveGuildUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service leave-guild -body JSON -guild-id STRING
 
 LeaveGuild implements LeaveGuild.
     -body JSON: 
     -guild-id STRING: 
 
 Example:
-    %[1]s guild-service leave-guild --body '{
+    %[1]s guilds-service leave-guild --body '{
       "message": "Laboriosam occaecati deleniti dolor.",
       "public_key": "Velit sit rerum inventore ut.",
       "signature": "Cupiditate qui ab accusantium modi alias officiis."
@@ -328,37 +328,37 @@ Example:
 `, os.Args[0])
 }
 
-func guildServiceGetGuildMarketsUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guild-service get-guild-markets -guild-id STRING
+func guildsServiceGetGuildMarketsUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-guild-markets -guild-id STRING
 
 GetGuildMarkets implements GetGuildMarkets.
     -guild-id STRING: 
 
 Example:
-    %[1]s guild-service get-guild-markets --guild-id "Ratione molestiae et."
+    %[1]s guilds-service get-guild-markets --guild-id "Ratione molestiae et."
 `, os.Args[0])
 }
 
-func guildServiceGetAccountPortfolioUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guild-service get-account-portfolio -guild-id STRING -injective-address STRING
+func guildsServiceGetAccountPortfolioUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-account-portfolio -guild-id STRING -injective-address STRING
 
 GetAccountPortfolio implements GetAccountPortfolio.
     -guild-id STRING: 
     -injective-address STRING: 
 
 Example:
-    %[1]s guild-service get-account-portfolio --guild-id "Nesciunt ea nesciunt magni sed sunt ut." --injective-address "Perferendis assumenda."
+    %[1]s guilds-service get-account-portfolio --guild-id "Nesciunt ea nesciunt magni sed sunt ut." --injective-address "Perferendis assumenda."
 `, os.Args[0])
 }
 
-func guildServiceGetAccountPortfoliosUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guild-service get-account-portfolios -guild-id STRING -injective-address STRING
+func guildsServiceGetAccountPortfoliosUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-account-portfolios -guild-id STRING -injective-address STRING
 
 GetAccountPortfolios implements GetAccountPortfolios.
     -guild-id STRING: 
     -injective-address STRING: 
 
 Example:
-    %[1]s guild-service get-account-portfolios --guild-id "Perferendis impedit voluptate quas." --injective-address "Iste quidem."
+    %[1]s guilds-service get-account-portfolios --guild-id "Perferendis impedit voluptate quas." --injective-address "Iste quidem."
 `, os.Args[0])
 }

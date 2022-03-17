@@ -6,9 +6,11 @@ import (
 	_ "goa.design/plugins/v3/docs"
 )
 
+// Repo: Injective guilds service
+// This service will be named Guilds
 // API params/result should be snake_case
 
-var _ = Service("GuildService", func() {
+var _ = Service("GuildsService", func() {
 	Description("Service supports trading guild queries")
 
 	cors.Origin("*", func() {
@@ -229,7 +231,7 @@ var _ = Service("GuildService", func() {
 		})
 
 		HTTP(func() {
-			GET("/guilds/{guildID}/portfolio")
+			GET("/guilds/{guildID}/portfolios")
 			Param("injective_address")
 
 			Response(CodeOK)
