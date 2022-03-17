@@ -1,0 +1,6 @@
+.env
+
+# local development
+.vscode
+var/
+dump.rdb
