@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
+	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -58,6 +59,36 @@ func (s *MongoService) EnsureIndex(ctx context.Context) error {
 	// use CreateMany here for future custom
 	// TODO: Index for faster query
 	return nil
+}
+
+func (s *MongoService) ListAllGuilds() ([]*model.Guild, error) {
+	return nil, nil
+}
+
+func (s *MongoService) GetSingleGuild(guildID string) (*model.Guild, error) {
+	return nil, nil
+}
+
+// members
+func (s *MongoService) GetGuildMembers(guildID string, isDefaultMember bool) ([]*model.GuildMember, error) {
+	return nil, nil
+}
+
+func (s *MongoService) AddMember(guildID string, address model.Address) error {
+	return nil
+}
+
+func (s *MongoService) RemoveMember(guildID string, address model.Address) error {
+	return nil
+}
+
+// account portfolio
+func (s *MongoService) GetAccountPortfolio(guildID string, address model.Address) (*model.AccountPortfolio, error) {
+	return nil, nil
+}
+
+func (s *MongoService) ListAccountPortfolios(guildID string, address model.Address) ([]*model.AccountPortfolio, error) {
+	return nil, nil
 }
 
 func (s *MongoService) Disconnect(ctx context.Context) error {

@@ -48,16 +48,16 @@ func NewServer(cfg config.GuildsAPIServerConfig) (*APIServer, error) {
 	guildsServiceEndpoints := guildsapisvc.NewEndpoints(guildsApi)
 
 	var (
-		dec                     = goahttp.RequestDecoder
-		enc                     = goahttp.ResponseEncoder
-		logger                  = log.WithField("svc", "asset_price_api")
-		eh                      = errorHandler(logger)
-		mux                     = goahttp.NewMuxer()
-		assetPriceServiceServer = guildsapisvr.New(guildsServiceEndpoints, mux, dec, enc, eh, nil)
+		dec                 = goahttp.RequestDecoder
+		enc                 = goahttp.ResponseEncoder
+		logger              = log.WithField("svc", "guilds_service")
+		eh                  = errorHandler(logger)
+		mux                 = goahttp.NewMuxer()
+		guildsServiceServer = guildsapisvr.New(guildsServiceEndpoints, mux, dec, enc, eh, nil)
 	)
 
 	// mounts
-	guildsapisvr.Mount(mux, assetPriceServiceServer)
+	guildsapisvr.Mount(mux, guildsServiceServer)
 	s.handlers = mux
 
 	return s, nil
