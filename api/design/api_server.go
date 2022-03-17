@@ -1,4 +1,4 @@
-//go:generate goa gen github.com/InjectiveLabs/injective-asset-price/api/design -o ../
+//go:generate goa gen github.com/InjectiveLabs/injective-guilds-service/api/design -o ../
 package design
 
 import (
