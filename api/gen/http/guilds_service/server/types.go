@@ -947,11 +947,11 @@ func NewGetGuildDefaultMemberPayload(guildID string) *guildsservice.GetGuildDefa
 // payload.
 func NewEnterGuildPayload(body *EnterGuildRequestBody, guildID string) *guildsservice.EnterGuildPayload {
 	v := &guildsservice.EnterGuildPayload{
-		PublicKey: body.PublicKey,
-		Message:   body.Message,
-		Signature: body.Signature,
+		PublicKey: *body.PublicKey,
+		Message:   *body.Message,
+		Signature: *body.Signature,
 	}
-	v.GuildID = &guildID
+	v.GuildID = guildID
 
 	return v
 }
@@ -960,11 +960,11 @@ func NewEnterGuildPayload(body *EnterGuildRequestBody, guildID string) *guildsse
 // payload.
 func NewLeaveGuildPayload(body *LeaveGuildRequestBody, guildID string) *guildsservice.LeaveGuildPayload {
 	v := &guildsservice.LeaveGuildPayload{
-		PublicKey: body.PublicKey,
-		Message:   body.Message,
-		Signature: body.Signature,
+		PublicKey: *body.PublicKey,
+		Message:   *body.Message,
+		Signature: *body.Signature,
 	}
-	v.GuildID = &guildID
+	v.GuildID = guildID
 
 	return v
 }
@@ -996,4 +996,34 @@ func NewGetAccountPortfoliosPayload(guildID string, injectiveAddress string) *gu
 	v.InjectiveAddress = injectiveAddress
 
 	return v
+}
+
+// ValidateEnterGuildRequestBody runs the validations defined on
+// EnterGuildRequestBody
+func ValidateEnterGuildRequestBody(body *EnterGuildRequestBody) (err error) {
+	if body.PublicKey == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("public_key", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Signature == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("signature", "body"))
+	}
+	return
+}
+
+// ValidateLeaveGuildRequestBody runs the validations defined on
+// LeaveGuildRequestBody
+func ValidateLeaveGuildRequestBody(body *LeaveGuildRequestBody) (err error) {
+	if body.PublicKey == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("public_key", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Signature == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("signature", "body"))
+	}
+	return
 }

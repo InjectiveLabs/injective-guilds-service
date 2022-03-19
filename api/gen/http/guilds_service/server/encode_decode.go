@@ -379,6 +379,10 @@ func DecodeEnterGuildRequest(mux goahttp.Muxer, decoder func(*http.Request) goah
 			}
 			return nil, goa.DecodePayloadError(err.Error())
 		}
+		err = ValidateEnterGuildRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
 
 		var (
 			guildID string
@@ -460,6 +464,10 @@ func DecodeLeaveGuildRequest(mux goahttp.Muxer, decoder func(*http.Request) goah
 				return nil, goa.MissingPayloadError()
 			}
 			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateLeaveGuildRequestBody(&body)
+		if err != nil {
+			return nil, err
 		}
 
 		var (

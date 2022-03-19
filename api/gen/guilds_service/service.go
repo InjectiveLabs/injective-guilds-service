@@ -58,10 +58,10 @@ type Balance struct {
 // EnterGuildPayload is the payload type of the GuildsService service
 // EnterGuild method.
 type EnterGuildPayload struct {
-	GuildID   *string
-	PublicKey *string
-	Message   *string
-	Signature *string
+	GuildID   string
+	PublicKey string
+	Message   string
+	Signature string
 }
 
 // EnterGuildResult is the result type of the GuildsService service EnterGuild
@@ -188,10 +188,10 @@ type GuildMember struct {
 // LeaveGuildPayload is the payload type of the GuildsService service
 // LeaveGuild method.
 type LeaveGuildPayload struct {
-	GuildID   *string
-	PublicKey *string
-	Message   *string
-	Signature *string
+	GuildID   string
+	PublicKey string
+	Message   string
+	Signature string
 }
 
 // LeaveGuildResult is the result type of the GuildsService service LeaveGuild

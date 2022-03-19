@@ -625,6 +625,10 @@ components:
         message: Tenetur laboriosam culpa et accusantium.
         public_key: Possimus aspernatur beatae reiciendis nostrum.
         signature: In velit atque beatae eum.
+      required:
+      - public_key
+      - message
+      - signature
     EnterGuildResponseBody:
       type: object
       properties:

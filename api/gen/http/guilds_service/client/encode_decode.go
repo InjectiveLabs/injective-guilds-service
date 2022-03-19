@@ -502,9 +502,7 @@ func (c *Client) BuildEnterGuildRequest(ctx context.Context, v interface{}) (*ht
 		if !ok {
 			return nil, goahttp.ErrInvalidType("GuildsService", "EnterGuild", "*guildsservice.EnterGuildPayload", v)
 		}
-		if p.GuildID != nil {
-			guildID = *p.GuildID
-		}
+		guildID = p.GuildID
 	}
 	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: EnterGuildGuildsServicePath(guildID)}
 	req, err := http.NewRequest("POST", u.String(), nil)
@@ -613,9 +611,7 @@ func (c *Client) BuildLeaveGuildRequest(ctx context.Context, v interface{}) (*ht
 		if !ok {
 			return nil, goahttp.ErrInvalidType("GuildsService", "LeaveGuild", "*guildsservice.LeaveGuildPayload", v)
 		}
-		if p.GuildID != nil {
-			guildID = *p.GuildID
-		}
+		guildID = p.GuildID
 	}
 	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: LeaveGuildGuildsServicePath(guildID)}
 	req, err := http.NewRequest("DELETE", u.String(), nil)

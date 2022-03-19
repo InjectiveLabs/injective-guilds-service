@@ -157,6 +157,10 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/GuildsServiceEnterGuildRequestBody'
+          required:
+          - public_key
+          - message
+          - signature
       responses:
         "5":
           description: ' response.'
@@ -187,6 +191,10 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/GuildsServiceLeaveGuildRequestBody'
+          required:
+          - public_key
+          - message
+          - signature
       responses:
         "5":
           description: ' response.'
@@ -504,6 +512,10 @@ definitions:
       message: Rerum accusamus quis tenetur qui eius.
       public_key: Quam architecto qui quae et rerum.
       signature: Perferendis nam quasi expedita numquam vero.
+    required:
+    - public_key
+    - message
+    - signature
   GuildsServiceEnterGuildResponseBody:
     title: GuildsServiceEnterGuildResponseBody
     type: object
@@ -1585,6 +1597,10 @@ definitions:
       message: Laudantium commodi officia autem.
       public_key: Perspiciatis cupiditate ex quod molestias.
       signature: Illum cum maiores quidem voluptas eos.
+    required:
+    - public_key
+    - message
+    - signature
   GuildsServiceLeaveGuildResponseBody:
     title: GuildsServiceLeaveGuildResponseBody
     type: object

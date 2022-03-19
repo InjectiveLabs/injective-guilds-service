@@ -86,7 +86,7 @@ func BuildEnterGuildPayload(guildsServiceEnterGuildBody string, guildsServiceEnt
 		Message:   body.Message,
 		Signature: body.Signature,
 	}
-	v.GuildID = &guildID
+	v.GuildID = guildID
 
 	return v, nil
 }
@@ -111,7 +111,7 @@ func BuildLeaveGuildPayload(guildsServiceLeaveGuildBody string, guildsServiceLea
 		Message:   body.Message,
 		Signature: body.Signature,
 	}
-	v.GuildID = &guildID
+	v.GuildID = guildID
 
 	return v, nil
 }

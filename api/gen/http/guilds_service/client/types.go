@@ -15,17 +15,17 @@ import (
 // EnterGuildRequestBody is the type of the "GuildsService" service
 // "EnterGuild" endpoint HTTP request body.
 type EnterGuildRequestBody struct {
-	PublicKey *string `form:"public_key,omitempty" json:"public_key,omitempty" xml:"public_key,omitempty"`
-	Message   *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
-	Signature *string `form:"signature,omitempty" json:"signature,omitempty" xml:"signature,omitempty"`
+	PublicKey string `form:"public_key" json:"public_key" xml:"public_key"`
+	Message   string `form:"message" json:"message" xml:"message"`
+	Signature string `form:"signature" json:"signature" xml:"signature"`
 }
 
 // LeaveGuildRequestBody is the type of the "GuildsService" service
 // "LeaveGuild" endpoint HTTP request body.
 type LeaveGuildRequestBody struct {
-	PublicKey *string `form:"public_key,omitempty" json:"public_key,omitempty" xml:"public_key,omitempty"`
-	Message   *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
-	Signature *string `form:"signature,omitempty" json:"signature,omitempty" xml:"signature,omitempty"`
+	PublicKey string `form:"public_key" json:"public_key" xml:"public_key"`
+	Message   string `form:"message" json:"message" xml:"message"`
+	Signature string `form:"signature" json:"signature" xml:"signature"`
 }
 
 // GetAllGuildsResponseBody is the type of the "GuildsService" service
