@@ -476,6 +476,7 @@ type GuildResponseBody struct {
 	DerivativeQuoteRequirement *string `form:"derivative_quote_requirement,omitempty" json:"derivative_quote_requirement,omitempty" xml:"derivative_quote_requirement,omitempty"`
 	StakingRequirement         *string `form:"staking_requirement,omitempty" json:"staking_requirement,omitempty" xml:"staking_requirement,omitempty"`
 	Capacity                   *int    `form:"capacity,omitempty" json:"capacity,omitempty" xml:"capacity,omitempty"`
+	MemberCount                *int    `form:"member_count,omitempty" json:"member_count,omitempty" xml:"member_count,omitempty"`
 }
 
 // GuildMemberResponseBody is used to define fields on response body types.
@@ -1518,6 +1519,9 @@ func ValidateGuildResponseBody(body *GuildResponseBody) (err error) {
 	}
 	if body.Capacity == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("capacity", "body"))
+	}
+	if body.MemberCount == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("member_count", "body"))
 	}
 	return
 }

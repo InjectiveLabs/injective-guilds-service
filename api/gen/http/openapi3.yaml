@@ -47,6 +47,7 @@ paths:
                   description: Nihil quia quo eligendi omnis.
                   id: Adipisci reiciendis minima id.
                   master_address: Adipisci sed libero a nam consectetur.
+                  member_count: 2561428800172317609
                   name: Dolore atque aperiam officiis necessitatibus dicta est.
                   spot_base_requirement: Dolor commodi soluta dolores aut.
                   spot_quote_requirement: Voluptates est.
@@ -56,6 +57,17 @@ paths:
                   description: Nihil quia quo eligendi omnis.
                   id: Adipisci reiciendis minima id.
                   master_address: Adipisci sed libero a nam consectetur.
+                  member_count: 2561428800172317609
+                  name: Dolore atque aperiam officiis necessitatibus dicta est.
+                  spot_base_requirement: Dolor commodi soluta dolores aut.
+                  spot_quote_requirement: Voluptates est.
+                  staking_requirement: Et placeat id.
+                - capacity: 6362405101647038215
+                  derivative_quote_requirement: Harum eum vel quia.
+                  description: Nihil quia quo eligendi omnis.
+                  id: Adipisci reiciendis minima id.
+                  master_address: Adipisci sed libero a nam consectetur.
+                  member_count: 2561428800172317609
                   name: Dolore atque aperiam officiis necessitatibus dicta est.
                   spot_base_requirement: Dolor commodi soluta dolores aut.
                   spot_quote_requirement: Voluptates est.
@@ -73,8 +85,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Dolores ut expedita quo.
-        example: Natus molestiae et.
+          example: Autem laboriosam eligendi placeat.
+        example: Quis vero.
       responses:
         "5":
           description: ' response.'
@@ -109,6 +121,7 @@ paths:
                   description: Nihil quia quo eligendi omnis.
                   id: Adipisci reiciendis minima id.
                   master_address: Adipisci sed libero a nam consectetur.
+                  member_count: 2561428800172317609
                   name: Dolore atque aperiam officiis necessitatibus dicta est.
                   spot_base_requirement: Dolor commodi soluta dolores aut.
                   spot_quote_requirement: Voluptates est.
@@ -125,8 +138,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Voluptatem nihil eum ducimus.
-        example: Omnis quisquam nesciunt nam vel et.
+          example: Rerum quia.
+        example: Sit rerum repellendus aspernatur deserunt.
       responses:
         "5":
           description: ' response.'
@@ -171,8 +184,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Non dicta et consequatur aperiam facilis excepturi.
-        example: Eaque qui sunt sint aut unde iste.
+          example: Omnis delectus et modi accusamus aut.
+        example: Asperiores et dolorem.
       responses:
         "5":
           description: ' response.'
@@ -214,8 +227,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Omnis delectus et modi accusamus aut.
-        example: Asperiores et dolorem.
+          example: Voluptatum sunt laboriosam quia quibusdam dolor.
+        example: Ut odio assumenda facere enim atque totam.
       responses:
         "5":
           description: ' response.'
@@ -265,8 +278,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Eum illum et quibusdam.
-        example: Optio deserunt ducimus ipsum molestias non.
+          example: Et quibusdam alias aperiam.
+        example: Ut ut nam repellat labore qui velit.
       requestBody:
         required: true
         content:
@@ -317,8 +330,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Autem laboriosam eligendi placeat.
-        example: Quis vero.
+          example: Culpa rerum molestias deleniti nihil sit.
+        example: Totam itaque.
       requestBody:
         required: true
         content:
@@ -371,8 +384,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Corrupti est.
-        example: Vel repudiandae maiores voluptatem explicabo.
+          example: Eum illum et quibusdam.
+        example: Optio deserunt ducimus ipsum molestias non.
       responses:
         "5":
           description: ' response.'
@@ -421,15 +434,15 @@ paths:
         required: true
         schema:
           type: string
-          example: Rerum quia.
-        example: Sit rerum repellendus aspernatur deserunt.
+          example: Repellat eos distinctio ut rerum vitae.
+        example: Possimus pariatur.
       - name: guildID
         in: path
         required: true
         schema:
           type: string
-          example: Culpa rerum molestias deleniti nihil sit.
-        example: Totam itaque.
+          example: Tempora pariatur ea cum dolorem modi.
+        example: Et autem eius et placeat.
       responses:
         "5":
           description: ' response.'
@@ -480,15 +493,15 @@ paths:
         required: true
         schema:
           type: string
-          example: Et quibusdam alias aperiam.
-        example: Ut ut nam repellat labore qui velit.
+          example: Corrupti animi at quasi quidem.
+        example: Corrupti harum aut recusandae laudantium voluptas.
       - name: guildID
         in: path
         required: true
         schema:
           type: string
-          example: Voluptatum sunt laboriosam quia quibusdam dolor.
-        example: Ut odio assumenda facere enim atque totam.
+          example: Expedita error.
+        example: Amet et vitae aut.
       responses:
         "5":
           description: ' response.'
@@ -539,7 +552,7 @@ components:
       properties:
         injective_address:
           type: string
-          example: Et totam assumenda tempore earum deleniti.
+          example: Vel maiores iste.
         portfolios:
           type: array
           items:
@@ -557,22 +570,10 @@ components:
             total_balance: Repellendus ex sit consequatur.
             unrealized_pnl: Voluptas culpa.
             updated_at: "1977-02-05T21:09:14Z"
-          - available_balance: Accusamus aliquid quo delectus cupiditate optio.
-            denom: Ea et mollitia.
-            margin_hold: Odio porro tempore consectetur et corrupti.
-            total_balance: Repellendus ex sit consequatur.
-            unrealized_pnl: Voluptas culpa.
-            updated_at: "1977-02-05T21:09:14Z"
       description: Account portfio snapshots
       example:
-        injective_address: Exercitationem tempore repellendus non.
+        injective_address: Nam vel.
         portfolios:
-        - available_balance: Accusamus aliquid quo delectus cupiditate optio.
-          denom: Ea et mollitia.
-          margin_hold: Odio porro tempore consectetur et corrupti.
-          total_balance: Repellendus ex sit consequatur.
-          unrealized_pnl: Voluptas culpa.
-          updated_at: "1977-02-05T21:09:14Z"
         - available_balance: Accusamus aliquid quo delectus cupiditate optio.
           denom: Ea et mollitia.
           margin_hold: Odio porro tempore consectetur et corrupti.
@@ -599,30 +600,30 @@ components:
       properties:
         available_balance:
           type: string
-          example: Voluptatem incidunt.
+          example: Quis deleniti eum ut tenetur.
         denom:
           type: string
-          example: Eligendi laboriosam aut ut aliquam veritatis.
+          example: Odit maxime debitis dicta corporis cupiditate consequatur.
         margin_hold:
           type: string
-          example: Temporibus optio.
+          example: Molestias molestiae porro quisquam hic et quia.
         total_balance:
           type: string
-          example: Est dolores.
+          example: Ullam reiciendis.
         unrealized_pnl:
           type: string
-          example: Aspernatur est sed eum.
+          example: Maiores quisquam eligendi sint porro omnis.
         updated_at:
           type: string
-          example: "2003-01-18T20:51:10Z"
+          example: "2011-02-28T10:11:32Z"
           format: date-time
       example:
-        available_balance: Blanditiis animi.
-        denom: Odio consectetur voluptatem perspiciatis neque cupiditate distinctio.
-        margin_hold: Asperiores ea ratione.
-        total_balance: Laboriosam consectetur fugiat veritatis.
-        unrealized_pnl: Voluptatibus repudiandae assumenda hic neque.
-        updated_at: "2012-08-02T21:03:48Z"
+        available_balance: Voluptatem nisi quibusdam et aut.
+        denom: Animi est nemo dolor architecto est quod.
+        margin_hold: Iure cum deleniti exercitationem tempore repellendus.
+        total_balance: Minus id ullam quis rerum consequatur.
+        unrealized_pnl: Qui natus iusto.
+        updated_at: "1975-10-18T17:57:09Z"
       required:
       - denom
       - total_balance
@@ -635,25 +636,25 @@ components:
       properties:
         message:
           type: string
-          example: Occaecati beatae.
+          example: Suscipit aspernatur delectus est.
         public_key:
           type: string
-          example: Nobis odit.
+          example: Hic eius ut suscipit.
         signature:
           type: string
-          example: Nostrum maxime minus molestias.
+          example: Et amet.
       example:
-        message: Est quas.
-        public_key: Rerum cumque et odit id deserunt et.
-        signature: Hic eius ut suscipit.
+        message: Modi aspernatur iste ipsum at quia dolorem.
+        public_key: Beatae et illo ea laborum ea.
+        signature: Voluptatibus ea vel.
     EnterGuildResponseBody:
       type: object
       properties:
         join_status:
           type: string
-          example: Suscipit aspernatur delectus est.
+          example: Et veniam omnis nesciunt officia.
       example:
-        join_status: Et amet.
+        join_status: Ut delectus corrupti architecto ipsam voluptatem sit.
     Error:
       type: object
       properties:
@@ -678,11 +679,11 @@ components:
         temporary:
           type: boolean
           description: Is the error temporary?
-          example: false
+          example: true
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: false
+          example: true
       description: Not found
       example:
         id: 3F1FKVRR
@@ -744,6 +745,7 @@ components:
             description: Nihil quia quo eligendi omnis.
             id: Adipisci reiciendis minima id.
             master_address: Adipisci sed libero a nam consectetur.
+            member_count: 2561428800172317609
             name: Dolore atque aperiam officiis necessitatibus dicta est.
             spot_base_requirement: Dolor commodi soluta dolores aut.
             spot_quote_requirement: Voluptates est.
@@ -753,6 +755,27 @@ components:
             description: Nihil quia quo eligendi omnis.
             id: Adipisci reiciendis minima id.
             master_address: Adipisci sed libero a nam consectetur.
+            member_count: 2561428800172317609
+            name: Dolore atque aperiam officiis necessitatibus dicta est.
+            spot_base_requirement: Dolor commodi soluta dolores aut.
+            spot_quote_requirement: Voluptates est.
+            staking_requirement: Et placeat id.
+          - capacity: 6362405101647038215
+            derivative_quote_requirement: Harum eum vel quia.
+            description: Nihil quia quo eligendi omnis.
+            id: Adipisci reiciendis minima id.
+            master_address: Adipisci sed libero a nam consectetur.
+            member_count: 2561428800172317609
+            name: Dolore atque aperiam officiis necessitatibus dicta est.
+            spot_base_requirement: Dolor commodi soluta dolores aut.
+            spot_quote_requirement: Voluptates est.
+            staking_requirement: Et placeat id.
+          - capacity: 6362405101647038215
+            derivative_quote_requirement: Harum eum vel quia.
+            description: Nihil quia quo eligendi omnis.
+            id: Adipisci reiciendis minima id.
+            master_address: Adipisci sed libero a nam consectetur.
+            member_count: 2561428800172317609
             name: Dolore atque aperiam officiis necessitatibus dicta est.
             spot_base_requirement: Dolor commodi soluta dolores aut.
             spot_quote_requirement: Voluptates est.
@@ -764,6 +787,7 @@ components:
           description: Nihil quia quo eligendi omnis.
           id: Adipisci reiciendis minima id.
           master_address: Adipisci sed libero a nam consectetur.
+          member_count: 2561428800172317609
           name: Dolore atque aperiam officiis necessitatibus dicta est.
           spot_base_requirement: Dolor commodi soluta dolores aut.
           spot_quote_requirement: Voluptates est.
@@ -773,6 +797,7 @@ components:
           description: Nihil quia quo eligendi omnis.
           id: Adipisci reiciendis minima id.
           master_address: Adipisci sed libero a nam consectetur.
+          member_count: 2561428800172317609
           name: Dolore atque aperiam officiis necessitatibus dicta est.
           spot_base_requirement: Dolor commodi soluta dolores aut.
           spot_quote_requirement: Voluptates est.
@@ -782,6 +807,7 @@ components:
           description: Nihil quia quo eligendi omnis.
           id: Adipisci reiciendis minima id.
           master_address: Adipisci sed libero a nam consectetur.
+          member_count: 2561428800172317609
           name: Dolore atque aperiam officiis necessitatibus dicta est.
           spot_base_requirement: Dolor commodi soluta dolores aut.
           spot_quote_requirement: Voluptates est.
@@ -809,12 +835,8 @@ components:
             market_id: Necessitatibus at magni doloribus consequuntur.
           - is_perpetual: true
             market_id: Necessitatibus at magni doloribus consequuntur.
-          - is_perpetual: true
-            market_id: Necessitatibus at magni doloribus consequuntur.
       example:
         markets:
-        - is_perpetual: true
-          market_id: Necessitatibus at magni doloribus consequuntur.
         - is_perpetual: true
           market_id: Necessitatibus at magni doloribus consequuntur.
         - is_perpetual: true
@@ -824,9 +846,9 @@ components:
       properties:
         master_address:
           type: string
-          example: Beatae fugit.
+          example: Minus molestias aut rerum cumque et odit.
       example:
-        master_address: Ullam magnam velit.
+        master_address: Deserunt et placeat est quas.
     GetGuildMembersResponseBody:
       type: object
       properties:
@@ -840,14 +862,8 @@ components:
             is_default_guild_member: false
           - injective_address: Provident odio deserunt.
             is_default_guild_member: false
-          - injective_address: Provident odio deserunt.
-            is_default_guild_member: false
       example:
         members:
-        - injective_address: Provident odio deserunt.
-          is_default_guild_member: false
-        - injective_address: Provident odio deserunt.
-          is_default_guild_member: false
         - injective_address: Provident odio deserunt.
           is_default_guild_member: false
         - injective_address: Provident odio deserunt.
@@ -864,6 +880,7 @@ components:
           description: Nihil quia quo eligendi omnis.
           id: Adipisci reiciendis minima id.
           master_address: Adipisci sed libero a nam consectetur.
+          member_count: 2561428800172317609
           name: Dolore atque aperiam officiis necessitatibus dicta est.
           spot_base_requirement: Dolor commodi soluta dolores aut.
           spot_quote_requirement: Voluptates est.
@@ -873,43 +890,48 @@ components:
       properties:
         capacity:
           type: integer
-          example: 6905051250336583602
+          example: 6676278668094531619
           format: int64
         derivative_quote_requirement:
           type: string
-          example: Ipsam libero.
+          example: Officia velit.
         description:
           type: string
-          example: Est perspiciatis maiores consequatur.
+          example: Nulla temporibus.
         id:
           type: string
-          example: Dolor consequuntur laborum.
+          example: Et ipsum est sed quas minima.
         master_address:
           type: string
-          example: Ipsum est sed quas minima.
+          example: Ipsam libero.
+        member_count:
+          type: integer
+          example: 7389100215780126237
+          format: int64
         name:
           type: string
-          example: Et totam dolores.
+          example: Sed et.
         spot_base_requirement:
           type: string
-          example: Sed et.
+          example: Aut repudiandae ea officiis quia porro.
         spot_quote_requirement:
           type: string
-          example: Nulla temporibus.
+          example: Aut non sit explicabo velit.
         staking_requirement:
           type: string
-          example: Aut repudiandae ea officiis quia porro.
+          example: Ut ea eum et aperiam.
       description: Guild info
       example:
-        capacity: 1789493901113116561
-        derivative_quote_requirement: Minus dicta.
-        description: Non saepe ut fugit excepturi consequatur consequatur.
-        id: Non sit explicabo velit autem officia velit.
-        master_address: Alias et et.
-        name: Ut ea eum et aperiam.
-        spot_base_requirement: Placeat est aut praesentium aut corporis ab.
-        spot_quote_requirement: Est consectetur itaque reprehenderit nemo sed atque.
-        staking_requirement: Doloribus omnis ipsum sunt vel aut.
+        capacity: 316340321260088010
+        derivative_quote_requirement: Quod quia sunt aut expedita velit.
+        description: Placeat est aut praesentium aut corporis ab.
+        id: Ut fugit.
+        master_address: Est consectetur itaque reprehenderit nemo sed atque.
+        member_count: 5777184135119255354
+        name: Consequatur consequatur consequatur alias et et.
+        spot_base_requirement: Minus dicta.
+        spot_quote_requirement: Doloribus omnis ipsum sunt vel aut.
+        staking_requirement: Est sed.
       required:
       - id
       - name
@@ -918,40 +940,41 @@ components:
       - spot_quote_requirement
       - staking_requirement
       - capacity
+      - member_count
     GuildMember:
       type: object
       properties:
         injective_address:
           type: string
-          example: Rem est sed.
+          example: Beatae fugit.
         is_default_guild_member:
           type: boolean
           example: true
       description: Guild member metadata
       example:
-        injective_address: Omnis dolor.
-        is_default_guild_member: true
+        injective_address: Magnam velit est nobis odit cum occaecati.
+        is_default_guild_member: false
     LeaveGuildResponseBody:
       type: object
       properties:
         leave_status:
           type: string
-          example: Beatae et illo ea laborum ea.
+          example: Molestiae nemo quia aspernatur quisquam.
       example:
-        leave_status: Modi aspernatur iste ipsum at quia dolorem.
+        leave_status: Quisquam quis iure.
     Market:
       type: object
       properties:
         is_perpetual:
           type: boolean
-          example: false
+          example: true
         market_id:
           type: string
-          example: Voluptatibus ea vel.
+          example: Quisquam ex dolores voluptas corrupti velit enim.
       description: Market supported by guild
       example:
-        is_perpetual: true
-        market_id: Veniam omnis nesciunt officia.
+        is_perpetual: false
+        market_id: Cumque in necessitatibus officia odio.
       required:
       - market_id
       - is_perpetual
@@ -960,35 +983,35 @@ components:
       properties:
         available_balance:
           type: string
-          example: Quisquam ex dolores voluptas corrupti velit enim.
+          example: Nihil rerum mollitia nostrum itaque.
         denom:
           type: string
-          example: Quia aspernatur quisquam.
+          example: Ipsa quia nihil atque.
         injective_address:
           type: string
-          example: Architecto ipsam voluptatem sit perspiciatis molestiae.
+          example: Similique a a veritatis ut.
         margin_hold:
           type: string
-          example: Quisquam dolor natus sint similique a.
+          example: Repellendus et.
         total_balance:
           type: string
-          example: Quisquam quis iure.
+          example: Distinctio quia quia nesciunt minima sint.
         unrealized_pnl:
           type: string
-          example: Id cumque in necessitatibus officia.
+          example: A a excepturi hic laboriosam.
         updated_at:
           type: string
-          example: "1993-12-09T17:51:29Z"
+          example: "1988-07-15T18:13:09Z"
           format: date-time
       description: Account portfio snapshot
       example:
-        available_balance: Saepe sunt doloremque.
-        denom: Modi nisi.
-        injective_address: Tenetur velit aliquam dolorum laborum voluptatum vero.
-        margin_hold: Sequi numquam animi.
-        total_balance: Accusamus molestiae aliquam.
-        unrealized_pnl: Quae quam amet.
-        updated_at: "1970-07-09T23:06:55Z"
+        available_balance: Distinctio qui.
+        denom: Occaecati voluptatem id quia.
+        injective_address: Ea autem debitis quidem est iure vel.
+        margin_hold: Qui omnis.
+        total_balance: Ex totam eligendi est consequatur vel.
+        unrealized_pnl: Omnis minus.
+        updated_at: "1975-07-24T14:02:39Z"
       required:
       - injective_address
       - denom

@@ -476,6 +476,7 @@ type GuildResponseBody struct {
 	DerivativeQuoteRequirement *string `form:"derivative_quote_requirement,omitempty" json:"derivative_quote_requirement,omitempty" xml:"derivative_quote_requirement,omitempty"`
 	StakingRequirement         string  `form:"staking_requirement" json:"staking_requirement" xml:"staking_requirement"`
 	Capacity                   int     `form:"capacity" json:"capacity" xml:"capacity"`
+	MemberCount                int     `form:"member_count" json:"member_count" xml:"member_count"`
 }
 
 // GuildMemberResponseBody is used to define fields on response body types.

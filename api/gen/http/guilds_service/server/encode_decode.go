@@ -760,6 +760,7 @@ func marshalGuildsserviceGuildToGuildResponseBody(v *guildsservice.Guild) *Guild
 		DerivativeQuoteRequirement: v.DerivativeQuoteRequirement,
 		StakingRequirement:         v.StakingRequirement,
 		Capacity:                   v.Capacity,
+		MemberCount:                v.MemberCount,
 	}
 
 	return res

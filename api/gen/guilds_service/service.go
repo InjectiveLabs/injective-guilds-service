@@ -183,6 +183,7 @@ type Guild struct {
 	DerivativeQuoteRequirement *string
 	StakingRequirement         string
 	Capacity                   int
+	MemberCount                int
 }
 
 // Guild member metadata

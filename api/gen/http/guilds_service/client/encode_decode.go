@@ -1044,6 +1044,7 @@ func unmarshalGuildResponseBodyToGuildsserviceGuild(v *GuildResponseBody) *guild
 		DerivativeQuoteRequirement: v.DerivativeQuoteRequirement,
 		StakingRequirement:         *v.StakingRequirement,
 		Capacity:                   *v.Capacity,
+		MemberCount:                *v.MemberCount,
 	}
 
 	return res

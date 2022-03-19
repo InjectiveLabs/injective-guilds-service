@@ -259,7 +259,7 @@ Get a single guild
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-single-guild --guild-id "Alias at magnam ut magnam."
+    %[1]s guilds-service get-single-guild --guild-id "At magnam."
 `, os.Args[0])
 }
 
