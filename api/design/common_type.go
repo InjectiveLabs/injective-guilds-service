@@ -43,54 +43,30 @@ var Guild = Type("Guild", func() {
 	Required("member_count")
 })
 
-var EmbededAccountPortfolio = Type("EmbededAccountPortfolio", func() {
+var Balance = Type("Balance", func() {
 	Field(1, "denom", String)
 	Field(2, "total_balance", String)
 	Field(3, "available_balance", String)
 	Field(4, "unrealized_pnl", String)
 	Field(5, "margin_hold", String)
 
-	Field(6, "updated_at", String, func() {
-		Format(FormatDateTime)
-	})
-
 	Required("denom")
 	Required("total_balance")
 	Required("available_balance")
 	Required("unrealized_pnl")
 	Required("margin_hold")
-	Required("updated_at")
 })
 
 var SingleAccountPortfolio = Type("SingleAccountPortfolio", func() {
-	Description("Account portfio snapshot")
+	Description("Single account portfio snapshot")
 	Field(1, "injective_address", String)
-	Field(1, "denom", String)
-	Field(2, "total_balance", String)
-	Field(3, "available_balance", String)
-	Field(4, "unrealized_pnl", String)
-	Field(5, "margin_hold", String)
-
-	Field(6, "updated_at", String, func() {
+	Field(2, "balances", ArrayOf(Balance))
+	Field(3, "updated_at", String, func() {
 		Format(FormatDateTime)
 	})
-
 	Required("injective_address")
-	Required("denom")
-	Required("total_balance")
-	Required("available_balance")
-	Required("unrealized_pnl")
-	Required("margin_hold")
+	Required("balances")
 	Required("updated_at")
-})
-
-var AccountPortfolios = Type("AccountPorfolios", func() {
-	Description("Account portfio snapshots")
-	Field(1, "injective_address", String)
-	Field(2, "portfolios", ArrayOf(EmbededAccountPortfolio))
-
-	Required("injective_address")
-	Required("portfolios")
 })
 
 var GuildMember = Type("GuildMember", func() {
