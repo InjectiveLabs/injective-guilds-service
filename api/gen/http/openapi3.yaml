@@ -956,6 +956,9 @@ components:
       example:
         injective_address: Magnam velit est nobis odit cum occaecati.
         is_default_guild_member: false
+      required:
+      - injective_address
+      - is_default_guild_member
     LeaveGuildResponseBody:
       type: object
       properties:

@@ -188,8 +188,8 @@ type Guild struct {
 
 // Guild member metadata
 type GuildMember struct {
-	InjectiveAddress     *string
-	IsDefaultGuildMember *bool
+	InjectiveAddress     string
+	IsDefaultGuildMember bool
 }
 
 // LeaveGuildPayload is the payload type of the GuildsService service

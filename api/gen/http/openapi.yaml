@@ -402,6 +402,9 @@ definitions:
     example:
       injective_address: Repellendus quidem est enim.
       is_default_guild_member: true
+    required:
+    - injective_address
+    - is_default_guild_member
   GuildResponseBody:
     title: GuildResponseBody
     type: object

@@ -982,6 +982,30 @@ func ValidateGetSingleGuildResponseBody(body *GetSingleGuildResponseBody) (err e
 	return
 }
 
+// ValidateGetGuildMembersResponseBody runs the validations defined on
+// GetGuildMembersResponseBody
+func ValidateGetGuildMembersResponseBody(body *GetGuildMembersResponseBody) (err error) {
+	for _, e := range body.Members {
+		if e != nil {
+			if err2 := ValidateGuildMemberResponseBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// ValidateGetGuildDefaultMemberResponseBody runs the validations defined on
+// GetGuildDefaultMemberResponseBody
+func ValidateGetGuildDefaultMemberResponseBody(body *GetGuildDefaultMemberResponseBody) (err error) {
+	if body.DefaultMember != nil {
+		if err2 := ValidateGuildMemberResponseBody(body.DefaultMember); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	return
+}
+
 // ValidateGetGuildMarketsResponseBody runs the validations defined on
 // GetGuildMarketsResponseBody
 func ValidateGetGuildMarketsResponseBody(body *GetGuildMarketsResponseBody) (err error) {
@@ -1528,6 +1552,18 @@ func ValidateGuildResponseBody(body *GuildResponseBody) (err error) {
 	}
 	if body.MemberCount == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("member_count", "body"))
+	}
+	return
+}
+
+// ValidateGuildMemberResponseBody runs the validations defined on
+// GuildMemberResponseBody
+func ValidateGuildMemberResponseBody(body *GuildMemberResponseBody) (err error) {
+	if body.InjectiveAddress == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("injective_address", "body"))
+	}
+	if body.IsDefaultGuildMember == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("is_default_guild_member", "body"))
 	}
 	return
 }

@@ -481,8 +481,8 @@ type GuildResponseBody struct {
 
 // GuildMemberResponseBody is used to define fields on response body types.
 type GuildMemberResponseBody struct {
-	InjectiveAddress     *string `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
-	IsDefaultGuildMember *bool   `form:"is_default_guild_member,omitempty" json:"is_default_guild_member,omitempty" xml:"is_default_guild_member,omitempty"`
+	InjectiveAddress     string `form:"injective_address" json:"injective_address" xml:"injective_address"`
+	IsDefaultGuildMember bool   `form:"is_default_guild_member" json:"is_default_guild_member" xml:"is_default_guild_member"`
 }
 
 // MarketResponseBody is used to define fields on response body types.

@@ -258,6 +258,10 @@ func DecodeGetGuildMembersResponse(decoder func(*http.Response) goahttp.Decoder,
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("GuildsService", "GetGuildMembers", err)
 			}
+			err = ValidateGetGuildMembersResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetGuildMembers", err)
+			}
 			res := NewGetGuildMembersResultOK(&body)
 			return res, nil
 		case 5:
@@ -445,6 +449,10 @@ func DecodeGetGuildDefaultMemberResponse(decoder func(*http.Response) goahttp.De
 			err = decoder(resp).Decode(&body)
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("GuildsService", "GetGuildDefaultMember", err)
+			}
+			err = ValidateGetGuildDefaultMemberResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetGuildDefaultMember", err)
 			}
 			res := NewGetGuildDefaultMemberResultOK(&body)
 			return res, nil
@@ -1058,8 +1066,8 @@ func unmarshalGuildMemberResponseBodyToGuildsserviceGuildMember(v *GuildMemberRe
 		return nil
 	}
 	res := &guildsservice.GuildMember{
-		InjectiveAddress:     v.InjectiveAddress,
-		IsDefaultGuildMember: v.IsDefaultGuildMember,
+		InjectiveAddress:     *v.InjectiveAddress,
+		IsDefaultGuildMember: *v.IsDefaultGuildMember,
 	}
 
 	return res
