@@ -7,8 +7,9 @@ import (
 )
 
 type GuildMarket struct {
-	MarketID    Hash `bson:"market_id" json:"market_id"`
-	IsPerpetual bool `bson:"is_perpetual" json:"is_perpetual"`
+	MarketID    Hash   `bson:"market_id" json:"market_id"`
+	Denom       string `bson:"denom" json:"denom"`
+	IsPerpetual bool   `bson:"is_perpetual" json:"is_perpetual"`
 }
 
 type Guild struct {
@@ -22,7 +23,8 @@ type Guild struct {
 	DerivativeQuoteRequirement primitive.Decimal128 `bson:"derivative_quote_requirement" json:"derivative_quote_requirement"`
 	StakingRequirement         primitive.Decimal128 `bson:"staking_requirement" json:"staking_requirement"`
 
-	Capacity int `bson:"capacity" json:"capacity"`
+	Capacity    int `bson:"capacity" json:"capacity"`
+	MemberCount int `bson:"member_count" json:"member_count"`
 	// since number of markets is limited, we can embeded here:
 	Markets []GuildMarket `bson:"markets" json:"markets"`
 }
@@ -38,7 +40,7 @@ type AccountPortfolio struct {
 	MarginHold       primitive.Decimal128 `bson:"margin_hold" json:"margin_hold"`
 
 	// timestamp when this gets update
-	UpdatedAt time.Time `bson:"time" json:"time"`
+	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
 }
 
 // Design for future, when 1 guild -> 10k+ guild member

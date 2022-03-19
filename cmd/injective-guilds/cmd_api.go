@@ -11,6 +11,7 @@ import (
 	guildsapisvr "github.com/InjectiveLabs/injective-guilds-service/api/gen/http/guilds_service/server"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
+	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
 	guildsapi "github.com/InjectiveLabs/injective-guilds-service/internal/service/guilds-api"
 	cli "github.com/jawher/mow.cli"
 	"github.com/xlab/closer"
@@ -29,11 +30,11 @@ func NewServer(cfg config.GuildsAPIServerConfig) (*APIServer, error) {
 	var err error
 	s := &APIServer{cfg: cfg}
 
-	// ctx := context.Background()
-	// s.dbSvc, err = mongoimpl.NewService(ctx, cfg.DBConnectionURL, cfg.DBName)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	ctx := context.Background()
+	s.dbSvc, err = mongoimpl.NewService(ctx, cfg.DBConnectionURL, cfg.DBName)
+	if err != nil {
+		return nil, err
+	}
 
 	// setup logger
 	log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
@@ -80,10 +81,9 @@ func (s *APIServer) ListenAndServe(ctx context.Context) error {
 		return fmt.Errorf("unsupported protocol with address: %s, need http or https", s.cfg.ListenAddress)
 	}
 
-	// new server + listen
+	// new server + listenFn
 	s.server = &http.Server{Addr: address, Handler: s.handlers}
-
-	go func() {
+	listenFn := func() {
 		var err error
 		if tls {
 			log.Infoln("listening with tls:", s.server.Addr)
@@ -101,8 +101,9 @@ func (s *APIServer) ListenAndServe(ctx context.Context) error {
 			// call to gracefully close everything after an error occurs
 			closer.Close()
 		}
-	}()
+	}
 
+	go listenFn()
 	return nil
 }
 

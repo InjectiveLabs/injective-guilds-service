@@ -7,16 +7,16 @@ import (
 )
 
 type DBService interface {
-	ListAllGuilds() ([]*model.Guild, error)
-	GetSingleGuild(guildID string) (*model.Guild, error)
+	ListAllGuilds(ctx context.Context) ([]*model.Guild, error)
+	GetSingleGuild(ctx context.Context, guildID string) (*model.Guild, error)
 
 	// members
-	GetGuildMembers(guildID string, isDefaultMember bool) ([]*model.GuildMember, error)
-	AddMember(guildID string, address model.Address) error
-	RemoveMember(guildID string, address model.Address) error
+	GetGuildMembers(ctx context.Context, guildID string, isDefaultMember bool) ([]*model.GuildMember, error)
+	AddMember(ctx context.Context, guildID string, address model.Address) error
+	RemoveMember(ctx context.Context, guildID string, address model.Address) error
 
 	// account portfolio
-	GetAccountPortfolio(guildID string, address model.Address) (*model.AccountPortfolio, error)
-	ListAccountPortfolios(guildID string, address model.Address) ([]*model.AccountPortfolio, error)
+	GetAccountPortfolio(ctx context.Context, guildID string, address model.Address) ([]*model.AccountPortfolio, error)
+	ListAccountPortfolios(ctx context.Context, guildID string, address model.Address) ([]*model.AccountPortfolio, error)
 	Disconnect(ctx context.Context) error
 }
