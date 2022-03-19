@@ -804,48 +804,27 @@ func marshalGuildsserviceSingleAccountPortfolioToSingleAccountPortfolioResponseB
 	}
 	res := &SingleAccountPortfolioResponseBody{
 		InjectiveAddress: v.InjectiveAddress,
-		Denom:            v.Denom,
-		TotalBalance:     v.TotalBalance,
-		AvailableBalance: v.AvailableBalance,
-		UnrealizedPnl:    v.UnrealizedPnl,
-		MarginHold:       v.MarginHold,
 		UpdatedAt:        v.UpdatedAt,
 	}
-
-	return res
-}
-
-// marshalGuildsserviceAccountPorfoliosToAccountPorfoliosResponseBody builds a
-// value of type *AccountPorfoliosResponseBody from a value of type
-// *guildsservice.AccountPorfolios.
-func marshalGuildsserviceAccountPorfoliosToAccountPorfoliosResponseBody(v *guildsservice.AccountPorfolios) *AccountPorfoliosResponseBody {
-	if v == nil {
-		return nil
-	}
-	res := &AccountPorfoliosResponseBody{
-		InjectiveAddress: v.InjectiveAddress,
-	}
-	if v.Portfolios != nil {
-		res.Portfolios = make([]*EmbededAccountPortfolioResponseBody, len(v.Portfolios))
-		for i, val := range v.Portfolios {
-			res.Portfolios[i] = marshalGuildsserviceEmbededAccountPortfolioToEmbededAccountPortfolioResponseBody(val)
+	if v.Balances != nil {
+		res.Balances = make([]*BalanceResponseBody, len(v.Balances))
+		for i, val := range v.Balances {
+			res.Balances[i] = marshalGuildsserviceBalanceToBalanceResponseBody(val)
 		}
 	}
 
 	return res
 }
 
-// marshalGuildsserviceEmbededAccountPortfolioToEmbededAccountPortfolioResponseBody
-// builds a value of type *EmbededAccountPortfolioResponseBody from a value of
-// type *guildsservice.EmbededAccountPortfolio.
-func marshalGuildsserviceEmbededAccountPortfolioToEmbededAccountPortfolioResponseBody(v *guildsservice.EmbededAccountPortfolio) *EmbededAccountPortfolioResponseBody {
-	res := &EmbededAccountPortfolioResponseBody{
+// marshalGuildsserviceBalanceToBalanceResponseBody builds a value of type
+// *BalanceResponseBody from a value of type *guildsservice.Balance.
+func marshalGuildsserviceBalanceToBalanceResponseBody(v *guildsservice.Balance) *BalanceResponseBody {
+	res := &BalanceResponseBody{
 		Denom:            v.Denom,
 		TotalBalance:     v.TotalBalance,
 		AvailableBalance: v.AvailableBalance,
 		UnrealizedPnl:    v.UnrealizedPnl,
 		MarginHold:       v.MarginHold,
-		UpdatedAt:        v.UpdatedAt,
 	}
 
 	return res

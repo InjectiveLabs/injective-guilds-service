@@ -1096,46 +1096,25 @@ func unmarshalSingleAccountPortfolioResponseBodyToGuildsserviceSingleAccountPort
 	}
 	res := &guildsservice.SingleAccountPortfolio{
 		InjectiveAddress: *v.InjectiveAddress,
-		Denom:            *v.Denom,
-		TotalBalance:     *v.TotalBalance,
-		AvailableBalance: *v.AvailableBalance,
-		UnrealizedPnl:    *v.UnrealizedPnl,
-		MarginHold:       *v.MarginHold,
 		UpdatedAt:        *v.UpdatedAt,
+	}
+	res.Balances = make([]*guildsservice.Balance, len(v.Balances))
+	for i, val := range v.Balances {
+		res.Balances[i] = unmarshalBalanceResponseBodyToGuildsserviceBalance(val)
 	}
 
 	return res
 }
 
-// unmarshalAccountPorfoliosResponseBodyToGuildsserviceAccountPorfolios builds
-// a value of type *guildsservice.AccountPorfolios from a value of type
-// *AccountPorfoliosResponseBody.
-func unmarshalAccountPorfoliosResponseBodyToGuildsserviceAccountPorfolios(v *AccountPorfoliosResponseBody) *guildsservice.AccountPorfolios {
-	if v == nil {
-		return nil
-	}
-	res := &guildsservice.AccountPorfolios{
-		InjectiveAddress: *v.InjectiveAddress,
-	}
-	res.Portfolios = make([]*guildsservice.EmbededAccountPortfolio, len(v.Portfolios))
-	for i, val := range v.Portfolios {
-		res.Portfolios[i] = unmarshalEmbededAccountPortfolioResponseBodyToGuildsserviceEmbededAccountPortfolio(val)
-	}
-
-	return res
-}
-
-// unmarshalEmbededAccountPortfolioResponseBodyToGuildsserviceEmbededAccountPortfolio
-// builds a value of type *guildsservice.EmbededAccountPortfolio from a value
-// of type *EmbededAccountPortfolioResponseBody.
-func unmarshalEmbededAccountPortfolioResponseBodyToGuildsserviceEmbededAccountPortfolio(v *EmbededAccountPortfolioResponseBody) *guildsservice.EmbededAccountPortfolio {
-	res := &guildsservice.EmbededAccountPortfolio{
+// unmarshalBalanceResponseBodyToGuildsserviceBalance builds a value of type
+// *guildsservice.Balance from a value of type *BalanceResponseBody.
+func unmarshalBalanceResponseBodyToGuildsserviceBalance(v *BalanceResponseBody) *guildsservice.Balance {
+	res := &guildsservice.Balance{
 		Denom:            *v.Denom,
 		TotalBalance:     *v.TotalBalance,
 		AvailableBalance: *v.AvailableBalance,
 		UnrealizedPnl:    *v.UnrealizedPnl,
 		MarginHold:       *v.MarginHold,
-		UpdatedAt:        *v.UpdatedAt,
 	}
 
 	return res

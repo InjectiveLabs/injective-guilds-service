@@ -74,7 +74,7 @@ func BuildEnterGuildPayload(guildsServiceEnterGuildBody string, guildsServiceEnt
 	{
 		err = json.Unmarshal([]byte(guildsServiceEnterGuildBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"message\": \"Magnam dolorem nostrum velit non ipsa.\",\n      \"public_key\": \"Nulla et ipsum autem inventore sed maxime.\",\n      \"signature\": \"Autem est sit nesciunt ea et velit.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"message\": \"Et placeat id.\",\n      \"public_key\": \"Harum eum vel quia.\",\n      \"signature\": \"At quasi necessitatibus maxime enim.\"\n   }'")
 		}
 	}
 	var guildID string
@@ -99,7 +99,7 @@ func BuildLeaveGuildPayload(guildsServiceLeaveGuildBody string, guildsServiceLea
 	{
 		err = json.Unmarshal([]byte(guildsServiceLeaveGuildBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"message\": \"Laboriosam occaecati deleniti dolor.\",\n      \"public_key\": \"Velit sit rerum inventore ut.\",\n      \"signature\": \"Cupiditate qui ab accusantium modi alias officiis.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"message\": \"Ab enim similique ipsa.\",\n      \"public_key\": \"Vel provident odio deserunt quas.\",\n      \"signature\": \"Voluptatem ut labore.\"\n   }'")
 		}
 	}
 	var guildID string

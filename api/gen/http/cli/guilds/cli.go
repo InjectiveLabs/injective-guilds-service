@@ -259,7 +259,7 @@ Get a single guild
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-single-guild --guild-id "At magnam."
+    %[1]s guilds-service get-single-guild --guild-id "Officiis omnis expedita recusandae minima."
 `, os.Args[0])
 }
 
@@ -270,7 +270,7 @@ Get members
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-members --guild-id "Iste eaque nesciunt."
+    %[1]s guilds-service get-guild-members --guild-id "Id aut."
 `, os.Args[0])
 }
 
@@ -281,7 +281,7 @@ Get master address of given guild
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-master-address --guild-id "Labore incidunt molestiae cum error voluptatem."
+    %[1]s guilds-service get-guild-master-address --guild-id "Dolore atque aperiam officiis necessitatibus dicta est."
 `, os.Args[0])
 }
 
@@ -292,7 +292,7 @@ GetGuildDefaultMember implements GetGuildDefaultMember.
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-default-member --guild-id "Molestias iusto."
+    %[1]s guilds-service get-guild-default-member --guild-id "Dolor commodi soluta dolores aut."
 `, os.Args[0])
 }
 
@@ -305,10 +305,10 @@ EnterGuild implements EnterGuild.
 
 Example:
     %[1]s guilds-service enter-guild --body '{
-      "message": "Magnam dolorem nostrum velit non ipsa.",
-      "public_key": "Nulla et ipsum autem inventore sed maxime.",
-      "signature": "Autem est sit nesciunt ea et velit."
-   }' --guild-id "Aliquam aliquam cum cumque."
+      "message": "Et placeat id.",
+      "public_key": "Harum eum vel quia.",
+      "signature": "At quasi necessitatibus maxime enim."
+   }' --guild-id "Id alias at magnam ut."
 `, os.Args[0])
 }
 
@@ -321,10 +321,10 @@ LeaveGuild implements LeaveGuild.
 
 Example:
     %[1]s guilds-service leave-guild --body '{
-      "message": "Laboriosam occaecati deleniti dolor.",
-      "public_key": "Velit sit rerum inventore ut.",
-      "signature": "Cupiditate qui ab accusantium modi alias officiis."
-   }' --guild-id "Reprehenderit quos aut omnis quia omnis."
+      "message": "Ab enim similique ipsa.",
+      "public_key": "Vel provident odio deserunt quas.",
+      "signature": "Voluptatem ut labore."
+   }' --guild-id "Molestiae cum."
 `, os.Args[0])
 }
 
@@ -335,7 +335,7 @@ GetGuildMarkets implements GetGuildMarkets.
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-markets --guild-id "Ratione molestiae et."
+    %[1]s guilds-service get-guild-markets --guild-id "Accusantium nobis quia."
 `, os.Args[0])
 }
 
@@ -347,7 +347,7 @@ GetAccountPortfolio implements GetAccountPortfolio.
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-portfolio --guild-id "Nesciunt ea nesciunt magni sed sunt ut." --injective-address "Perferendis assumenda."
+    %[1]s guilds-service get-account-portfolio --guild-id "Et ipsum." --injective-address "Inventore sed."
 `, os.Args[0])
 }
 
@@ -359,6 +359,6 @@ GetAccountPortfolios implements GetAccountPortfolios.
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-portfolios --guild-id "Perferendis impedit voluptate quas." --injective-address "Iste quidem."
+    %[1]s guilds-service get-account-portfolios --guild-id "Ea nesciunt magni sed sunt." --injective-address "Sit perferendis assumenda."
 `, os.Args[0])
 }

@@ -88,7 +88,7 @@ type GetAccountPortfolioResponseBody struct {
 // GetAccountPortfoliosResponseBody is the type of the "GuildsService" service
 // "GetAccountPortfolios" endpoint HTTP response body.
 type GetAccountPortfoliosResponseBody struct {
-	Data *AccountPorfoliosResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
+	Portfolios []*SingleAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
 }
 
 // GetAllGuildsNotFoundResponseBody is the type of the "GuildsService" service
@@ -494,30 +494,18 @@ type MarketResponseBody struct {
 // SingleAccountPortfolioResponseBody is used to define fields on response body
 // types.
 type SingleAccountPortfolioResponseBody struct {
-	InjectiveAddress *string `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
+	InjectiveAddress *string                `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
+	Balances         []*BalanceResponseBody `form:"balances,omitempty" json:"balances,omitempty" xml:"balances,omitempty"`
+	UpdatedAt        *string                `form:"updated_at,omitempty" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
+}
+
+// BalanceResponseBody is used to define fields on response body types.
+type BalanceResponseBody struct {
 	Denom            *string `form:"denom,omitempty" json:"denom,omitempty" xml:"denom,omitempty"`
 	TotalBalance     *string `form:"total_balance,omitempty" json:"total_balance,omitempty" xml:"total_balance,omitempty"`
 	AvailableBalance *string `form:"available_balance,omitempty" json:"available_balance,omitempty" xml:"available_balance,omitempty"`
 	UnrealizedPnl    *string `form:"unrealized_pnl,omitempty" json:"unrealized_pnl,omitempty" xml:"unrealized_pnl,omitempty"`
 	MarginHold       *string `form:"margin_hold,omitempty" json:"margin_hold,omitempty" xml:"margin_hold,omitempty"`
-	UpdatedAt        *string `form:"updated_at,omitempty" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
-}
-
-// AccountPorfoliosResponseBody is used to define fields on response body types.
-type AccountPorfoliosResponseBody struct {
-	InjectiveAddress *string                                `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
-	Portfolios       []*EmbededAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
-}
-
-// EmbededAccountPortfolioResponseBody is used to define fields on response
-// body types.
-type EmbededAccountPortfolioResponseBody struct {
-	Denom            *string `form:"denom,omitempty" json:"denom,omitempty" xml:"denom,omitempty"`
-	TotalBalance     *string `form:"total_balance,omitempty" json:"total_balance,omitempty" xml:"total_balance,omitempty"`
-	AvailableBalance *string `form:"available_balance,omitempty" json:"available_balance,omitempty" xml:"available_balance,omitempty"`
-	UnrealizedPnl    *string `form:"unrealized_pnl,omitempty" json:"unrealized_pnl,omitempty" xml:"unrealized_pnl,omitempty"`
-	MarginHold       *string `form:"margin_hold,omitempty" json:"margin_hold,omitempty" xml:"margin_hold,omitempty"`
-	UpdatedAt        *string `form:"updated_at,omitempty" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
 }
 
 // NewEnterGuildRequestBody builds the HTTP request body from the payload of
@@ -921,8 +909,11 @@ func NewGetAccountPortfolioInternal(body *GetAccountPortfolioInternalResponseBod
 // "GetAccountPortfolios" endpoint result from a HTTP "OK" response.
 func NewGetAccountPortfoliosResultOK(body *GetAccountPortfoliosResponseBody) *guildsservice.GetAccountPortfoliosResult {
 	v := &guildsservice.GetAccountPortfoliosResult{}
-	if body.Data != nil {
-		v.Data = unmarshalAccountPorfoliosResponseBodyToGuildsserviceAccountPorfolios(body.Data)
+	if body.Portfolios != nil {
+		v.Portfolios = make([]*guildsservice.SingleAccountPortfolio, len(body.Portfolios))
+		for i, val := range body.Portfolios {
+			v.Portfolios[i] = unmarshalSingleAccountPortfolioResponseBodyToGuildsserviceSingleAccountPortfolio(val)
+		}
 	}
 
 	return v
@@ -1033,9 +1024,11 @@ func ValidateGetAccountPortfolioResponseBody(body *GetAccountPortfolioResponseBo
 // ValidateGetAccountPortfoliosResponseBody runs the validations defined on
 // GetAccountPortfoliosResponseBody
 func ValidateGetAccountPortfoliosResponseBody(body *GetAccountPortfoliosResponseBody) (err error) {
-	if body.Data != nil {
-		if err2 := ValidateAccountPorfoliosResponseBody(body.Data); err2 != nil {
-			err = goa.MergeErrors(err, err2)
+	for _, e := range body.Portfolios {
+		if e != nil {
+			if err2 := ValidateSingleAccountPortfolioResponseBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
 		}
 	}
 	return
@@ -1585,52 +1578,28 @@ func ValidateSingleAccountPortfolioResponseBody(body *SingleAccountPortfolioResp
 	if body.InjectiveAddress == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("injective_address", "body"))
 	}
-	if body.Denom == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("denom", "body"))
-	}
-	if body.TotalBalance == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("total_balance", "body"))
-	}
-	if body.AvailableBalance == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("available_balance", "body"))
-	}
-	if body.UnrealizedPnl == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("unrealized_pnl", "body"))
-	}
-	if body.MarginHold == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("margin_hold", "body"))
+	if body.Balances == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("balances", "body"))
 	}
 	if body.UpdatedAt == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("updated_at", "body"))
 	}
-	if body.UpdatedAt != nil {
-		err = goa.MergeErrors(err, goa.ValidateFormat("body.updated_at", *body.UpdatedAt, goa.FormatDateTime))
-	}
-	return
-}
-
-// ValidateAccountPorfoliosResponseBody runs the validations defined on
-// AccountPorfoliosResponseBody
-func ValidateAccountPorfoliosResponseBody(body *AccountPorfoliosResponseBody) (err error) {
-	if body.InjectiveAddress == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("injective_address", "body"))
-	}
-	if body.Portfolios == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("portfolios", "body"))
-	}
-	for _, e := range body.Portfolios {
+	for _, e := range body.Balances {
 		if e != nil {
-			if err2 := ValidateEmbededAccountPortfolioResponseBody(e); err2 != nil {
+			if err2 := ValidateBalanceResponseBody(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
 	}
+	if body.UpdatedAt != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.updated_at", *body.UpdatedAt, goa.FormatDateTime))
+	}
 	return
 }
 
-// ValidateEmbededAccountPortfolioResponseBody runs the validations defined on
-// EmbededAccountPortfolioResponseBody
-func ValidateEmbededAccountPortfolioResponseBody(body *EmbededAccountPortfolioResponseBody) (err error) {
+// ValidateBalanceResponseBody runs the validations defined on
+// BalanceResponseBody
+func ValidateBalanceResponseBody(body *BalanceResponseBody) (err error) {
 	if body.Denom == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("denom", "body"))
 	}
@@ -1645,12 +1614,6 @@ func ValidateEmbededAccountPortfolioResponseBody(body *EmbededAccountPortfolioRe
 	}
 	if body.MarginHold == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("margin_hold", "body"))
-	}
-	if body.UpdatedAt == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("updated_at", "body"))
-	}
-	if body.UpdatedAt != nil {
-		err = goa.MergeErrors(err, goa.ValidateFormat("body.updated_at", *body.UpdatedAt, goa.FormatDateTime))
 	}
 	return
 }

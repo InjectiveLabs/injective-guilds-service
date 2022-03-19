@@ -47,19 +47,12 @@ const ServiceName = "GuildsService"
 // MethodKey key.
 var MethodNames = [10]string{"GetAllGuilds", "GetSingleGuild", "GetGuildMembers", "GetGuildMasterAddress", "GetGuildDefaultMember", "EnterGuild", "LeaveGuild", "GetGuildMarkets", "GetAccountPortfolio", "GetAccountPortfolios"}
 
-// Account portfio snapshots
-type AccountPorfolios struct {
-	InjectiveAddress string
-	Portfolios       []*EmbededAccountPortfolio
-}
-
-type EmbededAccountPortfolio struct {
+type Balance struct {
 	Denom            string
 	TotalBalance     string
 	AvailableBalance string
 	UnrealizedPnl    string
 	MarginHold       string
-	UpdatedAt        string
 }
 
 // EnterGuildPayload is the payload type of the GuildsService service
@@ -100,7 +93,7 @@ type GetAccountPortfoliosPayload struct {
 // GetAccountPortfoliosResult is the result type of the GuildsService service
 // GetAccountPortfolios method.
 type GetAccountPortfoliosResult struct {
-	Data *AccountPorfolios
+	Portfolios []*SingleAccountPortfolio
 }
 
 // GetAllGuildsResult is the result type of the GuildsService service
@@ -213,14 +206,10 @@ type Market struct {
 	IsPerpetual bool
 }
 
-// Account portfio snapshot
+// Single account portfio snapshot
 type SingleAccountPortfolio struct {
 	InjectiveAddress string
-	Denom            string
-	TotalBalance     string
-	AvailableBalance string
-	UnrealizedPnl    string
-	MarginHold       string
+	Balances         []*Balance
 	UpdatedAt        string
 }
 

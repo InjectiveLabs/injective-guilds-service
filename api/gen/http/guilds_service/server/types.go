@@ -88,7 +88,7 @@ type GetAccountPortfolioResponseBody struct {
 // GetAccountPortfoliosResponseBody is the type of the "GuildsService" service
 // "GetAccountPortfolios" endpoint HTTP response body.
 type GetAccountPortfoliosResponseBody struct {
-	Data *AccountPorfoliosResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
+	Portfolios []*SingleAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
 }
 
 // GetAllGuildsNotFoundResponseBody is the type of the "GuildsService" service
@@ -494,30 +494,18 @@ type MarketResponseBody struct {
 // SingleAccountPortfolioResponseBody is used to define fields on response body
 // types.
 type SingleAccountPortfolioResponseBody struct {
-	InjectiveAddress string `form:"injective_address" json:"injective_address" xml:"injective_address"`
+	InjectiveAddress string                 `form:"injective_address" json:"injective_address" xml:"injective_address"`
+	Balances         []*BalanceResponseBody `form:"balances" json:"balances" xml:"balances"`
+	UpdatedAt        string                 `form:"updated_at" json:"updated_at" xml:"updated_at"`
+}
+
+// BalanceResponseBody is used to define fields on response body types.
+type BalanceResponseBody struct {
 	Denom            string `form:"denom" json:"denom" xml:"denom"`
 	TotalBalance     string `form:"total_balance" json:"total_balance" xml:"total_balance"`
 	AvailableBalance string `form:"available_balance" json:"available_balance" xml:"available_balance"`
 	UnrealizedPnl    string `form:"unrealized_pnl" json:"unrealized_pnl" xml:"unrealized_pnl"`
 	MarginHold       string `form:"margin_hold" json:"margin_hold" xml:"margin_hold"`
-	UpdatedAt        string `form:"updated_at" json:"updated_at" xml:"updated_at"`
-}
-
-// AccountPorfoliosResponseBody is used to define fields on response body types.
-type AccountPorfoliosResponseBody struct {
-	InjectiveAddress string                                 `form:"injective_address" json:"injective_address" xml:"injective_address"`
-	Portfolios       []*EmbededAccountPortfolioResponseBody `form:"portfolios" json:"portfolios" xml:"portfolios"`
-}
-
-// EmbededAccountPortfolioResponseBody is used to define fields on response
-// body types.
-type EmbededAccountPortfolioResponseBody struct {
-	Denom            string `form:"denom" json:"denom" xml:"denom"`
-	TotalBalance     string `form:"total_balance" json:"total_balance" xml:"total_balance"`
-	AvailableBalance string `form:"available_balance" json:"available_balance" xml:"available_balance"`
-	UnrealizedPnl    string `form:"unrealized_pnl" json:"unrealized_pnl" xml:"unrealized_pnl"`
-	MarginHold       string `form:"margin_hold" json:"margin_hold" xml:"margin_hold"`
-	UpdatedAt        string `form:"updated_at" json:"updated_at" xml:"updated_at"`
 }
 
 // NewGetAllGuildsResponseBody builds the HTTP response body from the result of
@@ -622,8 +610,11 @@ func NewGetAccountPortfolioResponseBody(res *guildsservice.GetAccountPortfolioRe
 // result of the "GetAccountPortfolios" endpoint of the "GuildsService" service.
 func NewGetAccountPortfoliosResponseBody(res *guildsservice.GetAccountPortfoliosResult) *GetAccountPortfoliosResponseBody {
 	body := &GetAccountPortfoliosResponseBody{}
-	if res.Data != nil {
-		body.Data = marshalGuildsserviceAccountPorfoliosToAccountPorfoliosResponseBody(res.Data)
+	if res.Portfolios != nil {
+		body.Portfolios = make([]*SingleAccountPortfolioResponseBody, len(res.Portfolios))
+		for i, val := range res.Portfolios {
+			body.Portfolios[i] = marshalGuildsserviceSingleAccountPortfolioToSingleAccountPortfolioResponseBody(val)
+		}
 	}
 	return body
 }

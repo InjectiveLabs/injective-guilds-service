@@ -3,9 +3,12 @@ package guildsapi
 import (
 	"context"
 	"errors"
+	"time"
 
 	svc "github.com/InjectiveLabs/injective-guilds-service/api/gen/guilds_service"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
+	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
+	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 )
 
 type GuildsAPI = svc.Service
@@ -128,11 +131,98 @@ func (s *service) GetGuildMarkets(ctx context.Context, payload *svc.GetGuildMark
 }
 
 // GetAccountPortfolio implements GetAccountPortfolio.
-func (s *service) GetAccountPortfolio(context.Context, *svc.GetAccountPortfolioPayload) (res *svc.GetAccountPortfolioResult, err error) {
-	return &svc.GetAccountPortfolioResult{}, nil
+func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccountPortfolioPayload) (res *svc.GetAccountPortfolioResult, err error) {
+	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
+	if err != nil {
+		return nil, svc.MakeInvalidArg(err)
+	}
+
+	portfolio, err := s.dbSvc.GetAccountPortfolio(ctx, payload.GuildID, model.Address{
+		AccAddress: address,
+	})
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	var (
+		balances  []*svc.Balance
+		updatedAt time.Time
+	)
+
+	for _, p := range portfolio {
+		balances = append(balances, &svc.Balance{
+			Denom:            p.Denom,
+			TotalBalance:     p.TotalBalance.String(),
+			AvailableBalance: p.AvailableBalance.String(),
+			UnrealizedPnl:    p.UnrealizedPNL.String(),
+			MarginHold:       p.MarginHold.String(),
+		})
+		updatedAt = p.UpdatedAt
+	}
+
+	return &svc.GetAccountPortfolioResult{
+		Data: &svc.SingleAccountPortfolio{
+			InjectiveAddress: address.String(),
+			Balances:         balances,
+			UpdatedAt:        updatedAt.String(),
+		},
+	}, nil
 }
 
 // GetAccountPortfolios implements GetAccountPortfolios.
-func (s *service) GetAccountPortfolios(context.Context, *svc.GetAccountPortfoliosPayload) (res *svc.GetAccountPortfoliosResult, err error) {
-	return &svc.GetAccountPortfoliosResult{}, nil
+func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAccountPortfoliosPayload) (res *svc.GetAccountPortfoliosResult, err error) {
+	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
+	if err != nil {
+		return nil, svc.MakeInvalidArg(err)
+	}
+
+	portfolios, err := s.dbSvc.ListAccountPortfolios(ctx, payload.GuildID, model.Address{
+		AccAddress: address,
+	})
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	var (
+		updatedAt time.Time
+		result    []*svc.SingleAccountPortfolio
+	)
+
+	var balances []*svc.Balance
+	// expected result to be sort by timestamp
+	for _, p := range portfolios {
+		if updatedAt != p.UpdatedAt {
+			updatedAt = p.UpdatedAt
+			// flush current snapshot
+			// TODO: Refactor DB Schema: embed balances
+			if len(balances) > 0 {
+				result = append(result, &svc.SingleAccountPortfolio{
+					InjectiveAddress: address.String(),
+					Balances:         balances,
+					UpdatedAt:        updatedAt.String(),
+				})
+			}
+			balances = make([]*svc.Balance, 0)
+		}
+
+		balances = append(balances, &svc.Balance{
+			Denom:            p.Denom,
+			TotalBalance:     p.TotalBalance.String(),
+			AvailableBalance: p.AvailableBalance.String(),
+			UnrealizedPnl:    p.UnrealizedPNL.String(),
+			MarginHold:       p.MarginHold.String(),
+		})
+	}
+
+	if len(balances) > 0 {
+		result = append(result, &svc.SingleAccountPortfolio{
+			InjectiveAddress: address.String(),
+			Balances:         balances,
+			UpdatedAt:        updatedAt.String(),
+		})
+	}
+
+	return &svc.GetAccountPortfoliosResult{
+		Portfolios: result,
+	}, nil
 }
