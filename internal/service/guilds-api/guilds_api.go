@@ -2,6 +2,7 @@ package guildsapi
 
 import (
 	"context"
+	"errors"
 
 	svc "github.com/InjectiveLabs/injective-guilds-service/api/gen/guilds_service"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
@@ -19,6 +20,8 @@ func NewService(dbSvc db.DBService) (GuildsAPI, error) {
 		dbSvc: dbSvc,
 	}, nil
 }
+
+// TODO: Refine error handling
 
 func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult, err error) {
 	guilds, err := s.dbSvc.ListAllGuilds(ctx)
@@ -56,7 +59,7 @@ func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMemb
 	for _, m := range members {
 		result = append(result, &svc.GuildMember{
 			InjectiveAddress:     m.InjectiveAddress.String(),
-			IsDefaultGuildMember: &m.IsDefaultGuildMember,
+			IsDefaultGuildMember: m.IsDefaultGuildMember,
 		})
 	}
 
@@ -66,28 +69,62 @@ func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMemb
 }
 
 // Get master address of given guild
-func (s *service) GetGuildMasterAddress(context.Context, *svc.GetGuildMasterAddressPayload) (res *svc.GetGuildMasterAddressResult, err error) {
-	return &svc.GetGuildMasterAddressResult{}, nil
+func (s *service) GetGuildMasterAddress(ctx context.Context, payload *svc.GetGuildMasterAddressPayload) (res *svc.GetGuildMasterAddressResult, err error) {
+	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+	address := guild.MasterAddress.String()
+
+	return &svc.GetGuildMasterAddressResult{
+		MasterAddress: &address,
+	}, nil
 }
 
-// GetGuildDefaultMember implements GetGuildDefaultMember.
-func (s *service) GetGuildDefaultMember(context.Context, *svc.GetGuildDefaultMemberPayload) (res *svc.GetGuildDefaultMemberResult, err error) {
-	return &svc.GetGuildDefaultMemberResult{}, nil
+func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGuildDefaultMemberPayload) (res *svc.GetGuildDefaultMemberResult, err error) {
+	defaultMember, err := s.dbSvc.GetGuildMembers(ctx, payload.GuildID, true)
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	if len(defaultMember) == 0 {
+		return nil, svc.MakeInternal(errors.New("default member notfound"))
+	}
+
+	return &svc.GetGuildDefaultMemberResult{
+		DefaultMember: &svc.GuildMember{
+			InjectiveAddress:     defaultMember[0].InjectiveAddress.String(),
+			IsDefaultGuildMember: defaultMember[0].IsDefaultGuildMember,
+		},
+	}, nil
 }
 
-// EnterGuild implements EnterGuild.
 func (s *service) EnterGuild(context.Context, *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
 	return &svc.EnterGuildResult{}, nil
 }
 
-// LeaveGuild implements LeaveGuild.
 func (s *service) LeaveGuild(context.Context, *svc.LeaveGuildPayload) (res *svc.LeaveGuildResult, err error) {
 	return &svc.LeaveGuildResult{}, nil
 }
 
 // GetGuildMarkets implements GetGuildMarkets.
-func (s *service) GetGuildMarkets(context.Context, *svc.GetGuildMarketsPayload) (res *svc.GetGuildMarketsResult, err error) {
-	return &svc.GetGuildMarketsResult{}, nil
+func (s *service) GetGuildMarkets(ctx context.Context, payload *svc.GetGuildMarketsPayload) (res *svc.GetGuildMarketsResult, err error) {
+	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	var markets []*svc.Market
+	for _, m := range guild.Markets {
+		markets = append(markets, &svc.Market{
+			MarketID:    m.MarketID.Hex(),
+			IsPerpetual: m.IsPerpetual,
+		})
+	}
+
+	return &svc.GetGuildMarketsResult{
+		Markets: markets,
+	}, nil
 }
 
 // GetAccountPortfolio implements GetAccountPortfolio.
