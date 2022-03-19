@@ -1508,11 +1508,17 @@ func ValidateGuildResponseBody(body *GuildResponseBody) (err error) {
 	if body.Description == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("description", "body"))
 	}
+	if body.MasterAddress == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("master_address", "body"))
+	}
 	if body.SpotBaseRequirement == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("spot_base_requirement", "body"))
 	}
 	if body.SpotQuoteRequirement == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("spot_quote_requirement", "body"))
+	}
+	if body.DerivativeQuoteRequirement == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("derivative_quote_requirement", "body"))
 	}
 	if body.StakingRequirement == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("staking_requirement", "body"))

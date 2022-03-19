@@ -467,16 +467,16 @@ type GetAccountPortfoliosInternalResponseBody struct {
 
 // GuildResponseBody is used to define fields on response body types.
 type GuildResponseBody struct {
-	ID                         string  `form:"id" json:"id" xml:"id"`
-	Name                       string  `form:"name" json:"name" xml:"name"`
-	Description                string  `form:"description" json:"description" xml:"description"`
-	MasterAddress              *string `form:"master_address,omitempty" json:"master_address,omitempty" xml:"master_address,omitempty"`
-	SpotBaseRequirement        string  `form:"spot_base_requirement" json:"spot_base_requirement" xml:"spot_base_requirement"`
-	SpotQuoteRequirement       string  `form:"spot_quote_requirement" json:"spot_quote_requirement" xml:"spot_quote_requirement"`
-	DerivativeQuoteRequirement *string `form:"derivative_quote_requirement,omitempty" json:"derivative_quote_requirement,omitempty" xml:"derivative_quote_requirement,omitempty"`
-	StakingRequirement         string  `form:"staking_requirement" json:"staking_requirement" xml:"staking_requirement"`
-	Capacity                   int     `form:"capacity" json:"capacity" xml:"capacity"`
-	MemberCount                int     `form:"member_count" json:"member_count" xml:"member_count"`
+	ID                         string `form:"id" json:"id" xml:"id"`
+	Name                       string `form:"name" json:"name" xml:"name"`
+	Description                string `form:"description" json:"description" xml:"description"`
+	MasterAddress              string `form:"master_address" json:"master_address" xml:"master_address"`
+	SpotBaseRequirement        string `form:"spot_base_requirement" json:"spot_base_requirement" xml:"spot_base_requirement"`
+	SpotQuoteRequirement       string `form:"spot_quote_requirement" json:"spot_quote_requirement" xml:"spot_quote_requirement"`
+	DerivativeQuoteRequirement string `form:"derivative_quote_requirement" json:"derivative_quote_requirement" xml:"derivative_quote_requirement"`
+	StakingRequirement         string `form:"staking_requirement" json:"staking_requirement" xml:"staking_requirement"`
+	Capacity                   int    `form:"capacity" json:"capacity" xml:"capacity"`
+	MemberCount                int    `form:"member_count" json:"member_count" xml:"member_count"`
 }
 
 // GuildMemberResponseBody is used to define fields on response body types.

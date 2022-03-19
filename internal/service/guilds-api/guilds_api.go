@@ -34,13 +34,35 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 	return &svc.GetAllGuildsResult{Guilds: result}, nil
 }
 
-func (s *service) GetSingleGuild(context.Context, *svc.GetSingleGuildPayload) (res *svc.GetSingleGuildResult, err error) {
-	return &svc.GetSingleGuildResult{}, nil
+func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuildPayload) (res *svc.GetSingleGuildResult, err error) {
+	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	return &svc.GetSingleGuildResult{
+		Guild: modelGuildToResponse(guild),
+	}, nil
 }
 
 // Get members
-func (s *service) GetGuildMembers(context.Context, *svc.GetGuildMembersPayload) (res *svc.GetGuildMembersResult, err error) {
-	return &svc.GetGuildMembersResult{}, nil
+func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMembersPayload) (res *svc.GetGuildMembersResult, err error) {
+	members, err := s.dbSvc.GetGuildMembers(ctx, payload.GuildID, false)
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	var result []*svc.GuildMember
+	for _, m := range members {
+		result = append(result, &svc.GuildMember{
+			InjectiveAddress:     m.InjectiveAddress.String(),
+			IsDefaultGuildMember: &m.IsDefaultGuildMember,
+		})
+	}
+
+	return &svc.GetGuildMembersResult{
+		Members: result,
+	}, nil
 }
 
 // Get master address of given guild

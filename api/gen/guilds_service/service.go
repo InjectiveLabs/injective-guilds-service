@@ -177,10 +177,10 @@ type Guild struct {
 	ID                         string
 	Name                       string
 	Description                string
-	MasterAddress              *string
+	MasterAddress              string
 	SpotBaseRequirement        string
 	SpotQuoteRequirement       string
-	DerivativeQuoteRequirement *string
+	DerivativeQuoteRequirement string
 	StakingRequirement         string
 	Capacity                   int
 	MemberCount                int

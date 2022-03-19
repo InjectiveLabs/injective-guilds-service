@@ -97,4 +97,7 @@ var GuildMember = Type("GuildMember", func() {
 	Description("Guild member metadata")
 	Field(1, "injective_address", String)
 	Field(2, "is_default_guild_member", Boolean)
+
+	Required("injective_address")
+	Required("is_default_guild_member")
 })

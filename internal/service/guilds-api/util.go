@@ -13,7 +13,7 @@ func modelGuildToResponse(m *model.Guild) *svc.Guild {
 		MasterAddress:              m.MasterAddress.String(),
 		SpotBaseRequirement:        m.SpotBaseRequirement.String(),
 		SpotQuoteRequirement:       m.SpotQuoteRequirement.String(),
-		DerivativeQuoteRequirement: m.DerivatDerivativeQuoteRequirement.String(),
+		DerivativeQuoteRequirement: m.DerivativeQuoteRequirement.String(),
 		StakingRequirement:         m.StakingRequirement.String(),
 		Capacity:                   m.Capacity,
 		MemberCount:                m.MemberCount,

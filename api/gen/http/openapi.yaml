@@ -454,8 +454,10 @@ definitions:
     - id
     - name
     - description
+    - master_address
     - spot_base_requirement
     - spot_quote_requirement
+    - derivative_quote_requirement
     - staking_requirement
     - capacity
     - member_count
