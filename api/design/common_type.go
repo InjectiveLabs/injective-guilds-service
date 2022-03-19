@@ -28,6 +28,7 @@ var Guild = Type("Guild", func() {
 
 	Field(8, "staking_requirement", String)
 	Field(9, "capacity", Int)
+	Field(10, "member_count", Int)
 
 	Required("id")
 	Required("name")
@@ -36,6 +37,7 @@ var Guild = Type("Guild", func() {
 	Required("spot_quote_requirement")
 	Required("staking_requirement")
 	Required("capacity")
+	Required("member_count")
 })
 
 var EmbededAccountPortfolio = Type("EmbededAccountPortfolio", func() {
