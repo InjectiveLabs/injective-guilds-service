@@ -4,20 +4,34 @@ import (
 	"context"
 
 	svc "github.com/InjectiveLabs/injective-guilds-service/api/gen/guilds_service"
+	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
 )
 
 type GuildsAPI = svc.Service
 
 type service struct {
 	svc.Service
+	dbSvc db.DBService
 }
 
-func NewService() (GuildsAPI, error) {
-	return &service{}, nil
+func NewService(dbSvc db.DBService) (GuildsAPI, error) {
+	return &service{
+		dbSvc: dbSvc,
+	}, nil
 }
 
-func (s *service) GetAllGuilds(context.Context) (res *svc.GetAllGuildsResult, err error) {
-	return &svc.GetAllGuildsResult{}, nil
+func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult, err error) {
+	guilds, err := s.dbSvc.ListAllGuilds(ctx)
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	var result []*svc.Guild
+	for _, g := range guilds {
+		result = append(result, modelGuildToResponse(g))
+	}
+
+	return &svc.GetAllGuildsResult{Guilds: result}, nil
 }
 
 func (s *service) GetSingleGuild(context.Context, *svc.GetSingleGuildPayload) (res *svc.GetSingleGuildResult, err error) {

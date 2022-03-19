@@ -33,8 +33,11 @@ var Guild = Type("Guild", func() {
 	Required("id")
 	Required("name")
 	Required("description")
+	Required("master_address")
 	Required("spot_base_requirement")
 	Required("spot_quote_requirement")
+	Required("derivative_quote_requirement")
+
 	Required("staking_requirement")
 	Required("capacity")
 	Required("member_count")

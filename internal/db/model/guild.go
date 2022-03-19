@@ -16,6 +16,7 @@ type Guild struct {
 	ID primitive.ObjectID `bson:"_id,omitempty" json:"guild_id"`
 
 	Name          string  `bson:"name" json:"name"`
+	Description   string  `bson:"description" json:"description"`
 	MasterAddress Address `bson:"master_address" json:"master_address"`
 
 	SpotBaseRequirement        primitive.Decimal128 `bson:"spot_base_requirement" json:"spot_base_requirement"`
