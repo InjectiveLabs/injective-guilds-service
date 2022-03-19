@@ -137,6 +137,11 @@ var _ = Service("GuildsService", func() {
 			Field(1, "public_key", String)
 			Field(2, "message", String)
 			Field(3, "signature", String)
+
+			Required("guildID")
+			Required("public_key")
+			Required("message")
+			Required("signature")
 		})
 
 		Result(func() {
@@ -158,6 +163,11 @@ var _ = Service("GuildsService", func() {
 			Field(1, "public_key", String)
 			Field(2, "message", String)
 			Field(3, "signature", String)
+
+			Required("guildID")
+			Required("public_key")
+			Required("message")
+			Required("signature")
 		})
 
 		Result(func() {
