@@ -131,6 +131,10 @@ type GuildProcessConfig struct {
 
 	PortfolioUpdateInterval time.Duration
 	DisqualifyInterval      time.Duration
+
+	ExchangeGRPCURL string
+
+	StatsdConfig StatsdConfig
 }
 
 func (c GuildProcessConfig) Validate() error {
@@ -153,5 +157,8 @@ func LoadGuildsProcessConfig() GuildProcessConfig {
 		// TODO: Discuss + Update interval
 		PortfolioUpdateInterval: LoadEnvDuration(fmt.Sprintf("%s_PORTFOLIO_UPDATE_INTERVAL", apiEnvPrefix), time.Hour),
 		DisqualifyInterval:      LoadEnvDuration(fmt.Sprintf("%s_DISQUALIFY_INTERVAL", processEnvPrefix), 6*time.Hour),
+		StatsdConfig:            loadStatsdConfig(processEnvPrefix),
+
+		ExchangeGRPCURL: LoadEnvString(fmt.Sprintf("%s_EXCHANGE_GRPC_URL", processEnvPrefix), "http://localhost:9910"),
 	}
 }
