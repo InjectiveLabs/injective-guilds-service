@@ -2,9 +2,13 @@ package exchange
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net"
+	"net/http"
 	"strings"
+	"time"
 
 	accountPB "github.com/InjectiveLabs/sdk-go/exchange/accounts_rpc/pb"
 	derivativeExchangePB "github.com/InjectiveLabs/sdk-go/exchange/derivative_exchange_rpc/pb"
@@ -25,6 +29,8 @@ type exchangeProvider struct {
 	DataProvider
 
 	conn                     *grpc.ClientConn
+	lcdAddr                  string
+	httpClient               *http.Client
 	accountClient            accountPB.InjectiveAccountsRPCClient
 	spotExchangeClient       spotExchangePB.InjectiveSpotExchangeRPCClient
 	derivativeExchangeClient derivativeExchangePB.InjectiveDerivativeExchangeRPCClient
@@ -52,7 +58,7 @@ func OptionTLSCert(tlsCert credentials.TransportCredentials) ClientOption {
 // derives from current `master` of sdk-go
 // vvvvv
 
-func NewExchangeProvider(protoAddr string, options ...ClientOption) (DataProvider, error) {
+func NewExchangeProvider(protoAddr string, lcdAddr string, options ...ClientOption) (DataProvider, error) {
 	// process options
 	opts := &ClientOptions{}
 	for _, opt := range options {
@@ -75,8 +81,14 @@ func NewExchangeProvider(protoAddr string, options ...ClientOption) (DataProvide
 		return nil, err
 	}
 
+	httpClient := &http.Client{
+		Timeout: 30 * time.Second,
+	}
+
 	cc := &exchangeProvider{
 		conn:                     conn,
+		lcdAddr:                  lcdAddr,
+		httpClient:               httpClient,
 		accountClient:            accountPB.NewInjectiveAccountsRPCClient(conn),
 		spotExchangeClient:       spotExchangePB.NewInjectiveSpotExchangeRPCClient(conn),
 		derivativeExchangeClient: derivativeExchangePB.NewInjectiveDerivativeExchangeRPCClient(conn),
@@ -97,13 +109,13 @@ func (p *exchangeProvider) GetDefaultSubaccountBalances(ctx context.Context, sub
 		return nil, err
 	}
 
-	for _, b := range res.Balances {
-		totalBalance, err := primitive.ParseDecimal128(b.Deposit.TotalBalance)
+	for _, b := range res.GetBalances() {
+		totalBalance, err := primitive.ParseDecimal128(b.GetDeposit().GetTotalBalance())
 		if err != nil {
 			return nil, fmt.Errorf("parse total balance err: %w", err)
 		}
 
-		availBalance, err := primitive.ParseDecimal128(b.Deposit.AvailableBalance)
+		availBalance, err := primitive.ParseDecimal128(b.GetDeposit().GetAvailableBalance())
 		if err != nil {
 			return nil, fmt.Errorf("parse avail balance err: %w", err)
 		}
@@ -116,6 +128,120 @@ func (p *exchangeProvider) GetDefaultSubaccountBalances(ctx context.Context, sub
 	}
 
 	return result, nil
+}
+
+func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketID string, subaccount string) (result []*SpotOrder, err error) {
+	req := &spotExchangePB.OrdersRequest{
+		SubaccountId: subaccount,
+		MarketId:     marketID,
+	}
+
+	var header metadata.MD
+	res, err := p.spotExchangeClient.Orders(ctx, req, grpc.Header(&header))
+	if err != nil {
+		return nil, err
+	}
+
+	for _, o := range res.GetOrders() {
+		result = append(result, &SpotOrder{
+			OrderHash:    o.GetOrderHash(),
+			FeeRecipient: o.GetFeeRecipient(),
+		})
+	}
+
+	return result, nil
+}
+
+func (p *exchangeProvider) GetDerivativeOrders(ctx context.Context, marketID string, subaccount string) (result []*DerivativeOrder, err error) {
+	req := &derivativeExchangePB.OrdersRequest{
+		SubaccountId: subaccount,
+		MarketId:     marketID,
+	}
+
+	var header metadata.MD
+	res, err := p.derivativeExchangeClient.Orders(ctx, req, grpc.Header(&header))
+	if err != nil {
+		return nil, err
+	}
+
+	for _, o := range res.GetOrders() {
+		result = append(result, &DerivativeOrder{
+			OrderHash:    o.GetOrderHash(),
+			FeeRecipient: o.GetFeeRecipient(),
+		})
+	}
+
+	return result, nil
+
+}
+
+func (p *exchangeProvider) GetPositions(ctx context.Context, marketID string, subaccount string) (result []*DerivativePosition, err error) {
+	req := &derivativeExchangePB.PositionsRequest{
+		SubaccountId: subaccount,
+		MarketId:     marketID,
+	}
+
+	var header metadata.MD
+	res, err := p.derivativeExchangeClient.Positions(ctx, req, grpc.Header(&header))
+	if err != nil {
+		return nil, err
+	}
+
+	for _, pos := range res.GetPositions() {
+		quantity, err := primitive.ParseDecimal128(pos.GetQuantity())
+		if err != nil {
+			return nil, fmt.Errorf("parse quantity err: %w", err)
+		}
+
+		margin, err := primitive.ParseDecimal128(pos.GetMargin())
+		if err != nil {
+			return nil, fmt.Errorf("parse quantity err: %w", err)
+		}
+
+		entryPrice, err := primitive.ParseDecimal128(pos.GetEntryPrice())
+		if err != nil {
+			return nil, fmt.Errorf("parse quantity err: %w", err)
+		}
+
+		result = append(result, &DerivativePosition{
+			MarketID:   pos.GetMarketId(),
+			Direction:  pos.GetDirection(),
+			Quantity:   quantity,
+			Margin:     margin,
+			EntryPrice: entryPrice,
+		})
+	}
+
+	return result, nil
+}
+
+func (p *exchangeProvider) GetGrants(ctx context.Context, granter, grantee string) (*Grants, error) {
+	url := fmt.Sprintf(
+		"%s/cosmos/authz/v1beta1/grants?granter=%s&grantee=%s&limit=100",
+		p.lcdAddr, granter, grantee,
+	)
+	resp, err := p.httpClient.Get(url)
+
+	if err != nil {
+		return nil, fmt.Errorf("request err: %w", err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("request err: bad status: %d", resp.StatusCode)
+	}
+
+	var res Grants
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read request body err: %w", err)
+	}
+
+	fmt.Println("bytes:", string(bytes))
+
+	if err := json.Unmarshal(bytes, &res); err != nil {
+		return nil, fmt.Errorf("marshal request body err: %w", err)
+	}
+
+	return &res, nil
 }
 
 func (p *exchangeProvider) Close() error {
