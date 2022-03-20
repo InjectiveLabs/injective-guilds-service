@@ -12,6 +12,7 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
+	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	guildsapi "github.com/InjectiveLabs/injective-guilds-service/internal/service/guilds-api"
 	cli "github.com/jawher/mow.cli"
 	"github.com/xlab/closer"
@@ -22,6 +23,7 @@ import (
 type APIServer struct {
 	cfg      config.GuildsAPIServerConfig
 	dbSvc    db.DBService
+	exchange exchange.DataProvider
 	handlers http.Handler
 	server   *http.Server
 }
@@ -36,11 +38,16 @@ func NewServer(cfg config.GuildsAPIServerConfig) (*APIServer, error) {
 		return nil, err
 	}
 
+	s.exchange, err = exchange.NewExchangeProvider(cfg.ExchangeGRPCURL, cfg.LcdURL)
+	if err != nil {
+		return nil, err
+	}
+
 	// setup logger
 	log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
 
 	// prepare service implementations
-	guildsApi, err := guildsapi.NewService(s.dbSvc)
+	guildsApi, err := guildsapi.NewService(s.dbSvc, s.exchange)
 	if err != nil {
 		return nil, err
 	}
@@ -122,6 +129,12 @@ func (s *APIServer) GracefullyShutdown() {
 	log.Info("closing db connection")
 	if err := s.dbSvc.Disconnect(shutdownCtx); err != nil {
 		log.WithError(err).Error("cannot close db connection")
+	}
+
+	// close exchange grpc
+	log.Info("closing exchange grpc connection")
+	if err := s.exchange.Close(); err != nil {
+		log.WithError(err).Error("cannot close exchange grpc connection")
 	}
 
 	log.Info("server stopped")

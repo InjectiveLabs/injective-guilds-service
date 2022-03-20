@@ -14,6 +14,7 @@ func TestSubaccountBalance(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	defer provider.Close()
 
 	ctx := context.Background()
 	balances, err := provider.GetDefaultSubaccountBalances(
@@ -32,6 +33,7 @@ func TestGrants(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
+	defer provider.Close()
 
 	ctx := context.Background()
 	grants, err := provider.GetGrants(

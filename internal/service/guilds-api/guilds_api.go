@@ -10,22 +10,35 @@ import (
 	svc "github.com/InjectiveLabs/injective-guilds-service/api/gen/guilds_service"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
+	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	secp256k1 "github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 )
+
+const expirationTimeLayout = "2006-01-02T15:04:05.000Z"
 
 type GuildsAPI = svc.Service
 
 type service struct {
 	svc.Service
-	dbSvc db.DBService
+	exchangeProvider exchange.DataProvider
+	dbSvc            db.DBService
+	// TODO: Load as env var
+	grants []string
 }
 
-func NewService(dbSvc db.DBService) (GuildsAPI, error) {
+func NewService(dbSvc db.DBService, exchangeProvider exchange.DataProvider) (GuildsAPI, error) {
 	cosmtypes.GetConfig().SetBech32PrefixForAccount("inj", "")
 
 	return &service{
-		dbSvc: dbSvc,
+		dbSvc:            dbSvc,
+		exchangeProvider: exchangeProvider,
+		grants: []string{
+			// TODO: Double check with Peiyun for these message
+			"/injective.exchange.v1beta1.MsgCreateSpotLimitOrder",
+			"/injective.exchange.v1beta1.MsgCreateDerivativeLimitOrder",
+			"/injective.exchange.v1beta1.MsgCancelDerivativeLimitOrder",
+		},
 	}, nil
 }
 
@@ -107,11 +120,40 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 	}, nil
 }
 
-func (s *service) isAddressQualified(guild *model.Guild, address string) bool {
-	// check for balances
+func (s *service) isAddressQualified(ctx context.Context, guild *model.Guild, address string) (bool, error) {
+	// TODO: Check balances
 
-	// check granter
-	return true
+	// check grants
+	grants, err := s.exchangeProvider.GetGrants(ctx, address, guild.MasterAddress.String())
+	if err != nil {
+		return false, err
+	}
+
+	var msgToExpiration map[string]time.Time
+
+	for _, g := range grants.Grants {
+		t, err := time.Parse(expirationTimeLayout, g.Expiration)
+		if err != nil {
+			return false, fmt.Errorf("time parse err: %w", err)
+		}
+
+		msgToExpiration[g.Authorization.Msg] = t
+	}
+
+	// all expected grants must be provided
+	now := time.Now()
+	for _, expectedMsg := range s.grants {
+		expiration, ok := msgToExpiration[expectedMsg]
+		if !ok {
+			return false, nil
+		}
+
+		if expiration.Before(now) {
+			return false, nil
+		}
+	}
+
+	return true, nil
 }
 
 func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
@@ -147,7 +189,12 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	}
 
 	// check qualification
-	if !s.isAddressQualified(guild, address) {
+	qualified, err := s.isAddressQualified(ctx, guild, address)
+	if err != nil {
+		return nil, svc.MakeInternal(fmt.Errorf("check qualification error: %w", err))
+	}
+
+	if !qualified {
 		joinStatus := "address_not_qualified"
 		return &svc.EnterGuildResult{
 			JoinStatus: &joinStatus,

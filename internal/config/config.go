@@ -91,6 +91,9 @@ type GuildsAPIServerConfig struct {
 	DBName          string
 	DBConnectionURL string
 
+	ExchangeGRPCURL string
+	LcdURL          string
+
 	StatsdConfig StatsdConfig
 }
 
@@ -111,6 +114,9 @@ func LoadGuildsAPIServerConfig() GuildsAPIServerConfig {
 		ListenAddress:   LoadEnvString(fmt.Sprintf("%s_LISTEN_ADDRESS", apiEnvPrefix), "http://localhost:9900"),
 		DBName:          LoadEnvString(fmt.Sprintf("%s_DB_NAME", apiEnvPrefix), "asset_price"),
 		DBConnectionURL: LoadEnvString(fmt.Sprintf("%s_DB_CONNECTION_URL", apiEnvPrefix), ""),
+
+		ExchangeGRPCURL: LoadEnvString(fmt.Sprintf("%s_EXCHANGE_GRPC_URL", apiEnvPrefix), "http://localhost:9910"),
+		LcdURL:          LoadEnvString(fmt.Sprintf("%s_LCD_URL", apiEnvPrefix), ""),
 
 		StatsdConfig: loadStatsdConfig(apiEnvPrefix),
 	}
