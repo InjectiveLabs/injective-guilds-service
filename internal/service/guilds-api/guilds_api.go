@@ -2,12 +2,15 @@ package guildsapi
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
+	"fmt"
 	"time"
 
 	svc "github.com/InjectiveLabs/injective-guilds-service/api/gen/guilds_service"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
+	secp256k1 "github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -19,6 +22,8 @@ type service struct {
 }
 
 func NewService(dbSvc db.DBService) (GuildsAPI, error) {
+	cosmtypes.GetConfig().SetBech32PrefixForAccount("inj", "")
+
 	return &service{
 		dbSvc: dbSvc,
 	}, nil
@@ -102,12 +107,101 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 	}, nil
 }
 
-func (s *service) EnterGuild(context.Context, *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
-	return &svc.EnterGuildResult{}, nil
+func (s *service) isAddressQualified(guild *model.Guild, address string) bool {
+	// check for balances
+
+	// check granter
+	return true
 }
 
-func (s *service) LeaveGuild(context.Context, *svc.LeaveGuildPayload) (res *svc.LeaveGuildResult, err error) {
-	return &svc.LeaveGuildResult{}, nil
+func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
+	// parse
+	messageBase64, err := base64.StdEncoding.DecodeString(payload.Message)
+	if err != nil {
+		return nil, svc.MakeInvalidArg(errors.New("bad message"))
+	}
+
+	signatureBase64, err := base64.StdEncoding.DecodeString(payload.Signature)
+	if err != nil {
+		return nil, svc.MakeInvalidArg(errors.New("bad signature"))
+	}
+
+	// verify message, reference: https://pkg.go.dev/github.com/cosmos/cosmos-sdk/crypto/keyring
+	pubKey := new(secp256k1.PubKey)
+	if err := pubKey.Unmarshal([]byte(payload.PublicKey)); err != nil {
+		return nil, svc.MakeInvalidArg(errors.New("bad pubKey"))
+	}
+
+	if !pubKey.VerifySignature(messageBase64, signatureBase64) {
+		joinStatus := "signature_not_verified"
+		return &svc.EnterGuildResult{JoinStatus: &joinStatus}, nil
+	}
+
+	// derive address
+	accAddress := cosmtypes.AccAddress(pubKey.Address().Bytes())
+	address := accAddress.String()
+
+	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
+	if err != nil {
+		return nil, svc.MakeInternal(fmt.Errorf("guild error: %w", err))
+	}
+
+	// check qualification
+	if !s.isAddressQualified(guild, address) {
+		joinStatus := "address_not_qualified"
+		return &svc.EnterGuildResult{
+			JoinStatus: &joinStatus,
+		}, nil
+	}
+
+	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress})
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	joinStatus := "success"
+	// add to database
+	return &svc.EnterGuildResult{
+		JoinStatus: &joinStatus,
+	}, nil
+}
+
+func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload) (res *svc.LeaveGuildResult, err error) {
+	// parse
+	messageBase64, err := base64.StdEncoding.DecodeString(payload.Message)
+	if err != nil {
+		return nil, svc.MakeInvalidArg(errors.New("bad message"))
+	}
+
+	signatureBase64, err := base64.StdEncoding.DecodeString(payload.Signature)
+	if err != nil {
+		return nil, svc.MakeInvalidArg(errors.New("bad signature"))
+	}
+
+	// verify message
+	pubKey := new(secp256k1.PubKey)
+	if err := pubKey.Unmarshal([]byte(payload.PublicKey)); err != nil {
+		return nil, svc.MakeInvalidArg(errors.New("bad pubKey"))
+	}
+
+	if !pubKey.VerifySignature(messageBase64, signatureBase64) {
+		leaveStatus := "signature_not_verified"
+		return &svc.LeaveGuildResult{LeaveStatus: &leaveStatus}, nil
+	}
+
+	// derive address
+	accAddress := cosmtypes.AccAddress(pubKey.Address().Bytes())
+
+	// remove member
+	err = s.dbSvc.RemoveMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress})
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	leaveStatus := "success"
+	return &svc.LeaveGuildResult{
+		LeaveStatus: &leaveStatus,
+	}, nil
 }
 
 // GetGuildMarkets implements GetGuildMarkets.
@@ -194,7 +288,7 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 		if updatedAt != p.UpdatedAt {
 			updatedAt = p.UpdatedAt
 			// flush current snapshot
-			// TODO: Refactor DB Schema: embed balances
+			// TODO: Refactor DB Schema to have embeded balances
 			if len(balances) > 0 {
 				result = append(result, &svc.SingleAccountPortfolio{
 					InjectiveAddress: address.String(),
