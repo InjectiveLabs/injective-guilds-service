@@ -17,12 +17,10 @@ func cmdProcess(c *cli.Cmd) {
 
 	// setup logger
 	log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
-
-	// new guild process
 	guildsProcess, err := guildsprocess.NewProcess(cfg)
 	panicIf(err)
 
-	// run process and hold until interrupt
+	// run process(es) and hold until interrupt
 	ctx := context.Background()
 	cancelCtx, cancelFn := context.WithCancel(ctx)
 	go func(cancelableContext context.Context) {
