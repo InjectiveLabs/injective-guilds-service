@@ -23,10 +23,8 @@ func cmdProcess(c *cli.Cmd) {
 	// run process(es) and hold until interrupt
 	ctx := context.Background()
 	cancelCtx, cancelFn := context.WithCancel(ctx)
-	go func(cancelableContext context.Context) {
-		guildsProcess.Run(cancelableContext)
-	}(cancelCtx)
 
+	guildsProcess.Run(cancelCtx)
 	closer.Bind(func() {
 		cancelFn()
 		guildsProcess.GracefullyShutdown(ctx)

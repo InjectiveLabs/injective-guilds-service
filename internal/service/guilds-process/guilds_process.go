@@ -20,6 +20,9 @@ type GuildsProcess struct {
 	dbSvc    db.DBService
 	exchange exchange.DataProvider
 	logger   log.Logger
+
+	portfolioUpdateInterval time.Duration
+	disqualifyInterval      time.Duration
 }
 
 func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
@@ -43,20 +46,41 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 	cosmtypes.GetConfig().SetBech32PrefixForAccount("inj", "injpub")
 
 	return &GuildsProcess{
-		dbSvc:    dbService,
-		exchange: exchangeProvider,
-		logger:   log.WithField("svc", "guilds_process"),
+		dbSvc:                   dbService,
+		exchange:                exchangeProvider,
+		logger:                  log.WithField("svc", "guilds_process"),
+		portfolioUpdateInterval: cfg.PortfolioUpdateInterval,
+		disqualifyInterval:      cfg.DisqualifyInterval,
 	}, nil
 }
 
 func (p *GuildsProcess) Run(ctx context.Context) {
-	// do something
+	// run 2 cron jobs
+	go p.runWithSchedule(ctx, p.portfolioUpdateInterval, func(ctx context.Context) error {
+		return p.capturePorfolioSnapshot(ctx)
+	})
+
+	go p.runWithSchedule(ctx, p.disqualifyInterval, func(ctx context.Context) error {
+		return p.processDisqualification(ctx)
+	})
+}
+
+func (p *GuildsProcess) runWithSchedule(ctx context.Context, interval time.Duration, fn func(ctx context.Context) error) {
 	for {
 		select {
 		case <-ctx.Done():
-			break
+			return
 		default:
-			break
+			timeMarker := time.Now()
+			err := fn(ctx)
+			if err != nil {
+				p.logger.WithError(err).Errorln("error while doing cronjob")
+			}
+			timeElasped := time.Since(timeMarker)
+
+			if timeElasped < interval {
+				time.Sleep(interval - timeElasped)
+			}
 		}
 	}
 }
