@@ -97,7 +97,7 @@ func NewExchangeProvider(protoAddr string, lcdAddr string, options ...ClientOpti
 	return cc, nil
 }
 
-func (p *exchangeProvider) GetDefaultSubaccountBalances(ctx context.Context, subaccount string) (result []*Balance, err error) {
+func (p *exchangeProvider) GetSubaccountBalances(ctx context.Context, subaccount string) (result []*Balance, err error) {
 	// get all denoms
 	req := &accountPB.SubaccountBalancesListRequest{
 		SubaccountId: subaccount,
@@ -130,10 +130,9 @@ func (p *exchangeProvider) GetDefaultSubaccountBalances(ctx context.Context, sub
 	return result, nil
 }
 
-func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketID string, subaccount string) (result []*SpotOrder, err error) {
+func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketIDs []string, subaccount string) (result []*SpotOrder, err error) {
 	req := &spotExchangePB.OrdersRequest{
 		SubaccountId: subaccount,
-		MarketId:     marketID,
 	}
 
 	var header metadata.MD
@@ -142,7 +141,17 @@ func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketID string, s
 		return nil, err
 	}
 
+	// we will filter on client side, support on exchange api later
+	m := make(map[string]bool)
+	for _, id := range marketIDs {
+		m[id] = true
+	}
+
 	for _, o := range res.GetOrders() {
+		if _, exist := m[o.MarketId]; !exist {
+			continue
+		}
+
 		result = append(result, &SpotOrder{
 			OrderHash:    o.GetOrderHash(),
 			FeeRecipient: o.GetFeeRecipient(),
@@ -152,10 +161,9 @@ func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketID string, s
 	return result, nil
 }
 
-func (p *exchangeProvider) GetDerivativeOrders(ctx context.Context, marketID string, subaccount string) (result []*DerivativeOrder, err error) {
+func (p *exchangeProvider) GetDerivativeOrders(ctx context.Context, marketIDs []string, subaccount string) (result []*DerivativeOrder, err error) {
 	req := &derivativeExchangePB.OrdersRequest{
 		SubaccountId: subaccount,
-		MarketId:     marketID,
 	}
 
 	var header metadata.MD
@@ -164,7 +172,17 @@ func (p *exchangeProvider) GetDerivativeOrders(ctx context.Context, marketID str
 		return nil, err
 	}
 
+	// we will filter on client side, support on exchange api later
+	m := make(map[string]bool)
+	for _, id := range marketIDs {
+		m[id] = true
+	}
+
 	for _, o := range res.GetOrders() {
+		if _, exist := m[o.MarketId]; !exist {
+			continue
+		}
+
 		result = append(result, &DerivativeOrder{
 			OrderHash:    o.GetOrderHash(),
 			FeeRecipient: o.GetFeeRecipient(),

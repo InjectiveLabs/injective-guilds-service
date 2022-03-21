@@ -28,8 +28,6 @@ type service struct {
 }
 
 func NewService(dbSvc db.DBService, exchangeProvider exchange.DataProvider) (GuildsAPI, error) {
-	cosmtypes.GetConfig().SetBech32PrefixForAccount("inj", "")
-
 	return &service{
 		dbSvc:            dbSvc,
 		exchangeProvider: exchangeProvider,
@@ -71,7 +69,14 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 
 // Get members
 func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMembersPayload) (res *svc.GetGuildMembersResult, err error) {
-	members, err := s.dbSvc.GetGuildMembers(ctx, payload.GuildID, false)
+	isDefaultMember := false
+	members, err := s.dbSvc.ListGuildMembers(
+		ctx,
+		model.MemberFilter{
+			GuildID:         &payload.GuildID,
+			IsDefaultMember: &isDefaultMember,
+		},
+	)
 	if err != nil {
 		return nil, svc.MakeInternal(err)
 	}
@@ -103,13 +108,21 @@ func (s *service) GetGuildMasterAddress(ctx context.Context, payload *svc.GetGui
 }
 
 func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGuildDefaultMemberPayload) (res *svc.GetGuildDefaultMemberResult, err error) {
-	defaultMember, err := s.dbSvc.GetGuildMembers(ctx, payload.GuildID, true)
+	isDefaultMember := true
+	defaultMember, err := s.dbSvc.ListGuildMembers(
+		ctx,
+		model.MemberFilter{
+			GuildID:         &payload.GuildID,
+			IsDefaultMember: &isDefaultMember,
+		},
+	)
 	if err != nil {
 		return nil, svc.MakeInternal(err)
 	}
 
 	if len(defaultMember) == 0 {
-		return nil, svc.MakeInternal(errors.New("default member notfound"))
+		// 1 guild should has a default member, if not found then it should be internal error
+		return nil, svc.MakeInternal(errors.New("default member not found"))
 	}
 
 	return &svc.GetGuildDefaultMemberResult{
@@ -286,16 +299,16 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 		updatedAt time.Time
 	)
 
-	for _, p := range portfolio {
+	for _, b := range portfolio.Balances {
 		balances = append(balances, &svc.Balance{
-			Denom:            p.Denom,
-			TotalBalance:     p.TotalBalance.String(),
-			AvailableBalance: p.AvailableBalance.String(),
-			UnrealizedPnl:    p.UnrealizedPNL.String(),
-			MarginHold:       p.MarginHold.String(),
+			Denom:            b.Denom,
+			TotalBalance:     b.TotalBalance.String(),
+			AvailableBalance: b.AvailableBalance.String(),
+			UnrealizedPnl:    b.UnrealizedPNL.String(),
+			MarginHold:       b.MarginHold.String(),
 		})
-		updatedAt = p.UpdatedAt
 	}
+	updatedAt = portfolio.UpdatedAt
 
 	return &svc.GetAccountPortfolioResult{
 		Data: &svc.SingleAccountPortfolio{
@@ -306,7 +319,6 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 	}, nil
 }
 
-// GetAccountPortfolios implements GetAccountPortfolios.
 func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAccountPortfoliosPayload) (res *svc.GetAccountPortfoliosResult, err error) {
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
@@ -320,42 +332,24 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 		return nil, svc.MakeInternal(err)
 	}
 
-	var (
-		updatedAt time.Time
-		result    []*svc.SingleAccountPortfolio
-	)
-
-	var balances []*svc.Balance
+	result := make([]*svc.SingleAccountPortfolio, 0)
 	// expected result to be sort by timestamp
 	for _, p := range portfolios {
-		if updatedAt != p.UpdatedAt {
-			updatedAt = p.UpdatedAt
-			// flush current snapshot
-			// TODO: Refactor DB Schema to have embeded balances
-			if len(balances) > 0 {
-				result = append(result, &svc.SingleAccountPortfolio{
-					InjectiveAddress: address.String(),
-					Balances:         balances,
-					UpdatedAt:        updatedAt.String(),
-				})
-			}
-			balances = make([]*svc.Balance, 0)
+		var balances []*svc.Balance
+		for _, b := range p.Balances {
+			balances = append(balances, &svc.Balance{
+				Denom:            b.Denom,
+				TotalBalance:     b.TotalBalance.String(),
+				AvailableBalance: b.AvailableBalance.String(),
+				UnrealizedPnl:    b.UnrealizedPNL.String(),
+				MarginHold:       b.MarginHold.String(),
+			})
 		}
 
-		balances = append(balances, &svc.Balance{
-			Denom:            p.Denom,
-			TotalBalance:     p.TotalBalance.String(),
-			AvailableBalance: p.AvailableBalance.String(),
-			UnrealizedPnl:    p.UnrealizedPNL.String(),
-			MarginHold:       p.MarginHold.String(),
-		})
-	}
-
-	if len(balances) > 0 {
 		result = append(result, &svc.SingleAccountPortfolio{
 			InjectiveAddress: address.String(),
 			Balances:         balances,
-			UpdatedAt:        updatedAt.String(),
+			UpdatedAt:        p.UpdatedAt.String(),
 		})
 	}
 

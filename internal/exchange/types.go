@@ -49,10 +49,10 @@ type Grants struct {
 }
 
 type DataProvider interface {
-	GetDefaultSubaccountBalances(ctx context.Context, subaccount string) ([]*Balance, error)
+	GetSubaccountBalances(ctx context.Context, subaccount string) ([]*Balance, error)
 
-	GetSpotOrders(ctx context.Context, marketID string, subaccount string) ([]*SpotOrder, error)
-	GetDerivativeOrders(ctx context.Context, marketId string, subaccount string) ([]*DerivativeOrder, error)
+	GetSpotOrders(ctx context.Context, marketIDs []string, subaccount string) ([]*SpotOrder, error)
+	GetDerivativeOrders(ctx context.Context, marketIDs []string, subaccount string) ([]*DerivativeOrder, error)
 
 	GetPositions(ctx context.Context, marketID string, subaccount string) ([]*DerivativePosition, error)
 	GetGrants(ctx context.Context, granter, grantee string) (*Grants, error)

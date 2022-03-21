@@ -122,19 +122,22 @@ func (s *MongoImpl) GetSingleGuild(ctx context.Context, guildID string) (*model.
 	return &guild, nil
 }
 
-func (s *MongoImpl) GetGuildMembers(
+func (s *MongoImpl) ListGuildMembers(
 	ctx context.Context,
-	guildID string,
-	isDefaultMember bool,
+	memberFilter model.MemberFilter,
 ) (result []*model.GuildMember, err error) {
-	guildObjectID, err := primitive.ObjectIDFromHex(guildID)
-	if err != nil {
-		return nil, fmt.Errorf("cannot parse guildID: %w", err)
+	filter := bson.M{}
+
+	if memberFilter.GuildID != nil {
+		guildObjectID, err := primitive.ObjectIDFromHex(*memberFilter.GuildID)
+		if err != nil {
+			return nil, fmt.Errorf("cannot parse guildID: %w", err)
+		}
+		filter["guild_id"] = guildObjectID
 	}
 
-	filter := bson.M{
-		"guild_id":                guildObjectID,
-		"is_default_guild_member": isDefaultMember,
+	if memberFilter.IsDefaultMember != nil {
+		filter["is_default_guild_member"] = *memberFilter.IsDefaultMember
 	}
 
 	cur, err := s.memberCollection.Find(ctx, filter)
@@ -268,53 +271,35 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 }
 
 // account portfolio gets latest account portfolio
-func (s *MongoImpl) GetAccountPortfolio(ctx context.Context, guildID string, address model.Address) ([]*model.AccountPortfolio, error) {
-	// fetch guild supported markets
-	guild, err := s.GetSingleGuild(ctx, guildID)
-	if err != nil {
-		return nil, fmt.Errorf("cannot find guild: %w", err)
-	}
-
-	denoms := make([]string, 0)
-	for _, m := range guild.Markets {
-		denoms = append(denoms, m.Denom)
-	}
-
+// TODO: Unify getAccountPortfolio to 1 function
+func (s *MongoImpl) GetAccountPortfolio(ctx context.Context, guildID string, address model.Address) (*model.AccountPortfolio, error) {
 	filter := bson.M{
 		"injective_address": address.String(),
-		"denom":             bson.M{"$in": denoms},
 	}
 
-	opts := &options.FindOptions{}
+	if guildID != "" {
+		guildObjectID, err := primitive.ObjectIDFromHex(guildID)
+		if err != nil {
+			return nil, fmt.Errorf("cannot parse guildID: %w", err)
+		}
+
+		filter["guild_id"] = guildObjectID
+	}
+
+	opts := &options.FindOneOptions{}
 	opts.SetSort(bson.M{"updated_at": -1})
 
-	cur, err := s.portfolioCollection.Find(ctx, filter, opts)
-	if err != nil {
+	singleRow := s.portfolioCollection.FindOne(ctx, filter, opts)
+	if err := singleRow.Err(); err != nil {
 		return nil, err
 	}
 
-	var (
-		recentTime time.Time
-		result     []*model.AccountPortfolio
-	)
-
-	for cur.Next(ctx) {
-		var portfolio model.AccountPortfolio
-		err := cur.Decode(&portfolio)
-		if err != nil {
-			return nil, err
-		}
-
-		if recentTime.IsZero() {
-			recentTime = portfolio.UpdatedAt
-		} else if recentTime != portfolio.UpdatedAt {
-			break
-		}
-
-		result = append(result, &portfolio)
+	var portfolio model.AccountPortfolio
+	if err := singleRow.Decode(&portfolio); err != nil {
+		return nil, err
 	}
 
-	return result, nil
+	return &portfolio, nil
 }
 
 func (s *MongoImpl) ListAccountPortfolios(
@@ -322,21 +307,19 @@ func (s *MongoImpl) ListAccountPortfolios(
 	guildID string,
 	address model.Address,
 ) (result []*model.AccountPortfolio, err error) {
-	// fetch guild supported markets
-	guild, err := s.GetSingleGuild(ctx, guildID)
-	if err != nil {
-		return nil, fmt.Errorf("cannot find guild: %w", err)
-	}
-
-	denoms := make([]string, 0)
-	for _, m := range guild.Markets {
-		denoms = append(denoms, m.Denom)
-	}
-
 	filter := bson.M{
 		"injective_address": address.String(),
-		"denom":             bson.M{"$in": denoms},
 	}
+
+	if guildID != "" {
+		guildObjectID, err := primitive.ObjectIDFromHex(guildID)
+		if err != nil {
+			return nil, fmt.Errorf("cannot parse guildID: %w", err)
+		}
+
+		filter["guild_id"] = guildObjectID
+	}
+
 	opts := &options.FindOptions{}
 	opts.SetSort(bson.M{"updated_at": -1})
 
@@ -355,6 +338,22 @@ func (s *MongoImpl) ListAccountPortfolios(
 		result = append(result, &portfolio)
 	}
 	return result, nil
+}
+
+// AddAccountPortfolios add portfolio snapshots in single write call
+func (s *MongoImpl) AddAccountPortfolios(
+	ctx context.Context,
+	guildID string,
+	portfolios []*model.AccountPortfolio,
+) error {
+
+	docs := make([]interface{}, len(portfolios))
+	for i, p := range portfolios {
+		docs[i] = p
+	}
+
+	_, err := s.portfolioCollection.InsertMany(ctx, docs)
+	return err
 }
 
 func (s *MongoImpl) Disconnect(ctx context.Context) error {

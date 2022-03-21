@@ -100,3 +100,8 @@ func (h *Hash) UnmarshalBSONValue(t bsontype.Type, src []byte) error {
 	}
 	return nil
 }
+
+type MemberFilter struct {
+	GuildID         *string
+	IsDefaultMember *bool
+}
