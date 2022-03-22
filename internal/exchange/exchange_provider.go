@@ -14,8 +14,8 @@ import (
 	derivativeExchangePB "github.com/InjectiveLabs/sdk-go/exchange/derivative_exchange_rpc/pb"
 	spotExchangePB "github.com/InjectiveLabs/sdk-go/exchange/spot_exchange_rpc/pb"
 	"github.com/pkg/errors"
+	"github.com/shopspring/decimal"
 	log "github.com/xlab/suplog"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
@@ -25,11 +25,14 @@ import (
 // NOW:
 // - Decided to use a stable release now, v1.31.0
 // - Atm, we can clone functions into this repo first
+// - We use this for data from our internal services
 type exchangeProvider struct {
 	DataProvider
 
-	conn                     *grpc.ClientConn
-	lcdAddr                  string
+	conn           *grpc.ClientConn
+	lcdAddr        string
+	assetPriceAddr string
+
 	httpClient               *http.Client
 	accountClient            accountPB.InjectiveAccountsRPCClient
 	spotExchangeClient       spotExchangePB.InjectiveSpotExchangeRPCClient
@@ -58,7 +61,12 @@ func OptionTLSCert(tlsCert credentials.TransportCredentials) ClientOption {
 // derives from current `master` of sdk-go
 // vvvvv
 
-func NewExchangeProvider(protoAddr string, lcdAddr string, options ...ClientOption) (DataProvider, error) {
+func NewExchangeProvider(
+	protoAddr string,
+	lcdAddr string,
+	assetPriceAddr string,
+	options ...ClientOption,
+) (DataProvider, error) {
 	// process options
 	opts := &ClientOptions{}
 	for _, opt := range options {
@@ -89,6 +97,7 @@ func NewExchangeProvider(protoAddr string, lcdAddr string, options ...ClientOpti
 		conn:                     conn,
 		lcdAddr:                  lcdAddr,
 		httpClient:               httpClient,
+		assetPriceAddr:           assetPriceAddr,
 		accountClient:            accountPB.NewInjectiveAccountsRPCClient(conn),
 		spotExchangeClient:       spotExchangePB.NewInjectiveSpotExchangeRPCClient(conn),
 		derivativeExchangeClient: derivativeExchangePB.NewInjectiveDerivativeExchangeRPCClient(conn),
@@ -110,12 +119,12 @@ func (p *exchangeProvider) GetSubaccountBalances(ctx context.Context, subaccount
 	}
 
 	for _, b := range res.GetBalances() {
-		totalBalance, err := primitive.ParseDecimal128(b.GetDeposit().GetTotalBalance())
+		totalBalance, err := decimal.NewFromString(b.GetDeposit().GetTotalBalance())
 		if err != nil {
 			return nil, fmt.Errorf("parse total balance err: %w", err)
 		}
 
-		availBalance, err := primitive.ParseDecimal128(b.GetDeposit().GetAvailableBalance())
+		availBalance, err := decimal.NewFromString(b.GetDeposit().GetAvailableBalance())
 		if err != nil {
 			return nil, fmt.Errorf("parse avail balance err: %w", err)
 		}
@@ -206,19 +215,24 @@ func (p *exchangeProvider) GetPositions(ctx context.Context, marketID string, su
 	}
 
 	for _, pos := range res.GetPositions() {
-		quantity, err := primitive.ParseDecimal128(pos.GetQuantity())
+		quantity, err := decimal.NewFromString(pos.GetQuantity())
 		if err != nil {
 			return nil, fmt.Errorf("parse quantity err: %w", err)
 		}
 
-		margin, err := primitive.ParseDecimal128(pos.GetMargin())
+		margin, err := decimal.NewFromString(pos.GetMargin())
 		if err != nil {
 			return nil, fmt.Errorf("parse quantity err: %w", err)
 		}
 
-		entryPrice, err := primitive.ParseDecimal128(pos.GetEntryPrice())
+		entryPrice, err := decimal.NewFromString(pos.GetEntryPrice())
 		if err != nil {
 			return nil, fmt.Errorf("parse quantity err: %w", err)
+		}
+
+		markPrice, err := decimal.NewFromString(pos.GetMarkPrice())
+		if err != nil {
+			return nil, fmt.Errorf("parse mark price err: %w", err)
 		}
 
 		result = append(result, &DerivativePosition{
@@ -227,6 +241,7 @@ func (p *exchangeProvider) GetPositions(ctx context.Context, marketID string, su
 			Quantity:   quantity,
 			Margin:     margin,
 			EntryPrice: entryPrice,
+			MarkPrice:  markPrice,
 		})
 	}
 
@@ -254,13 +269,39 @@ func (p *exchangeProvider) GetGrants(ctx context.Context, granter, grantee strin
 		return nil, fmt.Errorf("read request body err: %w", err)
 	}
 
-	fmt.Println("bytes:", string(bytes))
-
 	if err := json.Unmarshal(bytes, &res); err != nil {
 		return nil, fmt.Errorf("marshal request body err: %w", err)
 	}
 
 	return &res, nil
+}
+
+func (p *exchangeProvider) GetPriceUSD(ctx context.Context, coinIDs []string) ([]*CoinPrice, error) {
+	coinList := strings.Join(coinIDs, ",")
+
+	url := fmt.Sprintf(
+		"%s/asset-price/v1/coin/price?coinIds=%s&currency=usd",
+		p.assetPriceAddr, coinList,
+	)
+	resp, err := p.httpClient.Get(url)
+
+	if err != nil {
+		return nil, fmt.Errorf("request err: %w", err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("request err: bad status: %d", resp.StatusCode)
+	}
+
+	var res CoinPriceResult
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read request body err: %w", err)
+	}
+
+	if err := json.Unmarshal(bytes, &res); err != nil {
+		return nil, fmt.Errorf("marshal request body err: %w", err)
+	}
+	return res.Data, nil
 }
 
 func (p *exchangeProvider) Close() error {

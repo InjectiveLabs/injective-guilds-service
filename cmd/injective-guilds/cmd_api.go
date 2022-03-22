@@ -39,7 +39,7 @@ func NewServer(cfg config.GuildsAPIServerConfig) (*APIServer, error) {
 		return nil, err
 	}
 
-	s.exchange, err = exchange.NewExchangeProvider(cfg.ExchangeGRPCURL, cfg.LcdURL)
+	s.exchange, err = exchange.NewExchangeProvider(cfg.ExchangeGRPCURL, cfg.LcdURL, "")
 	if err != nil {
 		return nil, err
 	}

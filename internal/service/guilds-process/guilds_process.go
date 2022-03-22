@@ -38,7 +38,7 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 	}
 
 	// won't use lcd endpoint here
-	exchangeProvider, err := exchange.NewExchangeProvider(cfg.ExchangeGRPCURL, "")
+	exchangeProvider, err := exchange.NewExchangeProvider(cfg.ExchangeGRPCURL, "", cfg.AssetPriceURL)
 	if err != nil {
 		return nil, err
 	}
@@ -56,16 +56,16 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 
 func (p *GuildsProcess) Run(ctx context.Context) {
 	// run 2 cron jobs
-	go p.runWithSchedule(ctx, p.portfolioUpdateInterval, func(ctx context.Context) error {
+	go p.runWithInterval(ctx, p.portfolioUpdateInterval, func(ctx context.Context) error {
 		return p.capturePorfolioSnapshot(ctx)
 	})
 
-	go p.runWithSchedule(ctx, p.disqualifyInterval, func(ctx context.Context) error {
+	go p.runWithInterval(ctx, p.disqualifyInterval, func(ctx context.Context) error {
 		return p.processDisqualification(ctx)
 	})
 }
 
-func (p *GuildsProcess) runWithSchedule(ctx context.Context, interval time.Duration, fn func(ctx context.Context) error) {
+func (p *GuildsProcess) runWithInterval(ctx context.Context, interval time.Duration, fn func(ctx context.Context) error) {
 	for {
 		select {
 		case <-ctx.Done():
@@ -157,7 +157,6 @@ func (p *GuildsProcess) getMemberBalances(ctx context.Context, denoms []string, 
 	for _, b := range balances {
 		denomToBalance[b.Denom] = b
 	}
-
 	// filter denoms and add to result
 	for _, denom := range denoms {
 		b, exist := denomToBalance[denom]
@@ -170,10 +169,13 @@ func (p *GuildsProcess) getMemberBalances(ctx context.Context, denoms []string, 
 			continue
 		}
 
+		// we parsed this total balance successfully -> no error expected
+		totalBalance, _ := primitive.ParseDecimal128(b.TotalBalance.String())
+		availBalance, _ := primitive.ParseDecimal128(b.AvailableBalance.String())
 		result = append(result, &model.Balance{
 			Denom:            denom,
-			TotalBalance:     b.TotalBalance,
-			AvailableBalance: b.AvailableBalance,
+			TotalBalance:     totalBalance,
+			AvailableBalance: availBalance,
 		})
 	}
 

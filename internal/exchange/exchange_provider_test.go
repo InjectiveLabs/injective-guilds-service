@@ -10,7 +10,7 @@ import (
 
 func TestSubaccountBalance(t *testing.T) {
 	// integration test
-	provider, err := NewExchangeProvider("sentry2.injective.network:9910", "https://lcd.injective.network")
+	provider, err := NewExchangeProvider("sentry2.injective.network:9910", "https://lcd.injective.network", "")
 	if err != nil {
 		panic(err)
 	}
@@ -21,15 +21,13 @@ func TestSubaccountBalance(t *testing.T) {
 		ctx,
 		"0xaf79152ac5df276d9a8e1e2e22822f9713474902000000000000000000000000",
 	)
-	if err != nil {
-		panic(err)
-	}
+	assert.NoError(t, err)
 	assert.Equal(t, len(balances) > 0, true)
 }
 
 func TestGrants(t *testing.T) {
 	// integration test
-	provider, err := NewExchangeProvider("sentry2.injective.network:9910", "https://testnet.lcd.injective.dev")
+	provider, err := NewExchangeProvider("sentry2.injective.network:9910", "https://testnet.lcd.injective.dev", "")
 	if err != nil {
 		panic(err)
 	}
@@ -41,9 +39,30 @@ func TestGrants(t *testing.T) {
 		"inj14au322k9munkmx5wrchz9q30juf5wjgz2cfqku",
 		"inj1hkhdaj2a2clmq5jq6mspsggqs32vynpk228q3r",
 	)
+	assert.NoError(t, err)
+
+	fmt.Println(grants)
+}
+
+func TestAssetPrice(t *testing.T) {
+	// integration test
+	provider, err := NewExchangeProvider("sentry2.injective.network:9910", "https://testnet.lcd.injective.dev", "https://k8s.mainnet.asset.injective.network")
+	if err != nil {
+		panic(err)
+	}
+	defer provider.Close()
+
+	ctx := context.Background()
+	prices, err := provider.GetPriceUSD(
+		ctx,
+		[]string{"bitcoin", "ethereum"},
+	)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(grants)
+	assert.Equal(t, len(prices), 2)
+	for _, p := range prices {
+		fmt.Printf("Price of '%s': %.4f\n", p.ID, p.CurrentPrice)
+	}
 }

@@ -3,14 +3,14 @@ package exchange
 import (
 	"context"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"github.com/shopspring/decimal"
 )
 
 // declare internal types, interface for this service
 type Balance struct {
 	Denom            string
-	TotalBalance     primitive.Decimal128
-	AvailableBalance primitive.Decimal128
+	TotalBalance     decimal.Decimal
+	AvailableBalance decimal.Decimal
 }
 
 // we only concern these fields in this service
@@ -28,9 +28,10 @@ type DerivativeOrder struct {
 type DerivativePosition struct {
 	MarketID   string
 	Direction  string
-	Quantity   primitive.Decimal128
-	Margin     primitive.Decimal128
-	EntryPrice primitive.Decimal128
+	Quantity   decimal.Decimal
+	Margin     decimal.Decimal
+	EntryPrice decimal.Decimal
+	MarkPrice  decimal.Decimal
 }
 
 type Grants struct {
@@ -48,6 +49,38 @@ type Grants struct {
 	}
 }
 
+type CoinPrice struct {
+	ID                           string
+	Symbol                       string
+	Name                         string
+	Image                        string
+	CurrentPrice                 float64 `json:"current_price"`
+	MarketCap                    float64 `json:"market_cap"`
+	MarketCapRank                int     `json:"market_cap_rank"`
+	TotalVolume                  float64 `json:"total_volume"`
+	High24h                      float64 `json:"high_24h"`
+	Low24h                       float64 `json:"low_24h"`
+	PriceChange24h               float64 `json:"price_change_24h"`
+	PriceChangePercentage24h     float64 `json:"price_change_percentage_24h"`
+	MarketCapChange24h           float64 `json:"market_cap_change_24h"`
+	MarketCapChangePercentage24h float64 `json:"market_cap_change_percentage_24h"`
+	CirculatingSupply            float64 `json:"circulating_supply"`
+	TotalSupply                  float64 `json:"total_supply"`
+	MaxSupply                    float64 `json:"max_supply"`
+	Ath                          float64
+	AthChangePercentage          float64 `json:"ath_change_percentage"`
+	AthDate                      string  `json:"ath_date"`
+	Atl                          float64
+	AtlChangePercentage          float64     `json:"atl_change_percentage"`
+	AtlDate                      string      `json:"atl_date"`
+	Roi                          interface{} `json:"roi"` // we don't use this
+	LastUpdated                  string      `json:"last_updated"`
+}
+
+type CoinPriceResult struct {
+	Data []*CoinPrice `json:"data"`
+}
+
 type DataProvider interface {
 	GetSubaccountBalances(ctx context.Context, subaccount string) ([]*Balance, error)
 
@@ -56,6 +89,8 @@ type DataProvider interface {
 
 	GetPositions(ctx context.Context, marketID string, subaccount string) ([]*DerivativePosition, error)
 	GetGrants(ctx context.Context, granter, grantee string) (*Grants, error)
+
+	GetPriceUSD(ctx context.Context, coinIDs []string) ([]*CoinPrice, error)
 	// close provider
 	Close() error
 }
