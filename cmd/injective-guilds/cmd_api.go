@@ -48,7 +48,7 @@ func NewServer(cfg config.GuildsAPIServerConfig) (*APIServer, error) {
 	log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
 
 	// prepare service implementations
-	guildsApi, err := guildsapi.NewService(s.dbSvc, s.exchange)
+	guildsApi, err := guildsapi.NewService(ctx, s.dbSvc, s.exchange)
 	if err != nil {
 		return nil, err
 	}

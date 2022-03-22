@@ -28,6 +28,7 @@ func buildPortfolio(
 	balances []*exchange.Balance,
 	pnl map[string]decimal.Decimal,
 	marginHolds map[string]decimal.Decimal,
+	usdPrices map[string]float64,
 ) *model.AccountPortfolio {
 	portfolio := &model.AccountPortfolio{
 		GuildID: member.GuildID,
@@ -52,6 +53,11 @@ func buildPortfolio(
 		aBalance.AvailableBalance, _ = primitive.ParseDecimal128(b.AvailableBalance.String())
 		aBalance.UnrealizedPNL, _ = primitive.ParseDecimal128(pnlValue.String())
 		aBalance.MarginHold, _ = primitive.ParseDecimal128(marginHoldValue.String())
+		if usdPrices != nil {
+			// TODO: Impl historical price on asset-price service to recompute it on UI
+			aBalance.PriceUSD = usdPrices[b.Denom]
+		}
+
 		portfolio.Balances = append(portfolio.Balances, aBalance)
 	}
 

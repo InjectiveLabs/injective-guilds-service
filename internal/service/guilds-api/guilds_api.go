@@ -11,8 +11,10 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
+	guildsprocess "github.com/InjectiveLabs/injective-guilds-service/internal/service/guilds-process"
 	secp256k1 "github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
+	log "github.com/xlab/suplog"
 )
 
 const expirationTimeLayout = "2006-01-02T15:04:05.000Z"
@@ -23,14 +25,23 @@ type service struct {
 	svc.Service
 	exchangeProvider exchange.DataProvider
 	dbSvc            db.DBService
+	portfolioHelper  *guildsprocess.PortfolioHelper
+	logger           log.Logger
 	// TODO: Load as env var
 	grants []string
 }
 
-func NewService(dbSvc db.DBService, exchangeProvider exchange.DataProvider) (GuildsAPI, error) {
+func NewService(ctx context.Context, dbSvc db.DBService, exchangeProvider exchange.DataProvider) (GuildsAPI, error) {
+	helper, err := guildsprocess.NewPortfolioHelper(ctx, dbSvc, exchangeProvider)
+	if err != nil {
+		return nil, err
+	}
+
 	return &service{
 		dbSvc:            dbSvc,
 		exchangeProvider: exchangeProvider,
+		portfolioHelper:  helper,
+		logger:           log.WithField("svc", "guilds_api"),
 		grants: []string{
 			// TODO: Double check with Peiyun for these message
 			"/injective.exchange.v1beta1.MsgCreateSpotLimitOrder",
