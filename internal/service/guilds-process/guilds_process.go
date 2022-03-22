@@ -12,10 +12,8 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/shopspring/decimal"
 	log "github.com/xlab/suplog"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -219,11 +217,6 @@ func (p *GuildsProcess) getDenomPrices(ctx context.Context, denoms []string) (ma
 	return result, nil
 }
 
-func defaultSubaccountIDFromInjAddress(injAddress model.Address) string {
-	ethAddr := common.BytesToAddress(injAddress.Bytes())
-	return ethAddr.Hex() + "000000000000000000000000"
-}
-
 func (p *GuildsProcess) captureSingleMemberPortfolio(
 	ctx context.Context,
 	guild *model.Guild,
@@ -257,41 +250,6 @@ func (p *GuildsProcess) captureSingleMemberPortfolio(
 	return buildPortfolio(member, balances, pnl, marginHold), nil
 }
 
-func buildPortfolio(
-	member *model.GuildMember,
-	balances []*exchange.Balance,
-	pnl map[string]decimal.Decimal,
-	marginHolds map[string]decimal.Decimal,
-) *model.AccountPortfolio {
-	portfolio := &model.AccountPortfolio{
-		GuildID: member.GuildID,
-	}
-
-	for _, b := range balances {
-		pnlValue, ok := pnl[b.Denom]
-		if !ok {
-			pnlValue = decimal.Zero
-		}
-
-		marginHoldValue, ok := marginHolds[b.Denom]
-		if !ok {
-			marginHoldValue = decimal.Zero
-		}
-
-		aBalance := &model.Balance{
-			Denom: b.Denom,
-		}
-
-		aBalance.TotalBalance, _ = primitive.ParseDecimal128(b.TotalBalance.String())
-		aBalance.AvailableBalance, _ = primitive.ParseDecimal128(b.AvailableBalance.String())
-		aBalance.UnrealizedPNL, _ = primitive.ParseDecimal128(pnlValue.String())
-		aBalance.MarginHold, _ = primitive.ParseDecimal128(marginHoldValue.String())
-		portfolio.Balances = append(portfolio.Balances, aBalance)
-	}
-
-	return portfolio
-}
-
 func (p *GuildsProcess) getSubaccountBalances(ctx context.Context, denoms []string, defaultSubaccountID string) (result []*exchange.Balance, err error) {
 	balances, err := p.exchange.GetSubaccountBalances(ctx, defaultSubaccountID)
 	if err != nil {
@@ -318,21 +276,6 @@ func (p *GuildsProcess) getSubaccountBalances(ctx context.Context, denoms []stri
 	}
 
 	return result, nil
-}
-
-func getIDToMarket(g *model.Guild) map[string]*model.GuildMarket {
-	result := make(map[string]*model.GuildMarket)
-	for _, m := range g.Markets {
-		result[m.MarketID.String()] = m
-	}
-	return result
-}
-
-func signOf(direction string) decimal.Decimal {
-	if direction == DirectionShort {
-		return decimal.NewFromInt(-1)
-	}
-	return decimal.NewFromInt(1)
 }
 
 // getMemberUnrealizedPNL returns pnl[denom]decimal.Decimal
@@ -477,16 +420,6 @@ func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
 		}
 	}
 	return nil
-}
-
-func marketsFromGuild(guild *model.Guild, isPerp bool) []string {
-	var result []string
-	for _, m := range guild.Markets {
-		if m.IsPerpetual == isPerp {
-			result = append(result, m.MarketID.Hex())
-		}
-	}
-	return result
 }
 
 // shouldDisqualify tries to disqualify a person if deriv/spot orders has fee recipient != master address
