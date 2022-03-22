@@ -20,5 +20,8 @@ type DBService interface {
 	ListAccountPortfolios(ctx context.Context, guildID string, address model.Address) ([]*model.AccountPortfolio, error)
 	AddAccountPortfolios(ctx context.Context, guildID string, portfolios []*model.AccountPortfolio) error
 
+	// denom
+	ListDenomCoinID(ctx context.Context) ([]*model.DenomCoinID, error)
+
 	Disconnect(ctx context.Context) error
 }

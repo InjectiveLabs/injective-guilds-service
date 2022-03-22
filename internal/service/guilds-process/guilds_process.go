@@ -27,9 +27,10 @@ const (
 )
 
 type GuildsProcess struct {
-	dbSvc    db.DBService
-	exchange exchange.DataProvider
-	logger   log.Logger
+	dbSvc         db.DBService
+	exchange      exchange.DataProvider
+	logger        log.Logger
+	denomToCoinID map[string]string
 
 	portfolioUpdateInterval time.Duration
 	disqualifyInterval      time.Duration
@@ -55,13 +56,20 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 
 	cosmtypes.GetConfig().SetBech32PrefixForAccount("inj", "injpub")
 
-	return &GuildsProcess{
+	p := &GuildsProcess{
 		dbSvc:                   dbService,
 		exchange:                exchangeProvider,
 		logger:                  log.WithField("svc", "guilds_process"),
 		portfolioUpdateInterval: cfg.PortfolioUpdateInterval,
 		disqualifyInterval:      cfg.DisqualifyInterval,
-	}, nil
+	}
+
+	// update map[denom]CoinID
+	if err := p.updateDenomToCoinIDMap(ctx); err != nil {
+		return nil, err
+	}
+
+	return p, nil
 }
 
 func (p *GuildsProcess) Run(ctx context.Context) {
@@ -93,6 +101,19 @@ func (p *GuildsProcess) runWithInterval(ctx context.Context, interval time.Durat
 			}
 		}
 	}
+}
+
+func (p *GuildsProcess) updateDenomToCoinIDMap(ctx context.Context) error {
+	denomCoinID, err := p.dbSvc.ListDenomCoinID(ctx)
+	if err != nil {
+		return err
+	}
+
+	p.denomToCoinID = make(map[string]string)
+	for _, d := range denomCoinID {
+		p.denomToCoinID[d.Denom] = d.CoinID
+	}
+	return nil
 }
 
 // TODO: Improvement: Implement retryable mechanism
@@ -165,7 +186,7 @@ func (p *GuildsProcess) getDenomPrices(ctx context.Context, denoms []string) (ma
 	coinIDs := make([]string, 0)
 
 	for _, d := range denoms {
-		id, exist := exchange.DenomToCoinID[d]
+		id, exist := p.denomToCoinID[d]
 		if !exist {
 			p.logger.WithField("denom", d).Warning("coinID not found")
 			return nil, errors.New("not all denoms have coinIDs")
@@ -180,7 +201,7 @@ func (p *GuildsProcess) getDenomPrices(ctx context.Context, denoms []string) (ma
 	}
 
 	for _, d := range denoms {
-		id := exchange.DenomToCoinID[d]
+		id := p.denomToCoinID[d]
 		found := false
 		for _, price := range prices {
 			if price.ID == id {

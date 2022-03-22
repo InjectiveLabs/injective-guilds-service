@@ -22,6 +22,11 @@ type GuildMarket struct {
 	TakerFeeRate primitive.Decimal128 `bson:"taker_fee_rate" json:"taker_fee_rate"`
 }
 
+type DenomCoinID struct {
+	Denom  string `bson:"denom" json:"denom"`
+	CoinID string `bson:"coin_id" json:"coin_id"`
+}
+
 type TokenMeta struct {
 	// Token full name
 	Name string `bson:"name" json:"name"`

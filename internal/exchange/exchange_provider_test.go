@@ -46,7 +46,7 @@ func TestGrants(t *testing.T) {
 
 func TestAssetPrice(t *testing.T) {
 	// integration test
-	provider, err := NewExchangeProvider("sentry2.injective.network:9910", "https://testnet.lcd.injective.dev", "https://k8s.mainnet.asset.injective.network")
+	provider, err := NewExchangeProvider("sentry2.injective.network:9910", "", "https://k8s.mainnet.asset.injective.network")
 	if err != nil {
 		panic(err)
 	}

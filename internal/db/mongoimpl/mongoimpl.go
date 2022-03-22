@@ -19,6 +19,7 @@ const (
 	GuildCollectionName     = "guilds"
 	MemberCollectionName    = "members"
 	PortfolioCollectionName = "portfolios"
+	DenomCollectionName     = "denoms"
 )
 
 var (
@@ -36,6 +37,7 @@ type MongoImpl struct {
 	guildCollection     *mongo.Collection
 	memberCollection    *mongo.Collection
 	portfolioCollection *mongo.Collection
+	denomCollection     *mongo.Collection
 }
 
 func NewService(ctx context.Context, connectionURL, databaseName string) (db.DBService, error) {
@@ -58,6 +60,7 @@ func NewService(ctx context.Context, connectionURL, databaseName string) (db.DBS
 		guildCollection:     client.Database(databaseName).Collection(GuildCollectionName),
 		memberCollection:    client.Database(databaseName).Collection(MemberCollectionName),
 		portfolioCollection: client.Database(databaseName).Collection(PortfolioCollectionName),
+		denomCollection:     client.Database(databaseName).Collection(DenomCollectionName),
 	}, nil
 }
 
@@ -356,6 +359,30 @@ func (s *MongoImpl) AddAccountPortfolios(
 	return err
 }
 
+func (s *MongoImpl) ListDenomCoinID(ctx context.Context) (result []*model.DenomCoinID, err error) {
+	filter := bson.M{}
+	cur, err := s.denomCollection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	for cur.Next(ctx) {
+		var denomCoinID model.DenomCoinID
+		err := cur.Decode(&denomCoinID)
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, &denomCoinID)
+	}
+
+	return result, nil
+}
+
 func (s *MongoImpl) Disconnect(ctx context.Context) error {
 	return s.client.Disconnect(ctx)
+}
+
+func (s *MongoImpl) GetClient() *mongo.Client {
+	return s.client
 }
