@@ -15,13 +15,22 @@ type Balance struct {
 
 // we only concern these fields in this service
 type SpotOrder struct {
+	MarketID string
+
 	OrderHash    string
 	FeeRecipient string
+	OrderSide    string
+
+	Price            decimal.Decimal
+	UnfilledQuantity decimal.Decimal
 }
 
 type DerivativeOrder struct {
+	MarketID     string
 	OrderHash    string
 	FeeRecipient string
+
+	Margin decimal.Decimal
 }
 
 // to calculate unrealized pnl
@@ -87,7 +96,7 @@ type DataProvider interface {
 	GetSpotOrders(ctx context.Context, marketIDs []string, subaccount string) ([]*SpotOrder, error)
 	GetDerivativeOrders(ctx context.Context, marketIDs []string, subaccount string) ([]*DerivativeOrder, error)
 
-	GetPositions(ctx context.Context, marketID string, subaccount string) ([]*DerivativePosition, error)
+	GetPositions(ctx context.Context, subaccount string) ([]*DerivativePosition, error)
 	GetGrants(ctx context.Context, granter, grantee string) (*Grants, error)
 
 	GetPriceUSD(ctx context.Context, coinIDs []string) ([]*CoinPrice, error)

@@ -60,7 +60,6 @@ func OptionTLSCert(tlsCert credentials.TransportCredentials) ClientOption {
 
 // derives from current `master` of sdk-go
 // vvvvv
-
 func NewExchangeProvider(
 	protoAddr string,
 	lcdAddr string,
@@ -161,9 +160,32 @@ func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketIDs []string
 			continue
 		}
 
+		// MarketID string
+
+		// OrderHash    string
+		// FeeRecipient string
+		// OrderSide    string
+
+		// Price            decimal.Decimal
+		// UnfilledQuantity decimal.Decimal
+		price, err := decimal.NewFromString(o.GetPrice())
+		if err != nil {
+			return nil, fmt.Errorf("parse price err: %w", err)
+		}
+
+		unfilledQuantity, err := decimal.NewFromString(o.GetUnfilledQuantity())
+		if err != nil {
+			return nil, fmt.Errorf("parse unfilled quantity err: %w", err)
+		}
+
 		result = append(result, &SpotOrder{
+			MarketID:     o.GetMarketId(),
 			OrderHash:    o.GetOrderHash(),
 			FeeRecipient: o.GetFeeRecipient(),
+			OrderSide:    o.GetOrderSide(),
+
+			Price:            price,
+			UnfilledQuantity: unfilledQuantity,
 		})
 	}
 
@@ -192,20 +214,25 @@ func (p *exchangeProvider) GetDerivativeOrders(ctx context.Context, marketIDs []
 			continue
 		}
 
+		margin, err := decimal.NewFromString(o.GetMargin())
+		if err != nil {
+			return nil, fmt.Errorf("parse margin err: %w", err)
+		}
+
 		result = append(result, &DerivativeOrder{
+			MarketID:     o.GetMarketId(),
 			OrderHash:    o.GetOrderHash(),
 			FeeRecipient: o.GetFeeRecipient(),
+			Margin:       margin,
 		})
 	}
 
 	return result, nil
-
 }
 
-func (p *exchangeProvider) GetPositions(ctx context.Context, marketID string, subaccount string) (result []*DerivativePosition, err error) {
+func (p *exchangeProvider) GetPositions(ctx context.Context, subaccount string) (result []*DerivativePosition, err error) {
 	req := &derivativeExchangePB.PositionsRequest{
 		SubaccountId: subaccount,
-		MarketId:     marketID,
 	}
 
 	var header metadata.MD
