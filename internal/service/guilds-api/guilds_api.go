@@ -241,10 +241,32 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 		}, nil
 	}
 
+	// get portfolio
+	portfolio, err := s.portfolioHelper.CaptureSingleMemberPortfolio(
+		ctx,
+		guild,
+		&model.GuildMember{
+			GuildID:          guild.ID,
+			InjectiveAddress: model.Address{AccAddress: accAddress},
+		},
+		true,
+	)
+	if err != nil {
+		return nil, svc.MakeInternal(fmt.Errorf("capture portfolio error: %w", err))
+	}
+
 	// add to database
 	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress})
 	if err != nil {
+		s.logger.WithError(err).Errorln("cannot add member")
 		return nil, svc.MakeInternal(err)
+	}
+
+	// TODO: transaction
+	err = s.dbSvc.AddAccountPortfolios(ctx, guild.ID.Hex(), []*model.AccountPortfolio{portfolio})
+	if err != nil {
+		// This account now joined guild, this error is not fatal, portfolio can be captured later
+		s.logger.WithError(err).Warningln("cannot write account portfolio to db")
 	}
 
 	joinStatus := "success"

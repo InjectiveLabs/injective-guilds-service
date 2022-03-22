@@ -193,6 +193,20 @@ func (s *MongoImpl) deleteMember(
 	return s.memberCollection.DeleteOne(ctx, filter)
 }
 
+// do we want to keep data for future analyze?
+func (s *MongoImpl) deletePortfolios(
+	ctx context.Context,
+	guildID primitive.ObjectID,
+	address model.Address,
+) (*mongo.DeleteResult, error) {
+	filter := bson.M{
+		"guild_id":          guildID,
+		"injective_address": address.String(),
+	}
+
+	return s.memberCollection.DeleteMany(ctx, filter)
+}
+
 func (s *MongoImpl) adjustMemberCount(
 	ctx context.Context,
 	guildID primitive.ObjectID,
@@ -267,6 +281,12 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 		if err != nil {
 			return nil, err
 		}
+
+		_, err = s.deletePortfolios(ctx, guildObjectID, address)
+		if err != nil {
+			return nil, err
+		}
+
 		return nil, nil
 	})
 
