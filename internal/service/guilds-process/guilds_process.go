@@ -34,16 +34,21 @@ type GuildsProcess struct {
 
 func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 	ctx := context.Background()
+	logger := log.WithField("svc", "guilds_process")
+
+	logger.Infoln("initializing db service")
 	dbService, err := mongoimpl.NewService(ctx, cfg.DBConnectionURL, cfg.DBName)
 	if err != nil {
 		return nil, err
 	}
 
+	logger.Infoln("ensuring db indexes...")
 	// make index
 	if err := dbService.(*mongoimpl.MongoImpl).EnsureIndex(ctx); err != nil {
 		log.WithError(err).Warningln("cannot ensure index")
 	}
 
+	logger.Infoln("connecting exchange grpc api")
 	// won't use lcd endpoint here
 	exchangeProvider, err := exchange.NewExchangeProvider(cfg.ExchangeGRPCURL, "", cfg.AssetPriceURL)
 	if err != nil {
@@ -54,8 +59,6 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	logger := log.WithField("svc", "guilds_process")
 
 	return &GuildsProcess{
 		dbSvc:                   dbService,
@@ -68,6 +71,7 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 }
 
 func (p *GuildsProcess) Run(ctx context.Context) {
+	p.logger.Infoln("guilds process is running to update portfolio and check to disqualify members")
 	// run 2 cron jobs
 	go p.runWithInterval(ctx, p.portfolioUpdateInterval, func(ctx context.Context) error {
 		return p.captureMemberPortfolios(ctx)
@@ -198,11 +202,13 @@ func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
 			markets = append(markets, market.MarketID.Hex())
 		}
 
+		countDisqualifed := 0
 		for _, member := range members {
 			disqualify, err := p.shouldDisqualify(ctx, g, member.InjectiveAddress)
 			if err != nil {
 				continue
 			}
+
 			// we don't expect this to regularly happen,
 			// so decided to delete each document this way
 			if disqualify {
@@ -210,9 +216,17 @@ func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
 				if err != nil {
 					log.WithField("memberAddress", member.InjectiveAddress.String()).
 						WithError(err).Errorln("cannot delete member")
+					continue
 				}
+
+				countDisqualifed++
 			}
 		}
+
+		p.logger.
+			WithField("count", countDisqualifed).
+			WithField("guildID", guildID).
+			Info("disqualifed members")
 	}
 	return nil
 }
