@@ -49,7 +49,7 @@ func (p *PortfolioHelper) CaptureSingleMemberPortfolio(
 	// get balances
 	balances, err := p.getSubaccountBalances(ctx, denoms, defaultSubaccountID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get balance error: %w", err)
 	}
 
 	// get all positions
@@ -241,10 +241,17 @@ func (p *PortfolioHelper) GetDenomPrices(ctx context.Context, denoms []string) (
 	return result, nil
 }
 
+// basically, we need Denom -> CoinID to get coin price
+// decide to store usd price in db at the moment, will use historical price later
 func (p *PortfolioHelper) UpdateDenomToCoinIDMap(ctx context.Context) error {
 	denomCoinID, err := p.dbSvc.ListDenomCoinID(ctx)
 	if err != nil {
 		return err
+	}
+
+	// add a check to make sure denoms are added
+	if len(denomCoinID) == 0 {
+		return errors.New("cannot find denom to coin-id, should run update-denom first")
 	}
 
 	p.denomToCoinID = make(map[string]string)

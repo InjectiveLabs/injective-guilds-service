@@ -129,6 +129,10 @@ func addGuildAction() {
 	exchangeProvider, err := exchange.NewExchangeProvider(*exchangeURL, "", *assetPriceURL)
 	panicIf(err)
 
+	log.Info("initializing portfolio helper")
+	helper, err := guildsprocess.NewPortfolioHelper(ctx, dbSvc, exchangeProvider)
+	panicIf(err)
+
 	spotClient := spotExchangePB.NewInjectiveSpotExchangeRPCClient(exchangeProvider.GetExchangeConn())
 	derivativeClient := derivativeExchangePB.NewInjectiveDerivativeExchangeRPCClient(exchangeProvider.GetExchangeConn())
 
@@ -223,9 +227,6 @@ func addGuildAction() {
 	panicIf(err)
 
 	log.Info("capturing default member portfolio")
-	helper, err := guildsprocess.NewPortfolioHelper(ctx, dbSvc, exchangeProvider)
-	panicIf(err)
-
 	portfolio, err := helper.CaptureSingleMemberPortfolio(ctx, guild, &model.GuildMember{
 		GuildID:          *id,
 		InjectiveAddress: model.Address{AccAddress: defaultMember},

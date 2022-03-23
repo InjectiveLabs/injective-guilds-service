@@ -93,7 +93,7 @@ func actionUpdateDenom() {
 		coinIDs = append(coinIDs, v)
 	}
 
-	provider, err := exchange.NewExchangeProvider("sentry2.injective.network:9910", "", "https://k8s.mainnet.asset.injective.network")
+	provider, err := exchange.NewExchangeProvider("sentry2.injective.network:9910", "", *assetPriceURL)
 	panicIf(err)
 
 	prices := getAllCoinPrices(ctx, provider, coinIDs)
@@ -121,6 +121,12 @@ func cmdUpdateDenom(c *cli.Cmd) {
 		Name:  "db-url",
 		Desc:  "database url",
 		Value: "mongodb://localhost:27017",
+	})
+
+	assetPriceURL = c.String(cli.StringOpt{
+		Name:  "asset-price-url",
+		Desc:  "asset price service url",
+		Value: "https://k8s.mainnet.asset.injective.network",
 	})
 
 	c.Action = actionUpdateDenom

@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	apiEnvPrefix     = "GUILDS_"
-	processEnvPrefix = "GUILDS_PROCESS_"
+	apiEnvPrefix     = "GUILDS"
+	processEnvPrefix = "GUILDS_PROCESS"
 	envFile          = ".env"
 )
 
@@ -156,7 +156,7 @@ func LoadGuildsProcessConfig() GuildProcessConfig {
 		DBConnectionURL: LoadEnvString(fmt.Sprintf("%s_DB_CONNECTION_URL", processEnvPrefix), ""),
 
 		// TODO: Discuss + Update interval
-		PortfolioUpdateInterval: LoadEnvDuration(fmt.Sprintf("%s_PORTFOLIO_UPDATE_INTERVAL", apiEnvPrefix), time.Hour),
+		PortfolioUpdateInterval: LoadEnvDuration(fmt.Sprintf("%s_PORTFOLIO_UPDATE_INTERVAL", processEnvPrefix), time.Hour),
 		DisqualifyInterval:      LoadEnvDuration(fmt.Sprintf("%s_DISQUALIFY_INTERVAL", processEnvPrefix), 6*time.Hour),
 		StatsdConfig:            loadStatsdConfig(processEnvPrefix),
 

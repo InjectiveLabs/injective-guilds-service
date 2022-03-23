@@ -249,11 +249,10 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 			return nil, ErrMemberExceedCap
 		}
 
-		adj, err := s.adjustMemberCount(sessCtx, guildObjectID, 1)
+		_, err = s.adjustMemberCount(sessCtx, guildObjectID, 1)
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("adj: %#v", *adj)
 
 		upsertRes, err := s.upsertMember(sessCtx, guildObjectID, address)
 		if err != nil {

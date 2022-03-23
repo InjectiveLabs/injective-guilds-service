@@ -3,6 +3,7 @@ package guildsprocess
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
@@ -119,7 +120,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 			continue
 		}
 
-		// for each guild, we get all denom prices once
+		// for each guild, don't need price be 100% accurate, we get all denom prices once
 		// eliminate failure + save time
 		priceMap, err := p.portfolioHelper.GetDenomPrices(ctx, model.GetGuildDenoms(guild))
 		if err != nil {
@@ -152,11 +153,16 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 			portfolios = append(portfolios, portfolioSnapshot)
 		}
 
-		err = p.dbSvc.AddAccountPortfolios(ctx, guildID, portfolios)
-		if err != nil {
+		if len(portfolios) > 0 {
 			p.logger.
-				WithField("guildID", guildID).
-				WithError(err).Warningln("skip this guild")
+				WithField("count", len(portfolios)).
+				WithField("guildID", guildID).Infoln("updated portfolios")
+			err = p.dbSvc.AddAccountPortfolios(ctx, guildID, portfolios)
+			if err != nil {
+				p.logger.
+					WithField("guildID", guildID).
+					WithError(err).Warningln("skip this guild")
+			}
 		}
 	}
 	return nil
@@ -173,9 +179,11 @@ func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
 	// TODO: clarify disqualify reason
 	for _, g := range guilds {
 		guildID := g.ID.Hex()
+		isDefaultMember := false
 
 		members, err := p.dbSvc.ListGuildMembers(ctx, model.MemberFilter{
-			GuildID: &guildID,
+			GuildID:         &guildID,
+			IsDefaultMember: &isDefaultMember,
 		})
 		if err != nil {
 			err = fmt.Errorf("list non-default member err: %w", err)
@@ -216,6 +224,8 @@ func (p *GuildsProcess) shouldDisqualify(
 	address model.Address,
 ) (bool, error) {
 	defaultSubaccountID := defaultSubaccountIDFromInjAddress(address)
+	masterAddress := strings.ToLower(guild.MasterAddress.String())
+
 	spotOrders, err := p.exchange.GetSpotOrders(
 		ctx, marketsFromGuild(guild, false),
 		defaultSubaccountID,
@@ -226,7 +236,7 @@ func (p *GuildsProcess) shouldDisqualify(
 	}
 
 	for _, o := range spotOrders {
-		if o.FeeRecipient != guild.MasterAddress.String() {
+		if strings.ToLower(o.FeeRecipient) != masterAddress {
 			return true, nil
 		}
 	}
@@ -242,7 +252,7 @@ func (p *GuildsProcess) shouldDisqualify(
 	}
 
 	for _, o := range derivativeOrders {
-		if o.FeeRecipient != guild.MasterAddress.String() {
+		if strings.ToLower(o.FeeRecipient) != masterAddress {
 			return true, nil
 		}
 	}
