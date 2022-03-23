@@ -145,6 +145,9 @@ func cmdApi(c *cli.Cmd) {
 	err := cfg.Validate()
 	panicIf(err)
 
+	dbURL = &cfg.DBConnectionURL
+	actionUpdateDenom()
+
 	apiServer, err := NewServer(cfg)
 	panicIf(err)
 

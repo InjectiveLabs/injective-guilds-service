@@ -66,6 +66,8 @@ func actionUpdateDenom() {
 	dbSvc, err := mongoimpl.NewService(ctx, *dbURL, "guilds")
 	panicIf(err)
 
+	defer dbSvc.Disconnect(ctx)
+
 	// don't want to mess up internal db code -> implement write steps here
 	mgo := dbSvc.(*mongoimpl.MongoImpl)
 	denomsColl := mgo.GetClient().Database("guilds").Collection("denoms")
@@ -93,7 +95,7 @@ func actionUpdateDenom() {
 		coinIDs = append(coinIDs, v)
 	}
 
-	provider, err := exchange.NewExchangeProvider("sentry2.injective.network:9910", "", *assetPriceURL)
+	provider, err := exchange.NewExchangeProvider("", "", *assetPriceURL)
 	panicIf(err)
 
 	prices := getAllCoinPrices(ctx, provider, coinIDs)
