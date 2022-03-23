@@ -145,6 +145,7 @@ func cmdApi(c *cli.Cmd) {
 	err := cfg.Validate()
 	panicIf(err)
 
+	assetPriceURL = &cfg.AssetPriceURL
 	dbURL = &cfg.DBConnectionURL
 	actionUpdateDenom()
 
