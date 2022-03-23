@@ -14,7 +14,6 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	guildsapi "github.com/InjectiveLabs/injective-guilds-service/internal/service/guilds-api"
-	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 	cli "github.com/jawher/mow.cli"
 	"github.com/xlab/closer"
 	log "github.com/xlab/suplog"
@@ -52,9 +51,6 @@ func NewServer(cfg config.GuildsAPIServerConfig) (*APIServer, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// config cosmos type address prefix
-	cosmtypes.GetConfig().SetBech32PrefixForAccount("inj", "injpub")
 
 	// prepare endpoints
 	guildsServiceEndpoints := guildsapisvc.NewEndpoints(guildsApi)

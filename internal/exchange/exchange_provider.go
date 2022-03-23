@@ -331,6 +331,10 @@ func (p *exchangeProvider) GetPriceUSD(ctx context.Context, coinIDs []string) ([
 	return res.Data, nil
 }
 
+func (p *exchangeProvider) GetExchangeConn() *grpc.ClientConn {
+	return p.conn
+}
+
 func (p *exchangeProvider) Close() error {
 	return p.conn.Close()
 }

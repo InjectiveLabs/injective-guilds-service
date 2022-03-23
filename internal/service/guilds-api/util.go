@@ -1,6 +1,8 @@
 package guildsapi
 
 import (
+	"strconv"
+
 	svc "github.com/InjectiveLabs/injective-guilds-service/api/gen/guilds_service"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 )
@@ -11,10 +13,10 @@ func modelGuildToResponse(m *model.Guild) *svc.Guild {
 		Name:                       m.Name,
 		Description:                m.Description,
 		MasterAddress:              m.MasterAddress.String(),
-		SpotBaseRequirement:        m.SpotBaseRequirement.String(),
-		SpotQuoteRequirement:       m.SpotQuoteRequirement.String(),
-		DerivativeQuoteRequirement: m.DerivativeQuoteRequirement.String(),
-		StakingRequirement:         m.StakingRequirement.String(),
+		SpotBaseRequirement:        strconv.Itoa(m.SpotBaseRequirement),
+		SpotQuoteRequirement:       strconv.Itoa(m.SpotQuoteRequirement),
+		DerivativeQuoteRequirement: strconv.Itoa(m.DerivativeQuoteRequirement),
+		StakingRequirement:         strconv.Itoa(m.StakingRequirement),
 		Capacity:                   m.Capacity,
 		MemberCount:                m.MemberCount,
 	}

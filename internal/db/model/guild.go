@@ -28,18 +28,11 @@ type DenomCoinID struct {
 }
 
 type TokenMeta struct {
-	// Token full name
-	Name string `bson:"name" json:"name"`
-	// Token Ethereum contract address
-	Address string `bson:"address" json:"address"`
-	// Token symbol short name
-	Symbol string `bson:"symbol" json:"symbol"`
-	// URL to the logo image
-	Logo *string `bson:"logo" json:"logo"`
-	// Token decimals
-	Decimals int `bson:"decimal" json:"decimal"`
-	// Token metadata fetched timestamp in UNIX millis.
-	UpdatedAt int64 `bson:"updated_at" json:"updated_at"`
+	Name      string `bson:"name" json:"name"`
+	Address   string `bson:"address" json:"address"`
+	Symbol    string `bson:"symbol" json:"symbol"`
+	Decimals  int    `bson:"decimal" json:"decimal"`
+	UpdatedAt int64  `bson:"updated_at" json:"updated_at"`
 }
 
 type Guild struct {
@@ -49,10 +42,11 @@ type Guild struct {
 	Description   string  `bson:"description" json:"description"`
 	MasterAddress Address `bson:"master_address" json:"master_address"`
 
-	SpotBaseRequirement        primitive.Decimal128 `bson:"spot_base_requirement" json:"spot_base_requirement"`
-	SpotQuoteRequirement       primitive.Decimal128 `bson:"spot_quote_requirement" json:"spot_quote_requirement"`
-	DerivativeQuoteRequirement primitive.Decimal128 `bson:"derivative_quote_requirement" json:"derivative_quote_requirement"`
-	StakingRequirement         primitive.Decimal128 `bson:"staking_requirement" json:"staking_requirement"`
+	// Requirements are in USD
+	SpotBaseRequirement        int `bson:"spot_base_requirement" json:"spot_base_requirement"`
+	SpotQuoteRequirement       int `bson:"spot_quote_requirement" json:"spot_quote_requirement"`
+	DerivativeQuoteRequirement int `bson:"derivative_quote_requirement" json:"derivative_quote_requirement"`
+	StakingRequirement         int `bson:"staking_requirement" json:"staking_requirement"`
 
 	Capacity    int `bson:"capacity" json:"capacity"`
 	MemberCount int `bson:"member_count" json:"member_count"`

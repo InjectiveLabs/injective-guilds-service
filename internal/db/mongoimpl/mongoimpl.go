@@ -82,6 +82,16 @@ func (s *MongoImpl) EnsureIndex(ctx context.Context) error {
 	return nil
 }
 
+func (s *MongoImpl) AddGuild(ctx context.Context, guild *model.Guild) (*primitive.ObjectID, error) {
+	insertOneRes, err := s.guildCollection.InsertOne(ctx, guild)
+	if err != nil {
+		return nil, err
+	}
+
+	objID := insertOneRes.InsertedID.(primitive.ObjectID)
+	return &objID, nil
+}
+
 func (s *MongoImpl) ListAllGuilds(ctx context.Context) (result []*model.Guild, err error) {
 	filter := bson.M{}
 	cur, err := s.guildCollection.Find(ctx, filter)
@@ -213,7 +223,7 @@ func (s *MongoImpl) adjustMemberCount(
 	increment int,
 ) (*mongo.UpdateResult, error) {
 	filter := bson.M{
-		"guild_id": guildID,
+		"_id": guildID,
 	}
 	upd := bson.M{
 		"$inc": bson.M{
@@ -239,10 +249,11 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 			return nil, ErrMemberExceedCap
 		}
 
-		_, err = s.adjustMemberCount(sessCtx, guildObjectID, 1)
+		adj, err := s.adjustMemberCount(sessCtx, guildObjectID, 1)
 		if err != nil {
 			return nil, err
 		}
+		fmt.Printf("adj: %#v", *adj)
 
 		upsertRes, err := s.upsertMember(sessCtx, guildObjectID, address)
 		if err != nil {

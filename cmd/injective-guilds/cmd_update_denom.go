@@ -3,34 +3,30 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
+	cli "github.com/jawher/mow.cli"
+	log "github.com/xlab/suplog"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-func panicIf(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
 
 // this will support the guilds process to get correct denom price in USD from asset-price service
 var denomToCoinID = map[string]string{
 	"peggy0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2": "weth",
 	"peggy0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": "usd-coin",
 	"inj": "injective-protocol",
-	"peggy0xdAC17F958D2ee523a2206206994597C13D831ec7":                      "tether",
-	"peggy0x514910771AF9Ca656af840dff83E8264EcF986CA":                      "chainlink",
-	"peggy0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9":                      "aave",
-	"peggy0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0":                      "matic-network",
-	"peggy0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984":                      "uniswap",
-	"peggy0x6B3595068778DD592e39A122f4f5a5cF09C90fE2":                      "sushi",
-	"peggy0xc944E90C64B2c07662A292be6244BDf05Cda44a7":                      "the-graph",
-	"peggy0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F":                      "havven",
-	"peggy0x4a220E6096B25EADb88358cb44068A3248254675":                      "quant-network",
+	"peggy0xdAC17F958D2ee523a2206206994597C13D831ec7": "tether",
+	"peggy0x514910771AF9Ca656af840dff83E8264EcF986CA": "chainlink",
+	"peggy0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9": "aave",
+	"peggy0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0": "matic-network",
+	"peggy0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984": "uniswap",
+	"peggy0x6B3595068778DD592e39A122f4f5a5cF09C90fE2": "sushi",
+	"peggy0xc944E90C64B2c07662A292be6244BDf05Cda44a7": "the-graph",
+	"peggy0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F": "havven",
+	// TODO: Add quant-network to support list
+	// "peggy0x4a220E6096B25EADb88358cb44068A3248254675":                      "quant-network",
 	"peggy0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599":                      "wrapped-bitcoin",
 	"peggy0xBB0E17EF65F82Ab018d8EDd776e8DD940327B28b":                      "axie-infinity",
 	"ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9": "cosmos",
@@ -40,9 +36,34 @@ var denomToCoinID = map[string]string{
 	"ibc/E7807A46C0B7B44B350DA58F51F278881B863EC4DCA94635DAB39E52C30766CB": "chihuahua-token",
 }
 
-func main() {
+func getAllCoinPrices(ctx context.Context, provider exchange.DataProvider, coinIDs []string) []*exchange.CoinPrice {
+	var (
+		err    error
+		prices = make([]*exchange.CoinPrice, 0)
+		ids    = coinIDs[:]
+	)
+
+	for len(ids) > 0 {
+		var tmpPrices []*exchange.CoinPrice
+		if len(ids) > 10 {
+			tmpPrices, err = provider.GetPriceUSD(ctx, ids[:10])
+			panicIf(err)
+
+			ids = ids[10:]
+		} else {
+			tmpPrices, err = provider.GetPriceUSD(ctx, ids[:])
+			panicIf(err)
+
+			ids = []string{}
+		}
+		prices = append(prices, tmpPrices...)
+	}
+	return prices
+}
+
+func actionUpdateDenom() {
 	ctx := context.Background()
-	dbSvc, err := mongoimpl.NewService(ctx, "mongodb://localhost:27017", "guilds")
+	dbSvc, err := mongoimpl.NewService(ctx, *dbURL, "guilds")
 	panicIf(err)
 
 	// don't want to mess up internal db code -> implement write steps here
@@ -63,10 +84,10 @@ func main() {
 	panicIf(err)
 
 	for _, d := range allDenoms {
-		fmt.Printf("added: %+v\n", d)
+		log.Info(fmt.Sprintf("updated: %+v\n", d))
 	}
 
-	fmt.Printf("Double check if asset-price supports added coin:\n")
+	log.Info("Double checking if asset-price supports all added coins...")
 	coinIDs := make([]string, 0)
 	for _, v := range denomToCoinID {
 		coinIDs = append(coinIDs, v)
@@ -75,43 +96,32 @@ func main() {
 	provider, err := exchange.NewExchangeProvider("sentry2.injective.network:9910", "", "https://k8s.mainnet.asset.injective.network")
 	panicIf(err)
 
-	prices := make([]*exchange.CoinPrice, 0)
-
-	ids := coinIDs[:]
-	for len(ids) > 0 {
-		var tmpPrices []*exchange.CoinPrice
-		if len(ids) > 10 {
-			tmpPrices, err = provider.GetPriceUSD(ctx, ids[:10])
-			panicIf(err)
-
-			ids = ids[10:]
-		} else {
-			tmpPrices, err = provider.GetPriceUSD(ctx, ids[:])
-			panicIf(err)
-
-			ids = []string{}
-		}
-
-		prices = append(prices, tmpPrices...)
-	}
+	prices := getAllCoinPrices(ctx, provider, coinIDs)
+	notFoundCoins := make([]string, 0)
 
 	existMap := make(map[string]bool)
 	for _, price := range prices {
 		existMap[price.ID] = true
 	}
 
-	fmt.Println("Coin IDs that not found:")
-	count := 0
 	for _, id := range coinIDs {
 		if _, exist := existMap[id]; !exist {
-			fmt.Println(id)
-			count++
+			notFoundCoins = append(notFoundCoins, id)
 		}
 	}
 
-	if count > 0 {
-		os.Exit(1)
+	if len(notFoundCoins) > 0 {
+		log.Fatal("asset-price desn't support: ", notFoundCoins)
 	}
-
 	fmt.Println("!!! Bravo, all coins price are supported")
+}
+
+func cmdUpdateDenom(c *cli.Cmd) {
+	dbURL = c.String(cli.StringOpt{
+		Name:  "db-url",
+		Desc:  "database url",
+		Value: "mongodb://localhost:27017",
+	})
+
+	c.Action = actionUpdateDenom
 }

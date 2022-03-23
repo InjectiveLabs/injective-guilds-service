@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/shopspring/decimal"
+	"google.golang.org/grpc"
 )
 
 // declare internal types, interface for this service
@@ -41,6 +42,13 @@ type DerivativePosition struct {
 	Margin     decimal.Decimal
 	EntryPrice decimal.Decimal
 	MarkPrice  decimal.Decimal
+}
+
+type SpotMarket struct {
+	MarketID string
+}
+
+type DerivativeMarket struct {
 }
 
 type Grants struct {
@@ -92,14 +100,17 @@ type CoinPriceResult struct {
 
 type DataProvider interface {
 	GetSubaccountBalances(ctx context.Context, subaccount string) ([]*Balance, error)
-
 	GetSpotOrders(ctx context.Context, marketIDs []string, subaccount string) ([]*SpotOrder, error)
 	GetDerivativeOrders(ctx context.Context, marketIDs []string, subaccount string) ([]*DerivativeOrder, error)
-
 	GetPositions(ctx context.Context, subaccount string) ([]*DerivativePosition, error)
-	GetGrants(ctx context.Context, granter, grantee string) (*Grants, error)
 
+	GetSpotMarket(ctx context.Context, marketID string) (*SpotMarket, error)
+	GetDerivativeMarket(ctx context.Context, marketID string) (*DerivativeMarket, error)
+
+	GetGrants(ctx context.Context, granter, grantee string) (*Grants, error)
 	GetPriceUSD(ctx context.Context, coinIDs []string) ([]*CoinPrice, error)
+
+	GetExchangeConn() *grpc.ClientConn
 	// close provider
 	Close() error
 }

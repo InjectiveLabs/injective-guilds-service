@@ -10,7 +10,6 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
-	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 	log "github.com/xlab/suplog"
 )
 
@@ -55,7 +54,6 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 		return nil, err
 	}
 
-	cosmtypes.GetConfig().SetBech32PrefixForAccount("inj", "injpub")
 	logger := log.WithField("svc", "guilds_process")
 
 	return &GuildsProcess{

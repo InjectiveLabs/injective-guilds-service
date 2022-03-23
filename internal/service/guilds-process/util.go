@@ -1,6 +1,8 @@
 package guildsprocess
 
 import (
+	"time"
+
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	"github.com/ethereum/go-ethereum/common"
@@ -31,7 +33,9 @@ func buildPortfolio(
 	usdPrices map[string]float64,
 ) *model.AccountPortfolio {
 	portfolio := &model.AccountPortfolio{
-		GuildID: member.GuildID,
+		GuildID:          member.GuildID,
+		InjectiveAddress: member.InjectiveAddress,
+		UpdatedAt:        time.Now(),
 	}
 
 	for _, b := range balances {

@@ -4,11 +4,13 @@ import (
 	"context"
 
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type DBService interface {
 	ListAllGuilds(ctx context.Context) ([]*model.Guild, error)
 	GetSingleGuild(ctx context.Context, guildID string) (*model.Guild, error)
+	AddGuild(ctx context.Context, guild *model.Guild) (*primitive.ObjectID, error)
 
 	// members
 	ListGuildMembers(ctx context.Context, filter model.MemberFilter) ([]*model.GuildMember, error)

@@ -1,6 +1,7 @@
 package model
 
 import (
+	"bytes"
 	"encoding/binary"
 
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
@@ -31,6 +32,34 @@ func (a Address) MarshalJSON() ([]byte, error) {
 func (a Address) MarshalBSONValue() (bsontype.Type, []byte, error) {
 	buf := bsoncore.AppendString(nil, a.AccAddress.String())
 	return bsontype.String, buf, nil
+}
+
+var emptyCosmosAddr = cosmtypes.AccAddress{}
+
+func (a Address) IsEmpty() bool {
+	return bytes.Equal(a.AccAddress, emptyCosmosAddr)
+}
+
+func (a *Address) UnmarshalBSONValue(t bsontype.Type, src []byte) error {
+	if t != bsontype.String {
+		return errors.Errorf("bsontype(%s) not allowed in Address.UnmarshalBSONValue", t.String())
+	}
+
+	v, _, ok := bsoncore.ReadString(src)
+	if !ok {
+		return errors.Errorf("bsoncore failed to read String")
+	}
+
+	accAddress, err := cosmtypes.AccAddressFromBech32(v)
+	if err != nil {
+		err = errors.Wrapf(err, "failed to unmarshal cosmos address from bech32: %s", v)
+		return err
+	}
+
+	*a = Address{
+		AccAddress: accAddress,
+	}
+	return nil
 }
 
 type Hash struct {
