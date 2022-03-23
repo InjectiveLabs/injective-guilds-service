@@ -105,6 +105,40 @@ func (s *MongoImpl) AddGuild(ctx context.Context, guild *model.Guild) (*primitiv
 	return &objID, nil
 }
 
+func (s *MongoImpl) DeleteGuild(ctx context.Context, guildID string) error {
+	guildObjectID, err := primitive.ObjectIDFromHex(guildID)
+	if err != nil {
+		return fmt.Errorf("cannot parse guildID: %w", err)
+	}
+
+	_, err = s.session.WithTransaction(ctx, func(sessCtx mongo.SessionContext) (interface{}, error) {
+		filter := bson.M{
+			"_id": guildObjectID,
+		}
+		_, err := s.guildCollection.DeleteOne(ctx, filter)
+		if err != nil {
+			return nil, err
+		}
+
+		filter = bson.M{
+			"guild_id": guildObjectID,
+		}
+
+		_, err = s.memberCollection.DeleteMany(ctx, filter)
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = s.portfolioCollection.DeleteMany(ctx, filter)
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, nil
+	})
+	return err
+}
+
 func (s *MongoImpl) ListAllGuilds(ctx context.Context) (result []*model.Guild, err error) {
 	filter := bson.M{}
 	cur, err := s.guildCollection.Find(ctx, filter)

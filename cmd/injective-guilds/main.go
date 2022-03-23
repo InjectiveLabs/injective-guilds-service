@@ -11,6 +11,7 @@ var (
 	app               = cli.App("injective-guilds", "A microserivce for trading guilds queries")
 	spotIDs           *[]string
 	derivativeIDs     *[]string
+	guildID           *string
 	name              *string
 	description       *string
 	capacity          *int
@@ -38,6 +39,7 @@ func main() {
 	app.Command("process", "start Guilds process, which takes portfolios snapshots and handle disqualification", cmdProcess)
 	app.Command("update-denom", "update all denom-coinID map to database", cmdUpdateDenom)
 	app.Command("add-guild", "add a guild", cmdAddGuild)
+	app.Command("delete-guild", "delete a guild", cmdDeleteGuild)
 
 	_ = app.Run(os.Args)
 }
