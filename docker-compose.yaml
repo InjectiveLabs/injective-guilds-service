@@ -13,7 +13,7 @@ services:
       - GUILDS_LOG_LEVEL=DEBUG
       - GUILDS_LISTEN_ADDRESS=http://localhost:9930
       # this works on devnet
-      - GUILDS_DB_CONNECTION_URL=mongodb://host.docker.internal:27017
+      - GUILDS_DB_CONNECTION_URL=mongodb://mongo:27017
       - GUILDS_DB_NAME=guilds
       - GUILDS_EXCHANGE_GRPC_URL=host.docker.internal:9910
       - GUILDS_LCD_URL=http://host.docker.internal:10337
@@ -27,18 +27,18 @@ services:
     ports:
       - "9930:9930"
     command: injective-guilds api
-  asset-price-process:
+  guilds-process:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: injective-guilds-process
-    image: asset-price:${APP_ENV}
+    image: injective-guilds:${APP_ENV}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
       - GUILDS_PROCESS_ENV=${APP_ENV}
       - GUILDS_PROCESS_LOG_LEVEL=DEBUG
-      - GUILDS_PROCESS_DB_CONNECTION_URL=mongodb://host.docker.internal:27017
+      - GUILDS_PROCESS_DB_CONNECTION_URL=mongodb://mongo:27017
       - GUILDS_PROCESS_DB_NAME=guilds
       - GUILDS_PROCESS_EXCHANGE_GRPC_URL=host.docker.internal:9910
       - GUILDS_PROCESS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
@@ -52,3 +52,19 @@ services:
       - GUILDS_PROCESS_STATSD_MOCKING=false
       - GUILDS_PROCESS_STATSD_DISABLED=false
     command: injective-guilds process
+  # below mongo config is for dev/test env, not for production
+  # we already have a mongo setup on production
+  mongo:
+    container_name: mongo
+    image: mongo
+    command: mongod --replSet rs0 --port 27017 --bind_ip 0.0.0.0
+  # # a trick to setup mongo replset
+  mongo-setup:
+    container_name: mongo-setup
+    depends_on:
+      - mongo
+    image: mongo
+    entrypoint: |
+      bash -c "sleep 10 && mongo --host mongo:27017 --eval 'rs.initiate()'"
+
+  
