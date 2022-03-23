@@ -1,0 +1,54 @@
+version: "3.9"
+services:
+  guilds-api:
+    container_name: injective-guilds-api
+    image: injective-guilds:${APP_ENV}
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - GUILDS_ENV=${APP_ENV}
+      - GUILDS_LOG_LEVEL=DEBUG
+      - GUILDS_LISTEN_ADDRESS=http://localhost:9930
+      # this works on devnet
+      - GUILDS_DB_CONNECTION_URL=mongodb://host.docker.internal:27017
+      - GUILDS_DB_NAME=guilds
+      - GUILDS_EXCHANGE_GRPC_URL=host.docker.internal:9910
+      - GUILDS_LCD_URL=http://host.docker.internal:10337
+      - GUILDS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
+      # stat
+      - GUILDS_STATSD_PREFIX=guilds-api
+      - GUILDS_STATSD_ADDR=localhost:8125
+      - GUILDS_STATSD_STUCK_DUR=5m
+      - GUILDS_STATSD_MOCKING=false
+      - GUILDS_STATSD_DISABLED=false
+    ports:
+      - "9930:9930"
+    command: injective-guilds api
+  asset-price-process:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: injective-guilds-process
+    image: asset-price:${APP_ENV}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - GUILDS_PROCESS_ENV=${APP_ENV}
+      - GUILDS_PROCESS_LOG_LEVEL=DEBUG
+      - GUILDS_PROCESS_DB_CONNECTION_URL=mongodb://host.docker.internal:27017
+      - GUILDS_PROCESS_DB_NAME=guilds
+      - GUILDS_PROCESS_EXCHANGE_GRPC_URL=host.docker.internal:9910
+      - GUILDS_PROCESS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
+
+      - GUILDS_PROCESS_PORTFOLIO_UPDATE_INTERVAL=30s
+      - GUILDS_PROCESS_DISQUALIFY_INTERVAL=1m
+
+      - GUILDS_PROCESS_STATSD_PREFIX=guilds-process
+      - GUILDS_PROCESS_STATSD_ADDR=localhost:8125
+      - GUILDS_PROCESS_STATSD_STUCK_DUR=5m
+      - GUILDS_PROCESS_STATSD_MOCKING=false
+      - GUILDS_PROCESS_STATSD_DISABLED=false
+    command: injective-guilds process
