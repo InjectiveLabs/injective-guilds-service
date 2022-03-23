@@ -43,7 +43,7 @@ func NewService(ctx context.Context, dbSvc db.DBService, exchangeProvider exchan
 		portfolioHelper:  helper,
 		logger:           log.WithField("svc", "guilds_api"),
 		grants: []string{
-			// TODO: Double check with Peiyun for these message
+			// TODO: Double check with Peiyun for these grants
 			"/injective.exchange.v1beta1.MsgCreateSpotLimitOrder",
 			"/injective.exchange.v1beta1.MsgCreateDerivativeLimitOrder",
 			"/injective.exchange.v1beta1.MsgCancelDerivativeLimitOrder",

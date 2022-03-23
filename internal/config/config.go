@@ -93,6 +93,7 @@ type GuildsAPIServerConfig struct {
 
 	ExchangeGRPCURL string
 	LcdURL          string
+	AssetPriceURL   string
 
 	StatsdConfig StatsdConfig
 }
@@ -117,6 +118,7 @@ func LoadGuildsAPIServerConfig() GuildsAPIServerConfig {
 
 		ExchangeGRPCURL: LoadEnvString(fmt.Sprintf("%s_EXCHANGE_GRPC_URL", apiEnvPrefix), "http://localhost:9910"),
 		LcdURL:          LoadEnvString(fmt.Sprintf("%s_LCD_URL", apiEnvPrefix), ""),
+		AssetPriceURL:   LoadEnvString(fmt.Sprintf("%s_ASSET_PRICE_URL", apiEnvPrefix), ""),
 
 		StatsdConfig: loadStatsdConfig(apiEnvPrefix),
 	}

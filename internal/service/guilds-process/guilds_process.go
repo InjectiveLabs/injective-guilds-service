@@ -148,6 +148,10 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 				continue
 			}
 
+			if portfolioSnapshot == nil {
+				continue
+			}
+
 			// fill denom price, priceMap has all denom prices
 			for _, b := range portfolioSnapshot.Balances {
 				b.PriceUSD = priceMap[b.Denom]
