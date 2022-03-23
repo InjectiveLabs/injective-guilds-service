@@ -12,7 +12,7 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	guildsprocess "github.com/InjectiveLabs/injective-guilds-service/internal/service/guilds-process"
-	secp256k1 "github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/InjectiveLabs/sdk-go/chain/crypto/ethsecp256k1"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 	log "github.com/xlab/suplog"
 )
@@ -182,46 +182,45 @@ func (s *service) isAddressQualified(ctx context.Context, guild *model.Guild, ad
 }
 
 // input are base64 strings
-func (s *service) verifySigAndDeriveAddress(
-	publicKey string,
-	signature string,
-	message string,
+func verifySigAndDeriveAddress(
+	publicKeyBase64 string,
+	signatureBase64 string,
+	messageBase64 string,
 ) (cosmtypes.AccAddress, error) {
 	// parse
 	// TODO: Add timestamp check
-	messageBytes, err := base64.StdEncoding.DecodeString(message)
+	messageBytes, err := base64.StdEncoding.DecodeString(messageBase64)
 	if err != nil {
-		return nil, svc.MakeInvalidArg(errors.New("bad message"))
+		return nil, fmt.Errorf("bad message: %w", err)
 	}
 
-	signatureBytes, err := base64.StdEncoding.DecodeString(signature)
+	signatureBytes, err := base64.StdEncoding.DecodeString(signatureBase64)
 	if err != nil {
-		return nil, svc.MakeInvalidArg(errors.New("bad signature"))
+		return nil, fmt.Errorf("bad signature: %w", err)
 	}
 
-	publicKeyBytes, err := base64.StdEncoding.DecodeString(publicKey)
+	publicKeyBytes, err := base64.StdEncoding.DecodeString(publicKeyBase64)
 	if err != nil {
-		return nil, svc.MakeInvalidArg(errors.New("bad publicKey"))
+		return nil, fmt.Errorf("bad publicKey: %w", err)
 	}
 
 	// verify message, reference: https://pkg.go.dev/github.com/cosmos/cosmos-sdk/crypto/keyring
-	pubKey := new(secp256k1.PubKey)
-	if err := pubKey.Unmarshal(publicKeyBytes); err != nil {
-		return nil, svc.MakeInvalidArg(errors.New("bad pubKey"))
+	pubKey := &ethsecp256k1.PubKey{
+		Key: publicKeyBytes,
 	}
 
 	if !pubKey.VerifySignature(messageBytes, signatureBytes) {
-		return nil, svc.MakeInvalidArg(errors.New("cannot verify message and signature"))
+		return nil, fmt.Errorf("cannot verify message and signature")
 	}
 
 	// derive address
-	return cosmtypes.AccAddress(pubKey.Address().Bytes()), nil
+	return cosmtypes.AccAddress(pubKey.Address()), nil
 }
 
 func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
-	accAddress, err := s.verifySigAndDeriveAddress(payload.PublicKey, payload.Signature, payload.Message)
+	accAddress, err := verifySigAndDeriveAddress(payload.PublicKey, payload.Signature, payload.Message)
 	if err != nil {
-		return nil, err
+		return nil, svc.MakeInvalidArg(err)
 	}
 
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
@@ -277,9 +276,9 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 }
 
 func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload) (res *svc.LeaveGuildResult, err error) {
-	accAddress, err := s.verifySigAndDeriveAddress(payload.PublicKey, payload.Signature, payload.Message)
+	accAddress, err := verifySigAndDeriveAddress(payload.PublicKey, payload.Signature, payload.Message)
 	if err != nil {
-		return nil, err
+		return nil, svc.MakeInvalidArg(err)
 	}
 
 	// remove member from database
