@@ -11,7 +11,7 @@ services:
     environment:
       - GUILDS_ENV=${APP_ENV}
       - GUILDS_LOG_LEVEL=DEBUG
-      - GUILDS_LISTEN_ADDRESS=http://localhost:9930
+      - GUILDS_LISTEN_ADDRESS=http://0.0.0.0:9930
       # this works on devnet
       - GUILDS_DB_CONNECTION_URL=mongodb://mongo:27017
       - GUILDS_DB_NAME=guilds
