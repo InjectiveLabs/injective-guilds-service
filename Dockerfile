@@ -1,6 +1,6 @@
 FROM golang:1.17.3-alpine as builder
 WORKDIR /src
-ENV GO111MODULE=on CGO_ENABLED=0
+ENV GO111MODULE=on
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
