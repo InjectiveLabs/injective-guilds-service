@@ -67,18 +67,31 @@ func NewService(ctx context.Context, connectionURL, databaseName string) (db.DBS
 func makeIndex(unique bool, keys interface{}) mongo.IndexModel {
 	idx := mongo.IndexModel{
 		Keys:    keys,
-		Options: options.Index(),
+		Options: options.Index().SetUnique(unique),
 	}
-	if unique {
-		idx.Options = idx.Options.SetUnique(true)
-	}
-
 	return idx
 }
 
 func (s *MongoImpl) EnsureIndex(ctx context.Context) error {
 	// use CreateMany here for future custom
-	// TODO: Index for faster query
+	_, err := s.memberCollection.Indexes().CreateMany(ctx, []mongo.IndexModel{
+		makeIndex(true, bson.D{{Key: "injective_address", Value: 1}}),
+		makeIndex(false, bson.D{{Key: "is_default_guild_member", Value: 1}}),
+		makeIndex(false, bson.D{{Key: "guild_id", Value: 1}}),
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = s.portfolioCollection.Indexes().CreateMany(ctx, []mongo.IndexModel{
+		makeIndex(false, bson.D{{Key: "injective_address", Value: 1}}),
+		makeIndex(false, bson.D{{Key: "guild_id", Value: 1}}),
+		makeIndex(false, bson.D{{Key: "updated_at", Value: -1}}),
+	})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
