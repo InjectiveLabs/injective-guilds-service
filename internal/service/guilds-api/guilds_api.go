@@ -133,8 +133,8 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 	}
 
 	if len(defaultMember) == 0 {
-		// 1 guild should has a default member, if not found then it should be internal error
-		return nil, svc.MakeInternal(errors.New("default member not found"))
+		s.logger.WithField("guildID", payload.GuildID).Error("default member not found")
+		return nil, svc.MakeNotFound(errors.New("default member not found"))
 	}
 
 	return &svc.GetGuildDefaultMemberResult{

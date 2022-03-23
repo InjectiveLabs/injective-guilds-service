@@ -35,8 +35,8 @@ var _ = Service("GuildsService", func() {
 			GET("/guilds")
 
 			Response(CodeOK)
-			Response("not_found", CodeNotFound)
-			Response("internal", CodeInternal)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
 		})
 	})
 
@@ -59,8 +59,8 @@ var _ = Service("GuildsService", func() {
 			GET("/guilds/{guildID}")
 
 			Response(CodeOK)
-			Response("not_found", CodeNotFound)
-			Response("internal", CodeInternal)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
 		})
 	})
 
@@ -83,8 +83,8 @@ var _ = Service("GuildsService", func() {
 			GET("/guilds/{guildID}/members")
 
 			Response(CodeOK)
-			Response("not_found", CodeNotFound)
-			Response("internal", CodeInternal)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
 		})
 	})
 
@@ -105,8 +105,8 @@ var _ = Service("GuildsService", func() {
 			GET("/guilds/{guildID}/guild-master")
 
 			Response(CodeOK)
-			Response("not_found", CodeNotFound)
-			Response("internal", CodeInternal)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
 		})
 	})
 
@@ -126,8 +126,8 @@ var _ = Service("GuildsService", func() {
 			GET("/guilds/{guildID}/default-guild-member")
 
 			Response(CodeOK)
-			Response("not_found", CodeNotFound)
-			Response("internal", CodeInternal)
+			Response("not_found", 404)
+			Response("internal", 500)
 		})
 	})
 
@@ -152,8 +152,8 @@ var _ = Service("GuildsService", func() {
 			POST("/guilds/{guildID}/member")
 
 			Response(CodeOK)
-			Response("not_found", CodeNotFound)
-			Response("internal", CodeInternal)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
 		})
 	})
 
@@ -177,8 +177,8 @@ var _ = Service("GuildsService", func() {
 			DELETE("/guilds/{guildID}/member")
 
 			Response(CodeOK)
-			Response("not_found", CodeNotFound)
-			Response("internal", CodeInternal)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
 		})
 	})
 
@@ -198,8 +198,8 @@ var _ = Service("GuildsService", func() {
 			GET("/guilds/{guildID}/markets")
 
 			Response(CodeOK)
-			Response("not_found", CodeNotFound)
-			Response("internal", CodeInternal)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
 		})
 	})
 
@@ -222,8 +222,8 @@ var _ = Service("GuildsService", func() {
 			Param("injective_address")
 
 			Response(CodeOK)
-			Response("not_found", CodeNotFound)
-			Response("internal", CodeInternal)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
 		})
 	})
 
@@ -245,8 +245,8 @@ var _ = Service("GuildsService", func() {
 			Param("injective_address")
 
 			Response(CodeOK)
-			Response("not_found", CodeNotFound)
-			Response("internal", CodeInternal)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
 		})
 	})
 })
