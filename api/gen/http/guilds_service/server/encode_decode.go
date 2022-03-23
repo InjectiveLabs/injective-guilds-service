@@ -51,7 +51,7 @@ func EncodeGetAllGuildsError(encoder func(context.Context, http.ResponseWriter) 
 				body = NewGetAllGuildsNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(5)
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		case "internal":
 			var res *goa.ServiceError
@@ -64,7 +64,7 @@ func EncodeGetAllGuildsError(encoder func(context.Context, http.ResponseWriter) 
 				body = NewGetAllGuildsInternalResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(13)
+			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -121,7 +121,7 @@ func EncodeGetSingleGuildError(encoder func(context.Context, http.ResponseWriter
 				body = NewGetSingleGuildNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(5)
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		case "internal":
 			var res *goa.ServiceError
@@ -134,7 +134,7 @@ func EncodeGetSingleGuildError(encoder func(context.Context, http.ResponseWriter
 				body = NewGetSingleGuildInternalResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(13)
+			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -191,7 +191,7 @@ func EncodeGetGuildMembersError(encoder func(context.Context, http.ResponseWrite
 				body = NewGetGuildMembersNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(5)
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		case "internal":
 			var res *goa.ServiceError
@@ -204,7 +204,7 @@ func EncodeGetGuildMembersError(encoder func(context.Context, http.ResponseWrite
 				body = NewGetGuildMembersInternalResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(13)
+			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -261,7 +261,7 @@ func EncodeGetGuildMasterAddressError(encoder func(context.Context, http.Respons
 				body = NewGetGuildMasterAddressNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(5)
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		case "internal":
 			var res *goa.ServiceError
@@ -274,7 +274,7 @@ func EncodeGetGuildMasterAddressError(encoder func(context.Context, http.Respons
 				body = NewGetGuildMasterAddressInternalResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(13)
+			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -331,7 +331,7 @@ func EncodeGetGuildDefaultMemberError(encoder func(context.Context, http.Respons
 				body = NewGetGuildDefaultMemberNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(5)
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		case "internal":
 			var res *goa.ServiceError
@@ -344,7 +344,7 @@ func EncodeGetGuildDefaultMemberError(encoder func(context.Context, http.Respons
 				body = NewGetGuildDefaultMemberInternalResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(13)
+			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -417,7 +417,7 @@ func EncodeEnterGuildError(encoder func(context.Context, http.ResponseWriter) go
 				body = NewEnterGuildNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(5)
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		case "internal":
 			var res *goa.ServiceError
@@ -430,7 +430,7 @@ func EncodeEnterGuildError(encoder func(context.Context, http.ResponseWriter) go
 				body = NewEnterGuildInternalResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(13)
+			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -503,7 +503,7 @@ func EncodeLeaveGuildError(encoder func(context.Context, http.ResponseWriter) go
 				body = NewLeaveGuildNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(5)
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		case "internal":
 			var res *goa.ServiceError
@@ -516,7 +516,7 @@ func EncodeLeaveGuildError(encoder func(context.Context, http.ResponseWriter) go
 				body = NewLeaveGuildInternalResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(13)
+			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -573,7 +573,7 @@ func EncodeGetGuildMarketsError(encoder func(context.Context, http.ResponseWrite
 				body = NewGetGuildMarketsNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(5)
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		case "internal":
 			var res *goa.ServiceError
@@ -586,7 +586,7 @@ func EncodeGetGuildMarketsError(encoder func(context.Context, http.ResponseWrite
 				body = NewGetGuildMarketsInternalResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(13)
+			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -652,7 +652,7 @@ func EncodeGetAccountPortfolioError(encoder func(context.Context, http.ResponseW
 				body = NewGetAccountPortfolioNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(5)
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		case "internal":
 			var res *goa.ServiceError
@@ -665,7 +665,7 @@ func EncodeGetAccountPortfolioError(encoder func(context.Context, http.ResponseW
 				body = NewGetAccountPortfolioInternalResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(13)
+			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)
@@ -731,7 +731,7 @@ func EncodeGetAccountPortfoliosError(encoder func(context.Context, http.Response
 				body = NewGetAccountPortfoliosNotFoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(5)
+			w.WriteHeader(http.StatusNotFound)
 			return enc.Encode(body)
 		case "internal":
 			var res *goa.ServiceError
@@ -744,7 +744,7 @@ func EncodeGetAccountPortfoliosError(encoder func(context.Context, http.Response
 				body = NewGetAccountPortfoliosInternalResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
-			w.WriteHeader(13)
+			w.WriteHeader(http.StatusInternalServerError)
 			return enc.Encode(body)
 		default:
 			return encodeError(ctx, w, v)

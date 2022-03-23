@@ -37,8 +37,8 @@ func (c *Client) BuildGetAllGuildsRequest(ctx context.Context, v interface{}) (*
 // GuildsService GetAllGuilds endpoint. restoreBody controls whether the
 // response body should be restored after having been read.
 // DecodeGetAllGuildsResponse may return the following errors:
-//	- "not_found" (type *goa.ServiceError): 5
-//	- "internal" (type *goa.ServiceError): 13
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
 //	- error: internal error
 func DecodeGetAllGuildsResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -70,7 +70,7 @@ func DecodeGetAllGuildsResponse(decoder func(*http.Response) goahttp.Decoder, re
 			}
 			res := NewGetAllGuildsResultOK(&body)
 			return res, nil
-		case 5:
+		case http.StatusNotFound:
 			var (
 				body GetAllGuildsNotFoundResponseBody
 				err  error
@@ -84,7 +84,7 @@ func DecodeGetAllGuildsResponse(decoder func(*http.Response) goahttp.Decoder, re
 				return nil, goahttp.ErrValidationError("GuildsService", "GetAllGuilds", err)
 			}
 			return nil, NewGetAllGuildsNotFound(&body)
-		case 13:
+		case http.StatusInternalServerError:
 			var (
 				body GetAllGuildsInternalResponseBody
 				err  error
@@ -134,8 +134,8 @@ func (c *Client) BuildGetSingleGuildRequest(ctx context.Context, v interface{}) 
 // GuildsService GetSingleGuild endpoint. restoreBody controls whether the
 // response body should be restored after having been read.
 // DecodeGetSingleGuildResponse may return the following errors:
-//	- "not_found" (type *goa.ServiceError): 5
-//	- "internal" (type *goa.ServiceError): 13
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
 //	- error: internal error
 func DecodeGetSingleGuildResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -167,7 +167,7 @@ func DecodeGetSingleGuildResponse(decoder func(*http.Response) goahttp.Decoder, 
 			}
 			res := NewGetSingleGuildResultOK(&body)
 			return res, nil
-		case 5:
+		case http.StatusNotFound:
 			var (
 				body GetSingleGuildNotFoundResponseBody
 				err  error
@@ -181,7 +181,7 @@ func DecodeGetSingleGuildResponse(decoder func(*http.Response) goahttp.Decoder, 
 				return nil, goahttp.ErrValidationError("GuildsService", "GetSingleGuild", err)
 			}
 			return nil, NewGetSingleGuildNotFound(&body)
-		case 13:
+		case http.StatusInternalServerError:
 			var (
 				body GetSingleGuildInternalResponseBody
 				err  error
@@ -231,8 +231,8 @@ func (c *Client) BuildGetGuildMembersRequest(ctx context.Context, v interface{})
 // the GuildsService GetGuildMembers endpoint. restoreBody controls whether the
 // response body should be restored after having been read.
 // DecodeGetGuildMembersResponse may return the following errors:
-//	- "not_found" (type *goa.ServiceError): 5
-//	- "internal" (type *goa.ServiceError): 13
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
 //	- error: internal error
 func DecodeGetGuildMembersResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -264,7 +264,7 @@ func DecodeGetGuildMembersResponse(decoder func(*http.Response) goahttp.Decoder,
 			}
 			res := NewGetGuildMembersResultOK(&body)
 			return res, nil
-		case 5:
+		case http.StatusNotFound:
 			var (
 				body GetGuildMembersNotFoundResponseBody
 				err  error
@@ -278,7 +278,7 @@ func DecodeGetGuildMembersResponse(decoder func(*http.Response) goahttp.Decoder,
 				return nil, goahttp.ErrValidationError("GuildsService", "GetGuildMembers", err)
 			}
 			return nil, NewGetGuildMembersNotFound(&body)
-		case 13:
+		case http.StatusInternalServerError:
 			var (
 				body GetGuildMembersInternalResponseBody
 				err  error
@@ -329,8 +329,8 @@ func (c *Client) BuildGetGuildMasterAddressRequest(ctx context.Context, v interf
 // by the GuildsService GetGuildMasterAddress endpoint. restoreBody controls
 // whether the response body should be restored after having been read.
 // DecodeGetGuildMasterAddressResponse may return the following errors:
-//	- "not_found" (type *goa.ServiceError): 5
-//	- "internal" (type *goa.ServiceError): 13
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
 //	- error: internal error
 func DecodeGetGuildMasterAddressResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -358,7 +358,7 @@ func DecodeGetGuildMasterAddressResponse(decoder func(*http.Response) goahttp.De
 			}
 			res := NewGetGuildMasterAddressResultOK(&body)
 			return res, nil
-		case 5:
+		case http.StatusNotFound:
 			var (
 				body GetGuildMasterAddressNotFoundResponseBody
 				err  error
@@ -372,7 +372,7 @@ func DecodeGetGuildMasterAddressResponse(decoder func(*http.Response) goahttp.De
 				return nil, goahttp.ErrValidationError("GuildsService", "GetGuildMasterAddress", err)
 			}
 			return nil, NewGetGuildMasterAddressNotFound(&body)
-		case 13:
+		case http.StatusInternalServerError:
 			var (
 				body GetGuildMasterAddressInternalResponseBody
 				err  error
@@ -423,8 +423,8 @@ func (c *Client) BuildGetGuildDefaultMemberRequest(ctx context.Context, v interf
 // by the GuildsService GetGuildDefaultMember endpoint. restoreBody controls
 // whether the response body should be restored after having been read.
 // DecodeGetGuildDefaultMemberResponse may return the following errors:
-//	- "not_found" (type *goa.ServiceError): 5
-//	- "internal" (type *goa.ServiceError): 13
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
 //	- error: internal error
 func DecodeGetGuildDefaultMemberResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -456,7 +456,7 @@ func DecodeGetGuildDefaultMemberResponse(decoder func(*http.Response) goahttp.De
 			}
 			res := NewGetGuildDefaultMemberResultOK(&body)
 			return res, nil
-		case 5:
+		case http.StatusNotFound:
 			var (
 				body GetGuildDefaultMemberNotFoundResponseBody
 				err  error
@@ -470,7 +470,7 @@ func DecodeGetGuildDefaultMemberResponse(decoder func(*http.Response) goahttp.De
 				return nil, goahttp.ErrValidationError("GuildsService", "GetGuildDefaultMember", err)
 			}
 			return nil, NewGetGuildDefaultMemberNotFound(&body)
-		case 13:
+		case http.StatusInternalServerError:
 			var (
 				body GetGuildDefaultMemberInternalResponseBody
 				err  error
@@ -536,8 +536,8 @@ func EncodeEnterGuildRequest(encoder func(*http.Request) goahttp.Encoder) func(*
 // GuildsService EnterGuild endpoint. restoreBody controls whether the response
 // body should be restored after having been read.
 // DecodeEnterGuildResponse may return the following errors:
-//	- "not_found" (type *goa.ServiceError): 5
-//	- "internal" (type *goa.ServiceError): 13
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
 //	- error: internal error
 func DecodeEnterGuildResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -565,7 +565,7 @@ func DecodeEnterGuildResponse(decoder func(*http.Response) goahttp.Decoder, rest
 			}
 			res := NewEnterGuildResultOK(&body)
 			return res, nil
-		case 5:
+		case http.StatusNotFound:
 			var (
 				body EnterGuildNotFoundResponseBody
 				err  error
@@ -579,7 +579,7 @@ func DecodeEnterGuildResponse(decoder func(*http.Response) goahttp.Decoder, rest
 				return nil, goahttp.ErrValidationError("GuildsService", "EnterGuild", err)
 			}
 			return nil, NewEnterGuildNotFound(&body)
-		case 13:
+		case http.StatusInternalServerError:
 			var (
 				body EnterGuildInternalResponseBody
 				err  error
@@ -645,8 +645,8 @@ func EncodeLeaveGuildRequest(encoder func(*http.Request) goahttp.Encoder) func(*
 // GuildsService LeaveGuild endpoint. restoreBody controls whether the response
 // body should be restored after having been read.
 // DecodeLeaveGuildResponse may return the following errors:
-//	- "not_found" (type *goa.ServiceError): 5
-//	- "internal" (type *goa.ServiceError): 13
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
 //	- error: internal error
 func DecodeLeaveGuildResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -674,7 +674,7 @@ func DecodeLeaveGuildResponse(decoder func(*http.Response) goahttp.Decoder, rest
 			}
 			res := NewLeaveGuildResultOK(&body)
 			return res, nil
-		case 5:
+		case http.StatusNotFound:
 			var (
 				body LeaveGuildNotFoundResponseBody
 				err  error
@@ -688,7 +688,7 @@ func DecodeLeaveGuildResponse(decoder func(*http.Response) goahttp.Decoder, rest
 				return nil, goahttp.ErrValidationError("GuildsService", "LeaveGuild", err)
 			}
 			return nil, NewLeaveGuildNotFound(&body)
-		case 13:
+		case http.StatusInternalServerError:
 			var (
 				body LeaveGuildInternalResponseBody
 				err  error
@@ -738,8 +738,8 @@ func (c *Client) BuildGetGuildMarketsRequest(ctx context.Context, v interface{})
 // the GuildsService GetGuildMarkets endpoint. restoreBody controls whether the
 // response body should be restored after having been read.
 // DecodeGetGuildMarketsResponse may return the following errors:
-//	- "not_found" (type *goa.ServiceError): 5
-//	- "internal" (type *goa.ServiceError): 13
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
 //	- error: internal error
 func DecodeGetGuildMarketsResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -771,7 +771,7 @@ func DecodeGetGuildMarketsResponse(decoder func(*http.Response) goahttp.Decoder,
 			}
 			res := NewGetGuildMarketsResultOK(&body)
 			return res, nil
-		case 5:
+		case http.StatusNotFound:
 			var (
 				body GetGuildMarketsNotFoundResponseBody
 				err  error
@@ -785,7 +785,7 @@ func DecodeGetGuildMarketsResponse(decoder func(*http.Response) goahttp.Decoder,
 				return nil, goahttp.ErrValidationError("GuildsService", "GetGuildMarkets", err)
 			}
 			return nil, NewGetGuildMarketsNotFound(&body)
-		case 13:
+		case http.StatusInternalServerError:
 			var (
 				body GetGuildMarketsInternalResponseBody
 				err  error
@@ -851,8 +851,8 @@ func EncodeGetAccountPortfolioRequest(encoder func(*http.Request) goahttp.Encode
 // by the GuildsService GetAccountPortfolio endpoint. restoreBody controls
 // whether the response body should be restored after having been read.
 // DecodeGetAccountPortfolioResponse may return the following errors:
-//	- "not_found" (type *goa.ServiceError): 5
-//	- "internal" (type *goa.ServiceError): 13
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
 //	- error: internal error
 func DecodeGetAccountPortfolioResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -884,7 +884,7 @@ func DecodeGetAccountPortfolioResponse(decoder func(*http.Response) goahttp.Deco
 			}
 			res := NewGetAccountPortfolioResultOK(&body)
 			return res, nil
-		case 5:
+		case http.StatusNotFound:
 			var (
 				body GetAccountPortfolioNotFoundResponseBody
 				err  error
@@ -898,7 +898,7 @@ func DecodeGetAccountPortfolioResponse(decoder func(*http.Response) goahttp.Deco
 				return nil, goahttp.ErrValidationError("GuildsService", "GetAccountPortfolio", err)
 			}
 			return nil, NewGetAccountPortfolioNotFound(&body)
-		case 13:
+		case http.StatusInternalServerError:
 			var (
 				body GetAccountPortfolioInternalResponseBody
 				err  error
@@ -964,8 +964,8 @@ func EncodeGetAccountPortfoliosRequest(encoder func(*http.Request) goahttp.Encod
 // by the GuildsService GetAccountPortfolios endpoint. restoreBody controls
 // whether the response body should be restored after having been read.
 // DecodeGetAccountPortfoliosResponse may return the following errors:
-//	- "not_found" (type *goa.ServiceError): 5
-//	- "internal" (type *goa.ServiceError): 13
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
 //	- error: internal error
 func DecodeGetAccountPortfoliosResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
@@ -997,7 +997,7 @@ func DecodeGetAccountPortfoliosResponse(decoder func(*http.Response) goahttp.Dec
 			}
 			res := NewGetAccountPortfoliosResultOK(&body)
 			return res, nil
-		case 5:
+		case http.StatusNotFound:
 			var (
 				body GetAccountPortfoliosNotFoundResponseBody
 				err  error
@@ -1011,7 +1011,7 @@ func DecodeGetAccountPortfoliosResponse(decoder func(*http.Response) goahttp.Dec
 				return nil, goahttp.ErrValidationError("GuildsService", "GetAccountPortfolios", err)
 			}
 			return nil, NewGetAccountPortfoliosNotFound(&body)
-		case 13:
+		case http.StatusInternalServerError:
 			var (
 				body GetAccountPortfoliosInternalResponseBody
 				err  error

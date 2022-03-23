@@ -188,13 +188,15 @@ func (s *MongoImpl) upsertMember(
 	ctx context.Context,
 	guildID primitive.ObjectID,
 	address model.Address,
+	isDefaultMember bool,
 ) (*mongo.UpdateResult, error) {
 	filter := bson.M{
 		"injective_address": address.String(),
 	}
 	upd := bson.M{
 		"$set": bson.M{
-			"guild_id": guildID,
+			"guild_id":                guildID,
+			"is_default_guild_member": isDefaultMember,
 		},
 	}
 	updOpt := &options.UpdateOptions{}
@@ -246,13 +248,19 @@ func (s *MongoImpl) adjustMemberCount(
 	return s.guildCollection.UpdateOne(ctx, filter, upd)
 }
 
-func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model.Address) error {
+func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model.Address, isDefaultMember bool) error {
 	guildObjectID, err := primitive.ObjectIDFromHex(guildID)
 	if err != nil {
 		return fmt.Errorf("cannot parse guildID: %w", err)
 	}
 
 	_, err = s.session.WithTransaction(ctx, func(sessCtx mongo.SessionContext) (interface{}, error) {
+		// add default member don't require any check
+		// just insert
+		if isDefaultMember {
+			return s.upsertMember(sessCtx, guildObjectID, address, true)
+		}
+
 		guild, err := s.GetSingleGuild(sessCtx, guildID)
 		if err != nil {
 			return nil, err
@@ -267,7 +275,7 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 			return nil, err
 		}
 
-		upsertRes, err := s.upsertMember(sessCtx, guildObjectID, address)
+		upsertRes, err := s.upsertMember(sessCtx, guildObjectID, address, false)
 		if err != nil {
 			return nil, err
 		}

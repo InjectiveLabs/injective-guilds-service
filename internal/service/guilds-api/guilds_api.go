@@ -257,7 +257,7 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	}
 
 	// add to database
-	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress})
+	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress}, false)
 	if err != nil {
 		s.logger.WithError(err).Errorln("cannot add member")
 		return nil, svc.MakeInternal(err)

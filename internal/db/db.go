@@ -14,7 +14,7 @@ type DBService interface {
 
 	// members
 	ListGuildMembers(ctx context.Context, filter model.MemberFilter) ([]*model.GuildMember, error)
-	AddMember(ctx context.Context, guildID string, address model.Address) error
+	AddMember(ctx context.Context, guildID string, address model.Address, isDefaultMember bool) error
 	RemoveMember(ctx context.Context, guildID string, address model.Address) error
 
 	// account portfolio

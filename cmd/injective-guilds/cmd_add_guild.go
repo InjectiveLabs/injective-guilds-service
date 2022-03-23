@@ -222,8 +222,8 @@ func addGuildAction() {
 	id, err := dbSvc.AddGuild(ctx, guild)
 	panicIf(err)
 
-	log.Info("adding default member portfolio")
-	err = dbSvc.AddMember(ctx, id.Hex(), model.Address{AccAddress: defaultMember})
+	log.Info("adding default member")
+	err = dbSvc.AddMember(ctx, id.Hex(), model.Address{AccAddress: defaultMember}, true)
 	panicIf(err)
 
 	log.Info("capturing default member portfolio")

@@ -21,18 +21,18 @@ paths:
       description: Get all guilds
       operationId: GuildsService#GetAllGuilds
       responses:
-        "5":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetAllGuildsNotFoundResponseBody'
-        "13":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetAllGuildsInternalResponseBody'
         "200":
           description: OK response.
           schema:
             $ref: '#/definitions/GuildsServiceGetAllGuildsResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetAllGuildsNotFoundResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetAllGuildsInternalResponseBody'
       schemes:
       - http
   /guilds/{guildID}:
@@ -48,18 +48,18 @@ paths:
         required: true
         type: string
       responses:
-        "5":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetSingleGuildNotFoundResponseBody'
-        "13":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetSingleGuildInternalResponseBody'
         "200":
           description: OK response.
           schema:
             $ref: '#/definitions/GuildsServiceGetSingleGuildResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetSingleGuildNotFoundResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetSingleGuildInternalResponseBody'
       schemes:
       - http
   /guilds/{guildID}/default-guild-member:
@@ -74,18 +74,18 @@ paths:
         required: true
         type: string
       responses:
-        "5":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetGuildDefaultMemberNotFoundResponseBody'
-        "13":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetGuildDefaultMemberInternalResponseBody'
         "200":
           description: OK response.
           schema:
             $ref: '#/definitions/GuildsServiceGetGuildDefaultMemberResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetGuildDefaultMemberNotFoundResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetGuildDefaultMemberInternalResponseBody'
       schemes:
       - http
   /guilds/{guildID}/guild-master:
@@ -101,18 +101,18 @@ paths:
         required: true
         type: string
       responses:
-        "5":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetGuildMasterAddressNotFoundResponseBody'
-        "13":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetGuildMasterAddressInternalResponseBody'
         "200":
           description: OK response.
           schema:
             $ref: '#/definitions/GuildsServiceGetGuildMasterAddressResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetGuildMasterAddressNotFoundResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetGuildMasterAddressInternalResponseBody'
       schemes:
       - http
   /guilds/{guildID}/markets:
@@ -127,18 +127,18 @@ paths:
         required: true
         type: string
       responses:
-        "5":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetGuildMarketsNotFoundResponseBody'
-        "13":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetGuildMarketsInternalResponseBody'
         "200":
           description: OK response.
           schema:
             $ref: '#/definitions/GuildsServiceGetGuildMarketsResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetGuildMarketsNotFoundResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetGuildMarketsInternalResponseBody'
       schemes:
       - http
   /guilds/{guildID}/member:
@@ -162,18 +162,18 @@ paths:
           - message
           - signature
       responses:
-        "5":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceEnterGuildNotFoundResponseBody'
-        "13":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceEnterGuildInternalResponseBody'
         "200":
           description: OK response.
           schema:
             $ref: '#/definitions/GuildsServiceEnterGuildResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/GuildsServiceEnterGuildNotFoundResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/GuildsServiceEnterGuildInternalResponseBody'
       schemes:
       - http
     delete:
@@ -196,18 +196,18 @@ paths:
           - message
           - signature
       responses:
-        "5":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceLeaveGuildNotFoundResponseBody'
-        "13":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceLeaveGuildInternalResponseBody'
         "200":
           description: OK response.
           schema:
             $ref: '#/definitions/GuildsServiceLeaveGuildResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/GuildsServiceLeaveGuildNotFoundResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/GuildsServiceLeaveGuildInternalResponseBody'
       schemes:
       - http
   /guilds/{guildID}/members:
@@ -223,18 +223,18 @@ paths:
         required: true
         type: string
       responses:
-        "5":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetGuildMembersNotFoundResponseBody'
-        "13":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetGuildMembersInternalResponseBody'
         "200":
           description: OK response.
           schema:
             $ref: '#/definitions/GuildsServiceGetGuildMembersResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetGuildMembersNotFoundResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetGuildMembersInternalResponseBody'
       schemes:
       - http
   /guilds/{guildID}/portfolio:
@@ -253,18 +253,18 @@ paths:
         required: true
         type: string
       responses:
-        "5":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetAccountPortfolioNotFoundResponseBody'
-        "13":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetAccountPortfolioInternalResponseBody'
         "200":
           description: OK response.
           schema:
             $ref: '#/definitions/GuildsServiceGetAccountPortfolioResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetAccountPortfolioNotFoundResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetAccountPortfolioInternalResponseBody'
       schemes:
       - http
   /guilds/{guildID}/portfolios:
@@ -283,18 +283,18 @@ paths:
         required: true
         type: string
       responses:
-        "5":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetAccountPortfoliosNotFoundResponseBody'
-        "13":
-          description: ' response.'
-          schema:
-            $ref: '#/definitions/GuildsServiceGetAccountPortfoliosInternalResponseBody'
         "200":
           description: OK response.
           schema:
             $ref: '#/definitions/GuildsServiceGetAccountPortfoliosResponseBody'
+        "404":
+          description: Not Found response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetAccountPortfoliosNotFoundResponseBody'
+        "500":
+          description: Internal Server Error response.
+          schema:
+            $ref: '#/definitions/GuildsServiceGetAccountPortfoliosInternalResponseBody'
       schemes:
       - http
 definitions:

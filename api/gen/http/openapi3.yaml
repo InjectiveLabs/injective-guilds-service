@@ -14,26 +14,6 @@ paths:
       description: Get all guilds
       operationId: GuildsService#GetAllGuilds
       responses:
-        "5":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
-        "13":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "200":
           description: OK response.
           content:
@@ -86,6 +66,26 @@ paths:
                   spot_base_requirement: Provident excepturi nam vel in repudiandae.
                   spot_quote_requirement: Consequatur quaerat voluptatem ullam aliquid.
                   staking_requirement: Omnis labore consequatur commodi.
+        "404":
+          description: Not Found response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "500":
+          description: Internal Server Error response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
   /guilds/{guildID}:
     get:
       tags:
@@ -102,26 +102,6 @@ paths:
           example: Non saepe ut fugit excepturi consequatur consequatur.
         example: Alias et et.
       responses:
-        "5":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
-        "13":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "200":
           description: OK response.
           content:
@@ -141,6 +121,26 @@ paths:
                   spot_base_requirement: Provident excepturi nam vel in repudiandae.
                   spot_quote_requirement: Consequatur quaerat voluptatem ullam aliquid.
                   staking_requirement: Omnis labore consequatur commodi.
+        "404":
+          description: Not Found response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "500":
+          description: Internal Server Error response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
   /guilds/{guildID}/default-guild-member:
     get:
       tags:
@@ -156,26 +156,6 @@ paths:
           example: Quod quia sunt aut expedita velit.
         example: Est sed.
       responses:
-        "5":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
-        "13":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "200":
           description: OK response.
           content:
@@ -186,6 +166,26 @@ paths:
                 default_member:
                   injective_address: Ipsa omnis.
                   is_default_guild_member: true
+        "404":
+          description: Not Found response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "500":
+          description: Internal Server Error response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
   /guilds/{guildID}/guild-master:
     get:
       tags:
@@ -202,26 +202,6 @@ paths:
           example: Minus dicta.
         example: Doloribus omnis ipsum sunt vel aut.
       responses:
-        "5":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
-        "13":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "200":
           description: OK response.
           content:
@@ -230,6 +210,26 @@ paths:
                 $ref: '#/components/schemas/GetGuildMasterAddressResponseBody'
               example:
                 master_address: Nihil quia quo eligendi omnis.
+        "404":
+          description: Not Found response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "500":
+          description: Internal Server Error response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
   /guilds/{guildID}/markets:
     get:
       tags:
@@ -245,26 +245,6 @@ paths:
           example: Nostrum maxime minus molestias.
         example: Rerum cumque et odit id deserunt et.
       responses:
-        "5":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
-        "13":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "200":
           description: OK response.
           content:
@@ -279,6 +259,26 @@ paths:
                   market_id: Veritatis molestias iusto.
                 - is_perpetual: false
                   market_id: Veritatis molestias iusto.
+        "404":
+          description: Not Found response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "500":
+          description: Internal Server Error response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
   /guilds/{guildID}/member:
     delete:
       tags:
@@ -304,26 +304,6 @@ paths:
               public_key: Vel provident odio deserunt quas.
               signature: Voluptatem ut labore.
       responses:
-        "5":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
-        "13":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "200":
           description: OK response.
           content:
@@ -332,6 +312,26 @@ paths:
                 $ref: '#/components/schemas/LeaveGuildResponseBody'
               example:
                 leave_status: Voluptatem autem animi corrupti.
+        "404":
+          description: Not Found response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "500":
+          description: Internal Server Error response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
     post:
       tags:
       - GuildsService
@@ -356,26 +356,6 @@ paths:
               public_key: Harum eum vel quia.
               signature: At quasi necessitatibus maxime enim.
       responses:
-        "5":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
-        "13":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "200":
           description: OK response.
           content:
@@ -384,6 +364,26 @@ paths:
                 $ref: '#/components/schemas/EnterGuildResponseBody'
               example:
                 join_status: Velit culpa in quae.
+        "404":
+          description: Not Found response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "500":
+          description: Internal Server Error response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
   /guilds/{guildID}/members:
     get:
       tags:
@@ -400,26 +400,6 @@ paths:
           example: Placeat est aut praesentium aut corporis ab.
         example: Est consectetur itaque reprehenderit nemo sed atque.
       responses:
-        "5":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
-        "13":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "200":
           description: OK response.
           content:
@@ -436,6 +416,26 @@ paths:
                   is_default_guild_member: true
                 - injective_address: Ipsa omnis.
                   is_default_guild_member: true
+        "404":
+          description: Not Found response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "500":
+          description: Internal Server Error response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
   /guilds/{guildID}/portfolio:
     get:
       tags:
@@ -459,26 +459,6 @@ paths:
           example: Suscipit aspernatur delectus est.
         example: Et amet.
       responses:
-        "5":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
-        "13":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "200":
           description: OK response.
           content:
@@ -500,6 +480,26 @@ paths:
                     unrealized_pnl: Totam fugit possimus et nostrum voluptatem.
                   injective_address: Voluptatum magnam dolorem nostrum velit non ipsa.
                   updated_at: "1988-09-01T09:10:29Z"
+        "404":
+          description: Not Found response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "500":
+          description: Internal Server Error response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
   /guilds/{guildID}/portfolios:
     get:
       tags:
@@ -523,26 +523,6 @@ paths:
           example: Voluptatibus ea vel.
         example: Et veniam omnis nesciunt officia.
       responses:
-        "5":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
-        "13":
-          description: ' response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                id: 3F1FKVRR
-                message: Value of ID must be an integer
-                name: bad_request
         "200":
           description: OK response.
           content:
@@ -577,6 +557,26 @@ paths:
                     unrealized_pnl: Totam fugit possimus et nostrum voluptatem.
                   injective_address: Voluptatum magnam dolorem nostrum velit non ipsa.
                   updated_at: "1988-09-01T09:10:29Z"
+        "404":
+          description: Not Found response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
+        "500":
+          description: Internal Server Error response.
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                id: 3F1FKVRR
+                message: Value of ID must be an integer
+                name: bad_request
 components:
   schemas:
     Balance:
