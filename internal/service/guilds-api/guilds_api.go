@@ -128,6 +128,7 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 		},
 	)
 	if err != nil {
+		s.logger.WithError(err).Error("list guild members error")
 		return nil, svc.MakeInternal(err)
 	}
 
