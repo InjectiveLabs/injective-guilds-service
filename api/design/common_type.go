@@ -30,7 +30,7 @@ var Guild = Type("Guild", func() {
 	Field(3, "description", String)
 
 	Field(4, "master_address", String)
-	Field(5, "requirements", Requirement)
+	Field(5, "requirements", ArrayOf(Requirement))
 
 	Field(6, "staking_requirement", String)
 	Field(7, "capacity", Int)
