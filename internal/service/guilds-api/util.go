@@ -18,7 +18,7 @@ type MemberMessage struct {
 	ExpiredAt int64  `json:"expired_at"` // unix timestamp, second
 }
 
-func modelGuildToResponse(m *model.Guild) *svc.Guild {
+func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio) *svc.Guild {
 	var requirements []*svc.Requirement
 	for _, req := range m.Requirements {
 		requirements = append(requirements, &svc.Requirement{
@@ -27,14 +27,27 @@ func modelGuildToResponse(m *model.Guild) *svc.Guild {
 		})
 	}
 
+	var balances []*svc.Balance
+	for _, b := range portfolio.Balances {
+		balances = append(balances, &svc.Balance{
+			Denom:            b.Denom,
+			TotalBalance:     b.TotalBalance.String(),
+			AvailableBalance: b.AvailableBalance.String(),
+			UnrealizedPnl:    b.UnrealizedPNL.String(),
+			MarginHold:       b.MarginHold.String(),
+			PriceUsd:         b.PriceUSD,
+		})
+	}
+
 	return &svc.Guild{
-		ID:            m.ID.Hex(),
-		Name:          m.Name,
-		Description:   m.Description,
-		MasterAddress: m.MasterAddress.String(),
-		Requirements:  requirements,
-		Capacity:      m.Capacity,
-		MemberCount:   m.MemberCount,
+		ID:               m.ID.Hex(),
+		Name:             m.Name,
+		Description:      m.Description,
+		MasterAddress:    m.MasterAddress.String(),
+		Requirements:     requirements,
+		Capacity:         m.Capacity,
+		MemberCount:      m.MemberCount,
+		CurrentPortfolio: balances,
 	}
 }
 

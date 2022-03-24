@@ -70,9 +70,27 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 		return nil, svc.MakeInternal(err)
 	}
 
-	var result []*svc.Guild
+	var (
+		result []*svc.Guild
+		limit  = int64(1)
+		to     = time.Now()
+	)
+
 	for _, g := range guilds {
-		result = append(result, modelGuildToResponse(g))
+		portfolios, err := s.dbSvc.ListGuildPortfolios(ctx, model.GuildPortfoliosFilter{
+			GuildID: g.ID.Hex(),
+			EndTime: &to,
+			Limit:   &limit,
+		})
+		if err != nil {
+			return nil, svc.MakeInternal(err)
+		}
+
+		var portfolio model.GuildPortfolio
+		if len(portfolios) > 0 {
+			portfolio = *portfolios[0]
+		}
+		result = append(result, modelGuildToResponse(g, &portfolio))
 	}
 
 	return &svc.GetAllGuildsResult{Guilds: result}, nil
@@ -84,8 +102,27 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 		return nil, svc.MakeInternal(err)
 	}
 
+	var (
+		limit = int64(1)
+		to    = time.Now()
+	)
+
+	portfolios, err := s.dbSvc.ListGuildPortfolios(ctx, model.GuildPortfoliosFilter{
+		GuildID: guild.ID.Hex(),
+		EndTime: &to,
+		Limit:   &limit,
+	})
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	var portfolio model.GuildPortfolio
+	if len(portfolios) > 0 {
+		portfolio = *portfolios[0]
+	}
+
 	return &svc.GetSingleGuildResult{
-		Guild: modelGuildToResponse(guild),
+		Guild: modelGuildToResponse(guild, &portfolio),
 	}, nil
 }
 
