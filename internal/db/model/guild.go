@@ -73,6 +73,7 @@ type AccountPortfolio struct {
 
 	// GuildID stores guildID at the time this portfolio is captured
 	// Which supports the case that an address can leave a guild and join another guild
+	// For a case in the future when 1 user can enter multiple guilds
 	GuildID primitive.ObjectID `bson:"guild_id" json:"guild_id"`
 
 	InjectiveAddress Address    `bson:"injective_address" json:"injective_address"`

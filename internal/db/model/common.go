@@ -134,3 +134,15 @@ type MemberFilter struct {
 	GuildID         *string
 	IsDefaultMember *bool
 }
+
+type AccountPortfoliosFilter struct {
+	InjectiveAddress Address
+	StartTime        *int64
+	EndTime          *int64
+}
+
+type GuildPortfoliosFilter struct {
+	GuildID   string
+	StartTime *int64
+	EndTime   *int64
+}

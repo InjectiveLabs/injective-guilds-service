@@ -15,11 +15,12 @@ import (
 )
 
 const (
-	connectionTimeout       = 30 * time.Second
-	GuildCollectionName     = "guilds"
-	MemberCollectionName    = "members"
-	PortfolioCollectionName = "portfolios"
-	DenomCollectionName     = "denoms"
+	connectionTimeout              = 30 * time.Second
+	GuildCollectionName            = "guilds"
+	MemberCollectionName           = "members"
+	AccountPortfolioCollectionName = "account_portfolios"
+	GuildPortfolioCollectionName   = "guild_portfolios"
+	DenomCollectionName            = "denoms"
 )
 
 var (
@@ -34,10 +35,11 @@ type MongoImpl struct {
 	client  *mongo.Client
 	session mongo.Session
 
-	guildCollection     *mongo.Collection
-	memberCollection    *mongo.Collection
-	portfolioCollection *mongo.Collection
-	denomCollection     *mongo.Collection
+	guildCollection            *mongo.Collection
+	memberCollection           *mongo.Collection
+	accountPortfolioCollection *mongo.Collection
+	guildPortfolioCollection   *mongo.Collection
+	denomCollection            *mongo.Collection
 }
 
 func NewService(ctx context.Context, connectionURL, databaseName string) (db.DBService, error) {
@@ -55,12 +57,13 @@ func NewService(ctx context.Context, connectionURL, databaseName string) (db.DBS
 	}
 
 	return &MongoImpl{
-		client:              client,
-		session:             session,
-		guildCollection:     client.Database(databaseName).Collection(GuildCollectionName),
-		memberCollection:    client.Database(databaseName).Collection(MemberCollectionName),
-		portfolioCollection: client.Database(databaseName).Collection(PortfolioCollectionName),
-		denomCollection:     client.Database(databaseName).Collection(DenomCollectionName),
+		client:                     client,
+		session:                    session,
+		guildCollection:            client.Database(databaseName).Collection(GuildCollectionName),
+		memberCollection:           client.Database(databaseName).Collection(MemberCollectionName),
+		accountPortfolioCollection: client.Database(databaseName).Collection(AccountPortfolioCollectionName),
+		guildPortfolioCollection:   client.Database(databaseName).Collection(GuildPortfolioCollectionName),
+		denomCollection:            client.Database(databaseName).Collection(DenomCollectionName),
 	}, nil
 }
 
@@ -83,7 +86,7 @@ func (s *MongoImpl) EnsureIndex(ctx context.Context) error {
 		return err
 	}
 
-	_, err = s.portfolioCollection.Indexes().CreateMany(ctx, []mongo.IndexModel{
+	_, err = s.accountPortfolioCollection.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		makeIndex(false, bson.D{{Key: "injective_address", Value: 1}}),
 		makeIndex(false, bson.D{{Key: "guild_id", Value: 1}}),
 		makeIndex(false, bson.D{{Key: "updated_at", Value: -1}}),
@@ -129,7 +132,7 @@ func (s *MongoImpl) DeleteGuild(ctx context.Context, guildID string) error {
 			return nil, err
 		}
 
-		_, err = s.portfolioCollection.DeleteMany(ctx, filter)
+		_, err = s.accountPortfolioCollection.DeleteMany(ctx, filter)
 		if err != nil {
 			return nil, err
 		}
@@ -180,6 +183,16 @@ func (s *MongoImpl) GetSingleGuild(ctx context.Context, guildID string) (*model.
 	}
 
 	return &guild, nil
+}
+
+func (s *MongoImpl) AddGuildPortfolios(ctx context.Context, portfolios []*model.GuildPortfolio) error {
+	docs := make([]interface{}, len(portfolios))
+	for i, p := range portfolios {
+		docs[i] = p
+	}
+
+	_, err := s.guildPortfolioCollection.InsertMany(ctx, docs)
+	return err
 }
 
 func (s *MongoImpl) ListGuildMembers(
@@ -361,24 +374,15 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 
 // account portfolio gets latest account portfolio
 // TODO: Unify getAccountPortfolio to 1 function
-func (s *MongoImpl) GetAccountPortfolio(ctx context.Context, guildID string, address model.Address) (*model.AccountPortfolio, error) {
+func (s *MongoImpl) GetAccountPortfolio(ctx context.Context, address model.Address) (*model.AccountPortfolio, error) {
 	filter := bson.M{
 		"injective_address": address.String(),
-	}
-
-	if guildID != "" {
-		guildObjectID, err := primitive.ObjectIDFromHex(guildID)
-		if err != nil {
-			return nil, fmt.Errorf("cannot parse guildID: %w", err)
-		}
-
-		filter["guild_id"] = guildObjectID
 	}
 
 	opts := &options.FindOneOptions{}
 	opts.SetSort(bson.M{"updated_at": -1})
 
-	singleRow := s.portfolioCollection.FindOne(ctx, filter, opts)
+	singleRow := s.accountPortfolioCollection.FindOne(ctx, filter, opts)
 	if err := singleRow.Err(); err != nil {
 		return nil, err
 	}
@@ -393,26 +397,16 @@ func (s *MongoImpl) GetAccountPortfolio(ctx context.Context, guildID string, add
 
 func (s *MongoImpl) ListAccountPortfolios(
 	ctx context.Context,
-	guildID string,
 	address model.Address,
 ) (result []*model.AccountPortfolio, err error) {
 	filter := bson.M{
 		"injective_address": address.String(),
 	}
 
-	if guildID != "" {
-		guildObjectID, err := primitive.ObjectIDFromHex(guildID)
-		if err != nil {
-			return nil, fmt.Errorf("cannot parse guildID: %w", err)
-		}
-
-		filter["guild_id"] = guildObjectID
-	}
-
 	opts := &options.FindOptions{}
 	opts.SetSort(bson.M{"updated_at": -1})
 
-	cur, err := s.portfolioCollection.Find(ctx, filter, opts)
+	cur, err := s.accountPortfolioCollection.Find(ctx, filter, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -432,16 +426,14 @@ func (s *MongoImpl) ListAccountPortfolios(
 // AddAccountPortfolios add portfolio snapshots in single write call
 func (s *MongoImpl) AddAccountPortfolios(
 	ctx context.Context,
-	guildID string,
 	portfolios []*model.AccountPortfolio,
 ) error {
-
 	docs := make([]interface{}, len(portfolios))
 	for i, p := range portfolios {
 		docs[i] = p
 	}
 
-	_, err := s.portfolioCollection.InsertMany(ctx, docs)
+	_, err := s.accountPortfolioCollection.InsertMany(ctx, docs)
 	return err
 }
 

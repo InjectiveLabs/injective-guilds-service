@@ -82,3 +82,10 @@ func defaultSubaccountIDFromInjAddress(injAddress model.Address) string {
 	ethAddr := common.BytesToAddress(injAddress.Bytes())
 	return ethAddr.Hex() + "000000000000000000000000"
 }
+
+func sum(a primitive.Decimal128, b primitive.Decimal128) primitive.Decimal128 {
+	parsedA, _ := decimal.NewFromString(a.String())
+	parsedB, _ := decimal.NewFromString(b.String())
+	result, _ := primitive.ParseDecimal128(parsedA.Add(parsedB).String())
+	return result
+}

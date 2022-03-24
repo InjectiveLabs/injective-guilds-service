@@ -241,7 +241,7 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	}
 
 	// TODO: transaction
-	err = s.dbSvc.AddAccountPortfolios(ctx, guild.ID.Hex(), []*model.AccountPortfolio{portfolio})
+	err = s.dbSvc.AddAccountPortfolios(ctx, []*model.AccountPortfolio{portfolio})
 	if err != nil {
 		// This account now joined guild, this error is not fatal, portfolio can be captured later
 		s.logger.WithError(err).Warningln("cannot write account portfolio to db")
@@ -301,7 +301,7 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 		return nil, svc.MakeInvalidArg(err)
 	}
 
-	portfolio, err := s.dbSvc.GetAccountPortfolio(ctx, payload.GuildID, model.Address{
+	portfolio, err := s.dbSvc.GetAccountPortfolio(ctx, model.Address{
 		AccAddress: address,
 	})
 	if err != nil {
@@ -339,7 +339,7 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 		return nil, svc.MakeInvalidArg(err)
 	}
 
-	portfolios, err := s.dbSvc.ListAccountPortfolios(ctx, payload.GuildID, model.Address{
+	portfolios, err := s.dbSvc.ListAccountPortfolios(ctx, model.Address{
 		AccAddress: address,
 	})
 	if err != nil {

@@ -229,7 +229,7 @@ func addGuildAction() {
 	}, true)
 	panicIf(err)
 
-	err = dbSvc.AddAccountPortfolios(ctx, id.Hex(), []*model.AccountPortfolio{portfolio})
+	err = dbSvc.AddAccountPortfolios(ctx, []*model.AccountPortfolio{portfolio})
 	panicIf(err)
 
 	log.Info("🍺 all done")

@@ -136,6 +136,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 		}
 
 		portfolios := make([]*model.AccountPortfolio, 0)
+		denomToBalance := make(map[string]*model.Balance)
 		// TODO: Create queue to re-try when failure happens
 		// TODO: Create bulk accounts balances query on injective-exchange
 		for _, member := range members {
@@ -155,6 +156,24 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 			// fill denom price, priceMap has all denom prices
 			for _, b := range portfolioSnapshot.Balances {
 				b.PriceUSD = priceMap[b.Denom]
+
+				// add to denom to balances
+				if _, exist := denomToBalance[b.Denom]; !exist {
+					denomToBalance[b.Denom] = &model.Balance{
+						Denom:            b.Denom,
+						PriceUSD:         b.PriceUSD,
+						TotalBalance:     b.TotalBalance,
+						AvailableBalance: b.AvailableBalance,
+						UnrealizedPNL:    b.UnrealizedPNL,
+						MarginHold:       b.MarginHold,
+					}
+				} else {
+					tmp := denomToBalance[b.Denom]
+					tmp.TotalBalance = sum(tmp.TotalBalance, b.TotalBalance)
+					tmp.AvailableBalance = sum(tmp.AvailableBalance, b.AvailableBalance)
+					tmp.UnrealizedPNL = sum(tmp.UnrealizedPNL, b.UnrealizedPNL)
+					tmp.MarginHold = sum(tmp.MarginHold, b.MarginHold)
+				}
 			}
 
 			portfolioSnapshot.UpdatedAt = now
@@ -165,11 +184,30 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 			p.logger.
 				WithField("count", len(portfolios)).
 				WithField("guildID", guildID).Infoln("updated portfolios")
-			err = p.dbSvc.AddAccountPortfolios(ctx, guildID, portfolios)
+			err = p.dbSvc.AddAccountPortfolios(ctx, portfolios)
 			if err != nil {
 				p.logger.
 					WithField("guildID", guildID).
 					WithError(err).Warningln("skip this guild")
+			}
+		}
+
+		// if no failed member then we are confident with writing this snapshot
+		if len(portfolios) == len(members) {
+			// update guild
+			guildPortfolio := &model.GuildPortfolio{
+				GuildID:   guild.ID,
+				UpdatedAt: now,
+			}
+			for _, v := range denomToBalance {
+				guildPortfolio.Balances = append(guildPortfolio.Balances, v)
+			}
+
+			err = p.dbSvc.AddGuildPortfolios(ctx, []*model.GuildPortfolio{guildPortfolio})
+			if err != nil {
+				p.logger.
+					WithField("guildID", guildID).
+					WithError(err).Warningln("cannot add guild portfolio")
 			}
 		}
 	}
