@@ -12,6 +12,7 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	guildsprocess "github.com/InjectiveLabs/injective-guilds-service/internal/service/guilds-process"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/shopspring/decimal"
 	log "github.com/xlab/suplog"
 )
 
@@ -192,8 +193,7 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 	}, nil
 }
 
-func (s *service) isAddressQualified(ctx context.Context, guild *model.Guild, address string) (bool, error) {
-	// TODO: Check balances
+func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address string) (bool, error) {
 	// Currently, we can handle it on UI (discussed) => skip for now
 	// check grants
 	grants, err := s.exchangeProvider.GetGrants(ctx, address, guild.MasterAddress.String())
@@ -228,6 +228,67 @@ func (s *service) isAddressQualified(ctx context.Context, guild *model.Guild, ad
 	return true, nil
 }
 
+func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapshot *model.AccountPortfolio) (bool, error) {
+	if snapshot == nil {
+		return false, fmt.Errorf("no snapshot found to check")
+	}
+
+	for _, b := range snapshot.Balances {
+		if b.AvailableBalance != b.TotalBalance {
+			return false, nil
+		}
+	}
+
+	denomToDecimal := make(map[string]int)
+	for _, market := range guild.Markets {
+		if market.BaseTokenMeta != nil {
+			denomToDecimal[market.BaseDenom] = market.BaseTokenMeta.Decimals
+		}
+
+		if market.QuoteTokenMeta != nil {
+			denomToDecimal[market.QuoteDenom] = market.QuoteTokenMeta.Decimals
+		}
+	}
+
+	denomToMinAmount := make(map[string]float64)
+	for _, req := range guild.Requirements {
+		denomToMinAmount[req.Denom] = req.MinAmountUSD
+	}
+
+	for _, b := range snapshot.Balances {
+		availBalance, _ := decimal.NewFromString(b.AvailableBalance.String())
+		dec, exist := denomToDecimal[b.Denom]
+		if !exist {
+			return false, fmt.Errorf("failed check denom not belongs to market")
+		}
+
+		min, exist := denomToMinAmount[b.Denom]
+		if !exist {
+			return false, fmt.Errorf("failed check denom not belongs to market")
+		}
+
+		usdInDecimal := decimal.NewFromFloat(b.PriceUSD)
+		if !availBalance.Shift(int32(dec)).Mul(usdInDecimal).GreaterThanOrEqual(decimal.NewFromFloat(min)) {
+			return false, nil
+		}
+	}
+	return true, nil
+}
+
+func (s *service) isAddressQualified(ctx context.Context, guild *model.Guild, portfolio *model.AccountPortfolio) (bool, error) {
+	// Total Balance == Available Balance
+	balanceQualified, err := s.checkBalances(ctx, guild, portfolio)
+	if err != nil {
+		return false, err
+	}
+
+	if !balanceQualified {
+		return false, nil
+	}
+
+	return s.checkGrants(ctx, guild, portfolio.InjectiveAddress.String())
+}
+
 func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
 	accAddress, msgInfo, err := verifySigAndExtractInfo(payload.PublicKey, payload.Signature, payload.Message)
 	if err != nil {
@@ -243,19 +304,6 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 		return nil, svc.MakeInternal(fmt.Errorf("guild error: %w", err))
 	}
 
-	// check qualification
-	qualified, err := s.isAddressQualified(ctx, guild, accAddress.String())
-	if err != nil {
-		return nil, svc.MakeInternal(fmt.Errorf("check qualification error: %w", err))
-	}
-
-	if !qualified {
-		joinStatus := "address_not_qualified"
-		return &svc.EnterGuildResult{
-			JoinStatus: &joinStatus,
-		}, nil
-	}
-
 	// get portfolio
 	portfolio, err := s.portfolioHelper.CaptureSingleMemberPortfolio(
 		ctx,
@@ -268,6 +316,19 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	)
 	if err != nil {
 		return nil, svc.MakeInternal(fmt.Errorf("capture portfolio error: %w", err))
+	}
+
+	// check qualification
+	qualified, err := s.isAddressQualified(ctx, guild, portfolio)
+	if err != nil {
+		return nil, svc.MakeInternal(fmt.Errorf("check qualification error: %w", err))
+	}
+
+	if !qualified {
+		joinStatus := "address_not_qualified"
+		return &svc.EnterGuildResult{
+			JoinStatus: &joinStatus,
+		}, nil
 	}
 
 	// add to database
