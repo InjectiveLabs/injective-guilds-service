@@ -83,6 +83,12 @@ type GetGuildMarketsResponseBody struct {
 	Markets []*MarketResponseBody `form:"markets,omitempty" json:"markets,omitempty" xml:"markets,omitempty"`
 }
 
+// GetGuildPortfoliosResponseBody is the type of the "GuildsService" service
+// "GetGuildPortfolios" endpoint HTTP response body.
+type GetGuildPortfoliosResponseBody struct {
+	Portfolios []*SingleGuildPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
+}
+
 // GetAccountPortfolioResponseBody is the type of the "GuildsService" service
 // "GetAccountPortfolio" endpoint HTTP response body.
 type GetAccountPortfolioResponseBody struct {
@@ -393,6 +399,44 @@ type GetGuildMarketsInternalResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
+// GetGuildPortfoliosNotFoundResponseBody is the type of the "GuildsService"
+// service "GetGuildPortfolios" endpoint HTTP response body for the "not_found"
+// error.
+type GetGuildPortfoliosNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// GetGuildPortfoliosInternalResponseBody is the type of the "GuildsService"
+// service "GetGuildPortfolios" endpoint HTTP response body for the "internal"
+// error.
+type GetGuildPortfoliosInternalResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
 // GetAccountPortfolioNotFoundResponseBody is the type of the "GuildsService"
 // service "GetAccountPortfolio" endpoint HTTP response body for the
 // "not_found" error.
@@ -471,16 +515,31 @@ type GetAccountPortfoliosInternalResponseBody struct {
 
 // GuildResponseBody is used to define fields on response body types.
 type GuildResponseBody struct {
-	ID                         string `form:"id" json:"id" xml:"id"`
-	Name                       string `form:"name" json:"name" xml:"name"`
-	Description                string `form:"description" json:"description" xml:"description"`
-	MasterAddress              string `form:"master_address" json:"master_address" xml:"master_address"`
-	SpotBaseRequirement        string `form:"spot_base_requirement" json:"spot_base_requirement" xml:"spot_base_requirement"`
-	SpotQuoteRequirement       string `form:"spot_quote_requirement" json:"spot_quote_requirement" xml:"spot_quote_requirement"`
-	DerivativeQuoteRequirement string `form:"derivative_quote_requirement" json:"derivative_quote_requirement" xml:"derivative_quote_requirement"`
-	StakingRequirement         string `form:"staking_requirement" json:"staking_requirement" xml:"staking_requirement"`
-	Capacity                   int    `form:"capacity" json:"capacity" xml:"capacity"`
-	MemberCount                int    `form:"member_count" json:"member_count" xml:"member_count"`
+	ID                 string                   `form:"id" json:"id" xml:"id"`
+	Name               string                   `form:"name" json:"name" xml:"name"`
+	Description        string                   `form:"description" json:"description" xml:"description"`
+	MasterAddress      string                   `form:"master_address" json:"master_address" xml:"master_address"`
+	Requirements       *RequirementResponseBody `form:"requirements" json:"requirements" xml:"requirements"`
+	StakingRequirement string                   `form:"staking_requirement" json:"staking_requirement" xml:"staking_requirement"`
+	Capacity           int                      `form:"capacity" json:"capacity" xml:"capacity"`
+	MemberCount        int                      `form:"member_count" json:"member_count" xml:"member_count"`
+	CurrentPortfolio   []*BalanceResponseBody   `form:"current_portfolio,omitempty" json:"current_portfolio,omitempty" xml:"current_portfolio,omitempty"`
+}
+
+// RequirementResponseBody is used to define fields on response body types.
+type RequirementResponseBody struct {
+	Denom        string  `form:"denom" json:"denom" xml:"denom"`
+	MinAmountUsd float64 `form:"min_amount_usd" json:"min_amount_usd" xml:"min_amount_usd"`
+}
+
+// BalanceResponseBody is used to define fields on response body types.
+type BalanceResponseBody struct {
+	Denom            string  `form:"denom" json:"denom" xml:"denom"`
+	TotalBalance     string  `form:"total_balance" json:"total_balance" xml:"total_balance"`
+	AvailableBalance string  `form:"available_balance" json:"available_balance" xml:"available_balance"`
+	UnrealizedPnl    string  `form:"unrealized_pnl" json:"unrealized_pnl" xml:"unrealized_pnl"`
+	MarginHold       string  `form:"margin_hold" json:"margin_hold" xml:"margin_hold"`
+	PriceUsd         float64 `form:"price_usd" json:"price_usd" xml:"price_usd"`
 }
 
 // GuildMemberResponseBody is used to define fields on response body types.
@@ -496,22 +555,20 @@ type MarketResponseBody struct {
 	IsPerpetual bool   `form:"is_perpetual" json:"is_perpetual" xml:"is_perpetual"`
 }
 
+// SingleGuildPortfolioResponseBody is used to define fields on response body
+// types.
+type SingleGuildPortfolioResponseBody struct {
+	GuildID   *string                `form:"guild_id,omitempty" json:"guild_id,omitempty" xml:"guild_id,omitempty"`
+	Balances  []*BalanceResponseBody `form:"balances" json:"balances" xml:"balances"`
+	UpdatedAt int64                  `form:"updated_at" json:"updated_at" xml:"updated_at"`
+}
+
 // SingleAccountPortfolioResponseBody is used to define fields on response body
 // types.
 type SingleAccountPortfolioResponseBody struct {
 	InjectiveAddress string                 `form:"injective_address" json:"injective_address" xml:"injective_address"`
 	Balances         []*BalanceResponseBody `form:"balances" json:"balances" xml:"balances"`
 	UpdatedAt        int64                  `form:"updated_at" json:"updated_at" xml:"updated_at"`
-}
-
-// BalanceResponseBody is used to define fields on response body types.
-type BalanceResponseBody struct {
-	Denom            string  `form:"denom" json:"denom" xml:"denom"`
-	TotalBalance     string  `form:"total_balance" json:"total_balance" xml:"total_balance"`
-	AvailableBalance string  `form:"available_balance" json:"available_balance" xml:"available_balance"`
-	UnrealizedPnl    string  `form:"unrealized_pnl" json:"unrealized_pnl" xml:"unrealized_pnl"`
-	MarginHold       string  `form:"margin_hold" json:"margin_hold" xml:"margin_hold"`
-	PriceUsd         float64 `form:"price_usd" json:"price_usd" xml:"price_usd"`
 }
 
 // NewGetAllGuildsResponseBody builds the HTTP response body from the result of
@@ -597,6 +654,19 @@ func NewGetGuildMarketsResponseBody(res *guildsservice.GetGuildMarketsResult) *G
 		body.Markets = make([]*MarketResponseBody, len(res.Markets))
 		for i, val := range res.Markets {
 			body.Markets[i] = marshalGuildsserviceMarketToMarketResponseBody(val)
+		}
+	}
+	return body
+}
+
+// NewGetGuildPortfoliosResponseBody builds the HTTP response body from the
+// result of the "GetGuildPortfolios" endpoint of the "GuildsService" service.
+func NewGetGuildPortfoliosResponseBody(res *guildsservice.GetGuildPortfoliosResult) *GetGuildPortfoliosResponseBody {
+	body := &GetGuildPortfoliosResponseBody{}
+	if res.Portfolios != nil {
+		body.Portfolios = make([]*SingleGuildPortfolioResponseBody, len(res.Portfolios))
+		for i, val := range res.Portfolios {
+			body.Portfolios[i] = marshalGuildsserviceSingleGuildPortfolioToSingleGuildPortfolioResponseBody(val)
 		}
 	}
 	return body
@@ -853,6 +923,36 @@ func NewGetGuildMarketsInternalResponseBody(res *goa.ServiceError) *GetGuildMark
 	return body
 }
 
+// NewGetGuildPortfoliosNotFoundResponseBody builds the HTTP response body from
+// the result of the "GetGuildPortfolios" endpoint of the "GuildsService"
+// service.
+func NewGetGuildPortfoliosNotFoundResponseBody(res *goa.ServiceError) *GetGuildPortfoliosNotFoundResponseBody {
+	body := &GetGuildPortfoliosNotFoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewGetGuildPortfoliosInternalResponseBody builds the HTTP response body from
+// the result of the "GetGuildPortfolios" endpoint of the "GuildsService"
+// service.
+func NewGetGuildPortfoliosInternalResponseBody(res *goa.ServiceError) *GetGuildPortfoliosInternalResponseBody {
+	body := &GetGuildPortfoliosInternalResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
 // NewGetAccountPortfolioNotFoundResponseBody builds the HTTP response body
 // from the result of the "GetAccountPortfolio" endpoint of the "GuildsService"
 // service.
@@ -984,11 +1084,21 @@ func NewGetGuildMarketsPayload(guildID string) *guildsservice.GetGuildMarketsPay
 	return v
 }
 
+// NewGetGuildPortfoliosPayload builds a GuildsService service
+// GetGuildPortfolios endpoint payload.
+func NewGetGuildPortfoliosPayload(guildID string, startTime *int64, endTime *int64) *guildsservice.GetGuildPortfoliosPayload {
+	v := &guildsservice.GetGuildPortfoliosPayload{}
+	v.GuildID = guildID
+	v.StartTime = startTime
+	v.EndTime = endTime
+
+	return v
+}
+
 // NewGetAccountPortfolioPayload builds a GuildsService service
 // GetAccountPortfolio endpoint payload.
-func NewGetAccountPortfolioPayload(guildID string, injectiveAddress string) *guildsservice.GetAccountPortfolioPayload {
+func NewGetAccountPortfolioPayload(injectiveAddress string) *guildsservice.GetAccountPortfolioPayload {
 	v := &guildsservice.GetAccountPortfolioPayload{}
-	v.GuildID = guildID
 	v.InjectiveAddress = injectiveAddress
 
 	return v
@@ -996,10 +1106,11 @@ func NewGetAccountPortfolioPayload(guildID string, injectiveAddress string) *gui
 
 // NewGetAccountPortfoliosPayload builds a GuildsService service
 // GetAccountPortfolios endpoint payload.
-func NewGetAccountPortfoliosPayload(guildID string, injectiveAddress string) *guildsservice.GetAccountPortfoliosPayload {
+func NewGetAccountPortfoliosPayload(injectiveAddress string, startTime *int64, endTime *int64) *guildsservice.GetAccountPortfoliosPayload {
 	v := &guildsservice.GetAccountPortfoliosPayload{}
-	v.GuildID = guildID
 	v.InjectiveAddress = injectiveAddress
+	v.StartTime = startTime
+	v.EndTime = endTime
 
 	return v
 }

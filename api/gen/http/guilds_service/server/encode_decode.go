@@ -12,6 +12,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"strconv"
 
 	guildsservice "github.com/InjectiveLabs/injective-guilds-service/api/gen/guilds_service"
 	goahttp "goa.design/goa/v3/http"
@@ -594,6 +595,102 @@ func EncodeGetGuildMarketsError(encoder func(context.Context, http.ResponseWrite
 	}
 }
 
+// EncodeGetGuildPortfoliosResponse returns an encoder for responses returned
+// by the GuildsService GetGuildPortfolios endpoint.
+func EncodeGetGuildPortfoliosResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*guildsservice.GetGuildPortfoliosResult)
+		enc := encoder(ctx, w)
+		body := NewGetGuildPortfoliosResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeGetGuildPortfoliosRequest returns a decoder for requests sent to the
+// GuildsService GetGuildPortfolios endpoint.
+func DecodeGetGuildPortfoliosRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			guildID   string
+			startTime *int64
+			endTime   *int64
+			err       error
+
+			params = mux.Vars(r)
+		)
+		guildID = params["guildID"]
+		{
+			startTimeRaw := r.URL.Query().Get("start_time")
+			if startTimeRaw != "" {
+				v, err2 := strconv.ParseInt(startTimeRaw, 10, 64)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("startTime", startTimeRaw, "integer"))
+				}
+				startTime = &v
+			}
+		}
+		{
+			endTimeRaw := r.URL.Query().Get("end_time")
+			if endTimeRaw != "" {
+				v, err2 := strconv.ParseInt(endTimeRaw, 10, 64)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("endTime", endTimeRaw, "integer"))
+				}
+				endTime = &v
+			}
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewGetGuildPortfoliosPayload(guildID, startTime, endTime)
+
+		return payload, nil
+	}
+}
+
+// EncodeGetGuildPortfoliosError returns an encoder for errors returned by the
+// GetGuildPortfolios GuildsService endpoint.
+func EncodeGetGuildPortfoliosError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		var en ErrorNamer
+		if !errors.As(v, &en) {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "not_found":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewGetGuildPortfoliosNotFoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "internal":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewGetGuildPortfoliosInternalResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusInternalServerError)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
 // EncodeGetAccountPortfolioResponse returns an encoder for responses returned
 // by the GuildsService GetAccountPortfolio endpoint.
 func EncodeGetAccountPortfolioResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
@@ -611,21 +708,12 @@ func EncodeGetAccountPortfolioResponse(encoder func(context.Context, http.Respon
 func DecodeGetAccountPortfolioRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			guildID          string
 			injectiveAddress string
-			err              error
 
 			params = mux.Vars(r)
 		)
-		guildID = params["guildID"]
-		injectiveAddress = r.URL.Query().Get("injective_address")
-		if injectiveAddress == "" {
-			err = goa.MergeErrors(err, goa.MissingFieldError("injective_address", "query string"))
-		}
-		if err != nil {
-			return nil, err
-		}
-		payload := NewGetAccountPortfolioPayload(guildID, injectiveAddress)
+		injectiveAddress = params["injective_address"]
+		payload := NewGetAccountPortfolioPayload(injectiveAddress)
 
 		return payload, nil
 	}
@@ -690,21 +778,38 @@ func EncodeGetAccountPortfoliosResponse(encoder func(context.Context, http.Respo
 func DecodeGetAccountPortfoliosRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			guildID          string
 			injectiveAddress string
+			startTime        *int64
+			endTime          *int64
 			err              error
 
 			params = mux.Vars(r)
 		)
-		guildID = params["guildID"]
-		injectiveAddress = r.URL.Query().Get("injective_address")
-		if injectiveAddress == "" {
-			err = goa.MergeErrors(err, goa.MissingFieldError("injective_address", "query string"))
+		injectiveAddress = params["injective_address"]
+		{
+			startTimeRaw := r.URL.Query().Get("start_time")
+			if startTimeRaw != "" {
+				v, err2 := strconv.ParseInt(startTimeRaw, 10, 64)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("startTime", startTimeRaw, "integer"))
+				}
+				startTime = &v
+			}
+		}
+		{
+			endTimeRaw := r.URL.Query().Get("end_time")
+			if endTimeRaw != "" {
+				v, err2 := strconv.ParseInt(endTimeRaw, 10, 64)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("endTime", endTimeRaw, "integer"))
+				}
+				endTime = &v
+			}
 		}
 		if err != nil {
 			return nil, err
 		}
-		payload := NewGetAccountPortfoliosPayload(guildID, injectiveAddress)
+		payload := NewGetAccountPortfoliosPayload(injectiveAddress, startTime, endTime)
 
 		return payload, nil
 	}
@@ -759,16 +864,52 @@ func marshalGuildsserviceGuildToGuildResponseBody(v *guildsservice.Guild) *Guild
 		return nil
 	}
 	res := &GuildResponseBody{
-		ID:                         v.ID,
-		Name:                       v.Name,
-		Description:                v.Description,
-		MasterAddress:              v.MasterAddress,
-		SpotBaseRequirement:        v.SpotBaseRequirement,
-		SpotQuoteRequirement:       v.SpotQuoteRequirement,
-		DerivativeQuoteRequirement: v.DerivativeQuoteRequirement,
-		StakingRequirement:         v.StakingRequirement,
-		Capacity:                   v.Capacity,
-		MemberCount:                v.MemberCount,
+		ID:                 v.ID,
+		Name:               v.Name,
+		Description:        v.Description,
+		MasterAddress:      v.MasterAddress,
+		StakingRequirement: v.StakingRequirement,
+		Capacity:           v.Capacity,
+		MemberCount:        v.MemberCount,
+	}
+	if v.Requirements != nil {
+		res.Requirements = marshalGuildsserviceRequirementToRequirementResponseBody(v.Requirements)
+	}
+	if v.CurrentPortfolio != nil {
+		res.CurrentPortfolio = make([]*BalanceResponseBody, len(v.CurrentPortfolio))
+		for i, val := range v.CurrentPortfolio {
+			res.CurrentPortfolio[i] = marshalGuildsserviceBalanceToBalanceResponseBody(val)
+		}
+	}
+
+	return res
+}
+
+// marshalGuildsserviceRequirementToRequirementResponseBody builds a value of
+// type *RequirementResponseBody from a value of type
+// *guildsservice.Requirement.
+func marshalGuildsserviceRequirementToRequirementResponseBody(v *guildsservice.Requirement) *RequirementResponseBody {
+	res := &RequirementResponseBody{
+		Denom:        v.Denom,
+		MinAmountUsd: v.MinAmountUsd,
+	}
+
+	return res
+}
+
+// marshalGuildsserviceBalanceToBalanceResponseBody builds a value of type
+// *BalanceResponseBody from a value of type *guildsservice.Balance.
+func marshalGuildsserviceBalanceToBalanceResponseBody(v *guildsservice.Balance) *BalanceResponseBody {
+	if v == nil {
+		return nil
+	}
+	res := &BalanceResponseBody{
+		Denom:            v.Denom,
+		TotalBalance:     v.TotalBalance,
+		AvailableBalance: v.AvailableBalance,
+		UnrealizedPnl:    v.UnrealizedPnl,
+		MarginHold:       v.MarginHold,
+		PriceUsd:         v.PriceUsd,
 	}
 
 	return res
@@ -804,6 +945,27 @@ func marshalGuildsserviceMarketToMarketResponseBody(v *guildsservice.Market) *Ma
 	return res
 }
 
+// marshalGuildsserviceSingleGuildPortfolioToSingleGuildPortfolioResponseBody
+// builds a value of type *SingleGuildPortfolioResponseBody from a value of
+// type *guildsservice.SingleGuildPortfolio.
+func marshalGuildsserviceSingleGuildPortfolioToSingleGuildPortfolioResponseBody(v *guildsservice.SingleGuildPortfolio) *SingleGuildPortfolioResponseBody {
+	if v == nil {
+		return nil
+	}
+	res := &SingleGuildPortfolioResponseBody{
+		GuildID:   v.GuildID,
+		UpdatedAt: v.UpdatedAt,
+	}
+	if v.Balances != nil {
+		res.Balances = make([]*BalanceResponseBody, len(v.Balances))
+		for i, val := range v.Balances {
+			res.Balances[i] = marshalGuildsserviceBalanceToBalanceResponseBody(val)
+		}
+	}
+
+	return res
+}
+
 // marshalGuildsserviceSingleAccountPortfolioToSingleAccountPortfolioResponseBody
 // builds a value of type *SingleAccountPortfolioResponseBody from a value of
 // type *guildsservice.SingleAccountPortfolio.
@@ -820,21 +982,6 @@ func marshalGuildsserviceSingleAccountPortfolioToSingleAccountPortfolioResponseB
 		for i, val := range v.Balances {
 			res.Balances[i] = marshalGuildsserviceBalanceToBalanceResponseBody(val)
 		}
-	}
-
-	return res
-}
-
-// marshalGuildsserviceBalanceToBalanceResponseBody builds a value of type
-// *BalanceResponseBody from a value of type *guildsservice.Balance.
-func marshalGuildsserviceBalanceToBalanceResponseBody(v *guildsservice.Balance) *BalanceResponseBody {
-	res := &BalanceResponseBody{
-		Denom:            v.Denom,
-		TotalBalance:     v.TotalBalance,
-		AvailableBalance: v.AvailableBalance,
-		UnrealizedPnl:    v.UnrealizedPnl,
-		MarginHold:       v.MarginHold,
-		PriceUsd:         v.PriceUsd,
 	}
 
 	return res

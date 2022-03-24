@@ -10,6 +10,7 @@ package client
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -806,21 +807,139 @@ func DecodeGetGuildMarketsResponse(decoder func(*http.Response) goahttp.Decoder,
 	}
 }
 
+// BuildGetGuildPortfoliosRequest instantiates a HTTP request object with
+// method and path set to call the "GuildsService" service "GetGuildPortfolios"
+// endpoint
+func (c *Client) BuildGetGuildPortfoliosRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	var (
+		guildID string
+	)
+	{
+		p, ok := v.(*guildsservice.GetGuildPortfoliosPayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("GuildsService", "GetGuildPortfolios", "*guildsservice.GetGuildPortfoliosPayload", v)
+		}
+		guildID = p.GuildID
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetGuildPortfoliosGuildsServicePath(guildID)}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("GuildsService", "GetGuildPortfolios", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeGetGuildPortfoliosRequest returns an encoder for requests sent to the
+// GuildsService GetGuildPortfolios server.
+func EncodeGetGuildPortfoliosRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*guildsservice.GetGuildPortfoliosPayload)
+		if !ok {
+			return goahttp.ErrInvalidType("GuildsService", "GetGuildPortfolios", "*guildsservice.GetGuildPortfoliosPayload", v)
+		}
+		values := req.URL.Query()
+		if p.StartTime != nil {
+			values.Add("start_time", fmt.Sprintf("%v", *p.StartTime))
+		}
+		if p.EndTime != nil {
+			values.Add("end_time", fmt.Sprintf("%v", *p.EndTime))
+		}
+		req.URL.RawQuery = values.Encode()
+		return nil
+	}
+}
+
+// DecodeGetGuildPortfoliosResponse returns a decoder for responses returned by
+// the GuildsService GetGuildPortfolios endpoint. restoreBody controls whether
+// the response body should be restored after having been read.
+// DecodeGetGuildPortfoliosResponse may return the following errors:
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
+//	- error: internal error
+func DecodeGetGuildPortfoliosResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body GetGuildPortfoliosResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("GuildsService", "GetGuildPortfolios", err)
+			}
+			err = ValidateGetGuildPortfoliosResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetGuildPortfolios", err)
+			}
+			res := NewGetGuildPortfoliosResultOK(&body)
+			return res, nil
+		case http.StatusNotFound:
+			var (
+				body GetGuildPortfoliosNotFoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("GuildsService", "GetGuildPortfolios", err)
+			}
+			err = ValidateGetGuildPortfoliosNotFoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetGuildPortfolios", err)
+			}
+			return nil, NewGetGuildPortfoliosNotFound(&body)
+		case http.StatusInternalServerError:
+			var (
+				body GetGuildPortfoliosInternalResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("GuildsService", "GetGuildPortfolios", err)
+			}
+			err = ValidateGetGuildPortfoliosInternalResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetGuildPortfolios", err)
+			}
+			return nil, NewGetGuildPortfoliosInternal(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("GuildsService", "GetGuildPortfolios", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildGetAccountPortfolioRequest instantiates a HTTP request object with
 // method and path set to call the "GuildsService" service
 // "GetAccountPortfolio" endpoint
 func (c *Client) BuildGetAccountPortfolioRequest(ctx context.Context, v interface{}) (*http.Request, error) {
 	var (
-		guildID string
+		injectiveAddress string
 	)
 	{
 		p, ok := v.(*guildsservice.GetAccountPortfolioPayload)
 		if !ok {
 			return nil, goahttp.ErrInvalidType("GuildsService", "GetAccountPortfolio", "*guildsservice.GetAccountPortfolioPayload", v)
 		}
-		guildID = p.GuildID
+		injectiveAddress = p.InjectiveAddress
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetAccountPortfolioGuildsServicePath(guildID)}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetAccountPortfolioGuildsServicePath(injectiveAddress)}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("GuildsService", "GetAccountPortfolio", u.String(), err)
@@ -830,21 +949,6 @@ func (c *Client) BuildGetAccountPortfolioRequest(ctx context.Context, v interfac
 	}
 
 	return req, nil
-}
-
-// EncodeGetAccountPortfolioRequest returns an encoder for requests sent to the
-// GuildsService GetAccountPortfolio server.
-func EncodeGetAccountPortfolioRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
-	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*guildsservice.GetAccountPortfolioPayload)
-		if !ok {
-			return goahttp.ErrInvalidType("GuildsService", "GetAccountPortfolio", "*guildsservice.GetAccountPortfolioPayload", v)
-		}
-		values := req.URL.Query()
-		values.Add("injective_address", p.InjectiveAddress)
-		req.URL.RawQuery = values.Encode()
-		return nil
-	}
 }
 
 // DecodeGetAccountPortfolioResponse returns a decoder for responses returned
@@ -924,16 +1028,16 @@ func DecodeGetAccountPortfolioResponse(decoder func(*http.Response) goahttp.Deco
 // "GetAccountPortfolios" endpoint
 func (c *Client) BuildGetAccountPortfoliosRequest(ctx context.Context, v interface{}) (*http.Request, error) {
 	var (
-		guildID string
+		injectiveAddress string
 	)
 	{
 		p, ok := v.(*guildsservice.GetAccountPortfoliosPayload)
 		if !ok {
 			return nil, goahttp.ErrInvalidType("GuildsService", "GetAccountPortfolios", "*guildsservice.GetAccountPortfoliosPayload", v)
 		}
-		guildID = p.GuildID
+		injectiveAddress = p.InjectiveAddress
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetAccountPortfoliosGuildsServicePath(guildID)}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetAccountPortfoliosGuildsServicePath(injectiveAddress)}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("GuildsService", "GetAccountPortfolios", u.String(), err)
@@ -954,7 +1058,12 @@ func EncodeGetAccountPortfoliosRequest(encoder func(*http.Request) goahttp.Encod
 			return goahttp.ErrInvalidType("GuildsService", "GetAccountPortfolios", "*guildsservice.GetAccountPortfoliosPayload", v)
 		}
 		values := req.URL.Query()
-		values.Add("injective_address", p.InjectiveAddress)
+		if p.StartTime != nil {
+			values.Add("start_time", fmt.Sprintf("%v", *p.StartTime))
+		}
+		if p.EndTime != nil {
+			values.Add("end_time", fmt.Sprintf("%v", *p.EndTime))
+		}
 		req.URL.RawQuery = values.Encode()
 		return nil
 	}
@@ -1039,16 +1148,50 @@ func unmarshalGuildResponseBodyToGuildsserviceGuild(v *GuildResponseBody) *guild
 		return nil
 	}
 	res := &guildsservice.Guild{
-		ID:                         *v.ID,
-		Name:                       *v.Name,
-		Description:                *v.Description,
-		MasterAddress:              *v.MasterAddress,
-		SpotBaseRequirement:        *v.SpotBaseRequirement,
-		SpotQuoteRequirement:       *v.SpotQuoteRequirement,
-		DerivativeQuoteRequirement: *v.DerivativeQuoteRequirement,
-		StakingRequirement:         *v.StakingRequirement,
-		Capacity:                   *v.Capacity,
-		MemberCount:                *v.MemberCount,
+		ID:                 *v.ID,
+		Name:               *v.Name,
+		Description:        *v.Description,
+		MasterAddress:      *v.MasterAddress,
+		StakingRequirement: *v.StakingRequirement,
+		Capacity:           *v.Capacity,
+		MemberCount:        *v.MemberCount,
+	}
+	res.Requirements = unmarshalRequirementResponseBodyToGuildsserviceRequirement(v.Requirements)
+	if v.CurrentPortfolio != nil {
+		res.CurrentPortfolio = make([]*guildsservice.Balance, len(v.CurrentPortfolio))
+		for i, val := range v.CurrentPortfolio {
+			res.CurrentPortfolio[i] = unmarshalBalanceResponseBodyToGuildsserviceBalance(val)
+		}
+	}
+
+	return res
+}
+
+// unmarshalRequirementResponseBodyToGuildsserviceRequirement builds a value of
+// type *guildsservice.Requirement from a value of type
+// *RequirementResponseBody.
+func unmarshalRequirementResponseBodyToGuildsserviceRequirement(v *RequirementResponseBody) *guildsservice.Requirement {
+	res := &guildsservice.Requirement{
+		Denom:        *v.Denom,
+		MinAmountUsd: *v.MinAmountUsd,
+	}
+
+	return res
+}
+
+// unmarshalBalanceResponseBodyToGuildsserviceBalance builds a value of type
+// *guildsservice.Balance from a value of type *BalanceResponseBody.
+func unmarshalBalanceResponseBodyToGuildsserviceBalance(v *BalanceResponseBody) *guildsservice.Balance {
+	if v == nil {
+		return nil
+	}
+	res := &guildsservice.Balance{
+		Denom:            *v.Denom,
+		TotalBalance:     *v.TotalBalance,
+		AvailableBalance: *v.AvailableBalance,
+		UnrealizedPnl:    *v.UnrealizedPnl,
+		MarginHold:       *v.MarginHold,
+		PriceUsd:         *v.PriceUsd,
 	}
 
 	return res
@@ -1084,6 +1227,25 @@ func unmarshalMarketResponseBodyToGuildsserviceMarket(v *MarketResponseBody) *gu
 	return res
 }
 
+// unmarshalSingleGuildPortfolioResponseBodyToGuildsserviceSingleGuildPortfolio
+// builds a value of type *guildsservice.SingleGuildPortfolio from a value of
+// type *SingleGuildPortfolioResponseBody.
+func unmarshalSingleGuildPortfolioResponseBodyToGuildsserviceSingleGuildPortfolio(v *SingleGuildPortfolioResponseBody) *guildsservice.SingleGuildPortfolio {
+	if v == nil {
+		return nil
+	}
+	res := &guildsservice.SingleGuildPortfolio{
+		GuildID:   v.GuildID,
+		UpdatedAt: *v.UpdatedAt,
+	}
+	res.Balances = make([]*guildsservice.Balance, len(v.Balances))
+	for i, val := range v.Balances {
+		res.Balances[i] = unmarshalBalanceResponseBodyToGuildsserviceBalance(val)
+	}
+
+	return res
+}
+
 // unmarshalSingleAccountPortfolioResponseBodyToGuildsserviceSingleAccountPortfolio
 // builds a value of type *guildsservice.SingleAccountPortfolio from a value of
 // type *SingleAccountPortfolioResponseBody.
@@ -1098,21 +1260,6 @@ func unmarshalSingleAccountPortfolioResponseBodyToGuildsserviceSingleAccountPort
 	res.Balances = make([]*guildsservice.Balance, len(v.Balances))
 	for i, val := range v.Balances {
 		res.Balances[i] = unmarshalBalanceResponseBodyToGuildsserviceBalance(val)
-	}
-
-	return res
-}
-
-// unmarshalBalanceResponseBodyToGuildsserviceBalance builds a value of type
-// *guildsservice.Balance from a value of type *BalanceResponseBody.
-func unmarshalBalanceResponseBodyToGuildsserviceBalance(v *BalanceResponseBody) *guildsservice.Balance {
-	res := &guildsservice.Balance{
-		Denom:            *v.Denom,
-		TotalBalance:     *v.TotalBalance,
-		AvailableBalance: *v.AvailableBalance,
-		UnrealizedPnl:    *v.UnrealizedPnl,
-		MarginHold:       *v.MarginHold,
-		PriceUsd:         *v.PriceUsd,
 	}
 
 	return res

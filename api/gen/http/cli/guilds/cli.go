@@ -23,7 +23,7 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `guilds-service (get-all-guilds|get-single-guild|get-guild-members|get-guild-master-address|get-guild-default-member|enter-guild|leave-guild|get-guild-markets|get-account-portfolio|get-account-portfolios)
+	return `guilds-service (get-all-guilds|get-single-guild|get-guild-members|get-guild-master-address|get-guild-default-member|enter-guild|leave-guild|get-guild-markets|get-guild-portfolios|get-account-portfolio|get-account-portfolios)
 `
 }
 
@@ -70,13 +70,18 @@ func ParseEndpoint(
 		guildsServiceGetGuildMarketsFlags       = flag.NewFlagSet("get-guild-markets", flag.ExitOnError)
 		guildsServiceGetGuildMarketsGuildIDFlag = guildsServiceGetGuildMarketsFlags.String("guild-id", "REQUIRED", "")
 
+		guildsServiceGetGuildPortfoliosFlags         = flag.NewFlagSet("get-guild-portfolios", flag.ExitOnError)
+		guildsServiceGetGuildPortfoliosGuildIDFlag   = guildsServiceGetGuildPortfoliosFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceGetGuildPortfoliosStartTimeFlag = guildsServiceGetGuildPortfoliosFlags.String("start-time", "", "")
+		guildsServiceGetGuildPortfoliosEndTimeFlag   = guildsServiceGetGuildPortfoliosFlags.String("end-time", "", "")
+
 		guildsServiceGetAccountPortfolioFlags                = flag.NewFlagSet("get-account-portfolio", flag.ExitOnError)
-		guildsServiceGetAccountPortfolioGuildIDFlag          = guildsServiceGetAccountPortfolioFlags.String("guild-id", "REQUIRED", "")
 		guildsServiceGetAccountPortfolioInjectiveAddressFlag = guildsServiceGetAccountPortfolioFlags.String("injective-address", "REQUIRED", "")
 
 		guildsServiceGetAccountPortfoliosFlags                = flag.NewFlagSet("get-account-portfolios", flag.ExitOnError)
-		guildsServiceGetAccountPortfoliosGuildIDFlag          = guildsServiceGetAccountPortfoliosFlags.String("guild-id", "REQUIRED", "")
 		guildsServiceGetAccountPortfoliosInjectiveAddressFlag = guildsServiceGetAccountPortfoliosFlags.String("injective-address", "REQUIRED", "")
+		guildsServiceGetAccountPortfoliosStartTimeFlag        = guildsServiceGetAccountPortfoliosFlags.String("start-time", "", "")
+		guildsServiceGetAccountPortfoliosEndTimeFlag          = guildsServiceGetAccountPortfoliosFlags.String("end-time", "", "")
 	)
 	guildsServiceFlags.Usage = guildsServiceUsage
 	guildsServiceGetAllGuildsFlags.Usage = guildsServiceGetAllGuildsUsage
@@ -87,6 +92,7 @@ func ParseEndpoint(
 	guildsServiceEnterGuildFlags.Usage = guildsServiceEnterGuildUsage
 	guildsServiceLeaveGuildFlags.Usage = guildsServiceLeaveGuildUsage
 	guildsServiceGetGuildMarketsFlags.Usage = guildsServiceGetGuildMarketsUsage
+	guildsServiceGetGuildPortfoliosFlags.Usage = guildsServiceGetGuildPortfoliosUsage
 	guildsServiceGetAccountPortfolioFlags.Usage = guildsServiceGetAccountPortfolioUsage
 	guildsServiceGetAccountPortfoliosFlags.Usage = guildsServiceGetAccountPortfoliosUsage
 
@@ -148,6 +154,9 @@ func ParseEndpoint(
 			case "get-guild-markets":
 				epf = guildsServiceGetGuildMarketsFlags
 
+			case "get-guild-portfolios":
+				epf = guildsServiceGetGuildPortfoliosFlags
+
 			case "get-account-portfolio":
 				epf = guildsServiceGetAccountPortfolioFlags
 
@@ -203,12 +212,15 @@ func ParseEndpoint(
 			case "get-guild-markets":
 				endpoint = c.GetGuildMarkets()
 				data, err = guildsservicec.BuildGetGuildMarketsPayload(*guildsServiceGetGuildMarketsGuildIDFlag)
+			case "get-guild-portfolios":
+				endpoint = c.GetGuildPortfolios()
+				data, err = guildsservicec.BuildGetGuildPortfoliosPayload(*guildsServiceGetGuildPortfoliosGuildIDFlag, *guildsServiceGetGuildPortfoliosStartTimeFlag, *guildsServiceGetGuildPortfoliosEndTimeFlag)
 			case "get-account-portfolio":
 				endpoint = c.GetAccountPortfolio()
-				data, err = guildsservicec.BuildGetAccountPortfolioPayload(*guildsServiceGetAccountPortfolioGuildIDFlag, *guildsServiceGetAccountPortfolioInjectiveAddressFlag)
+				data, err = guildsservicec.BuildGetAccountPortfolioPayload(*guildsServiceGetAccountPortfolioInjectiveAddressFlag)
 			case "get-account-portfolios":
 				endpoint = c.GetAccountPortfolios()
-				data, err = guildsservicec.BuildGetAccountPortfoliosPayload(*guildsServiceGetAccountPortfoliosGuildIDFlag, *guildsServiceGetAccountPortfoliosInjectiveAddressFlag)
+				data, err = guildsservicec.BuildGetAccountPortfoliosPayload(*guildsServiceGetAccountPortfoliosInjectiveAddressFlag, *guildsServiceGetAccountPortfoliosStartTimeFlag, *guildsServiceGetAccountPortfoliosEndTimeFlag)
 			}
 		}
 	}
@@ -235,7 +247,8 @@ COMMAND:
     enter-guild: Enter the guild: Should supply public_key, message, signature in base64
     leave-guild: Enter the guild: Should supply public_key, message, signature in base64
     get-guild-markets: Get the guild markets
-    get-account-portfolio: Get current account portfolio
+    get-guild-portfolios: Get the guild markets
+    get-account-portfolio: Get current account portfolio snapshot
     get-account-portfolios: Get current account portfolios snapshots all the time
 
 Additional help:
@@ -259,7 +272,7 @@ Get a single guild base on ID
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-single-guild --guild-id "At et velit minima inventore."
+    %[1]s guilds-service get-single-guild --guild-id "Consequatur quaerat voluptatem ullam aliquid."
 `, os.Args[0])
 }
 
@@ -270,7 +283,7 @@ Get all members a given guild (include default member)
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-members --guild-id "Consequatur quaerat voluptatem ullam aliquid."
+    %[1]s guilds-service get-guild-members --guild-id "Omnis labore consequatur commodi."
 `, os.Args[0])
 }
 
@@ -281,7 +294,7 @@ Get master address of given guild
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-master-address --guild-id "Quo dolorem aut officiis omnis."
+    %[1]s guilds-service get-guild-master-address --guild-id "Culpa id aut sint ipsa."
 `, os.Args[0])
 }
 
@@ -292,7 +305,7 @@ Get default guild member
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-default-member --guild-id "Ipsa omnis."
+    %[1]s guilds-service get-guild-default-member --guild-id "Dolore atque aperiam officiis necessitatibus dicta est."
 `, os.Args[0])
 }
 
@@ -305,10 +318,10 @@ Enter the guild: Should supply public_key, message, signature in base64
 
 Example:
     %[1]s guilds-service enter-guild --body '{
-      "message": "Nihil quia quo eligendi omnis.",
-      "public_key": "Dolore atque aperiam officiis necessitatibus dicta est.",
-      "signature": "Adipisci sed libero a nam consectetur."
-   }' --guild-id "Dolor commodi soluta dolores aut."
+      "message": "Dolor commodi soluta dolores aut.",
+      "public_key": "Adipisci sed libero a nam consectetur.",
+      "signature": "Voluptates est."
+   }' --guild-id "Harum eum vel quia."
 `, os.Args[0])
 }
 
@@ -321,10 +334,10 @@ Enter the guild: Should supply public_key, message, signature in base64
 
 Example:
     %[1]s guilds-service leave-guild --body '{
-      "message": "At quasi necessitatibus maxime enim.",
-      "public_key": "Et placeat id.",
-      "signature": "Id alias at magnam ut."
-   }' --guild-id "Velit culpa in quae."
+      "message": "Velit culpa in quae.",
+      "public_key": "Id alias at magnam ut.",
+      "signature": "Quia natus iste eaque."
+   }' --guild-id "Vel provident odio deserunt quas."
 `, os.Args[0])
 }
 
@@ -335,30 +348,43 @@ Get the guild markets
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-markets --guild-id "Ab enim similique ipsa."
+    %[1]s guilds-service get-guild-markets --guild-id "Molestiae cum."
+`, os.Args[0])
+}
+
+func guildsServiceGetGuildPortfoliosUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-guild-portfolios -guild-id STRING -start-time INT64 -end-time INT64
+
+Get the guild markets
+    -guild-id STRING: 
+    -start-time INT64: 
+    -end-time INT64: 
+
+Example:
+    %[1]s guilds-service get-guild-portfolios --guild-id "Accusantium nobis quia." --start-time 8038232831277701001 --end-time 6787478751059554332
 `, os.Args[0])
 }
 
 func guildsServiceGetAccountPortfolioUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-account-portfolio -guild-id STRING -injective-address STRING
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-account-portfolio -injective-address STRING
 
-Get current account portfolio
-    -guild-id STRING: 
+Get current account portfolio snapshot
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-portfolio --guild-id "Animi corrupti cupiditate consectetur ut veniam tempora." --injective-address "Harum illo accusantium nobis quia nihil."
+    %[1]s guilds-service get-account-portfolio --injective-address "Magnam dolorem nostrum velit non ipsa."
 `, os.Args[0])
 }
 
 func guildsServiceGetAccountPortfoliosUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-account-portfolios -guild-id STRING -injective-address STRING
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-account-portfolios -injective-address STRING -start-time INT64 -end-time INT64
 
 Get current account portfolios snapshots all the time
-    -guild-id STRING: 
     -injective-address STRING: 
+    -start-time INT64: 
+    -end-time INT64: 
 
 Example:
-    %[1]s guilds-service get-account-portfolios --guild-id "Voluptatem voluptatem cum vel voluptas." --injective-address "Molestiae possimus fugiat."
+    %[1]s guilds-service get-account-portfolios --injective-address "Totam fugit possimus et nostrum voluptatem." --start-time 6149130476220960367 --end-time 8186644215274380022
 `, os.Args[0])
 }

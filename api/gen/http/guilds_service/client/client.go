@@ -49,6 +49,10 @@ type Client struct {
 	// GetGuildMarkets endpoint.
 	GetGuildMarketsDoer goahttp.Doer
 
+	// GetGuildPortfolios Doer is the HTTP client used to make requests to the
+	// GetGuildPortfolios endpoint.
+	GetGuildPortfoliosDoer goahttp.Doer
+
 	// GetAccountPortfolio Doer is the HTTP client used to make requests to the
 	// GetAccountPortfolio endpoint.
 	GetAccountPortfolioDoer goahttp.Doer
@@ -89,6 +93,7 @@ func NewClient(
 		EnterGuildDoer:            doer,
 		LeaveGuildDoer:            doer,
 		GetGuildMarketsDoer:       doer,
+		GetGuildPortfoliosDoer:    doer,
 		GetAccountPortfolioDoer:   doer,
 		GetAccountPortfoliosDoer:  doer,
 		CORSDoer:                  doer,
@@ -262,19 +267,38 @@ func (c *Client) GetGuildMarkets() goa.Endpoint {
 	}
 }
 
-// GetAccountPortfolio returns an endpoint that makes HTTP requests to the
-// GuildsService service GetAccountPortfolio server.
-func (c *Client) GetAccountPortfolio() goa.Endpoint {
+// GetGuildPortfolios returns an endpoint that makes HTTP requests to the
+// GuildsService service GetGuildPortfolios server.
+func (c *Client) GetGuildPortfolios() goa.Endpoint {
 	var (
-		encodeRequest  = EncodeGetAccountPortfolioRequest(c.encoder)
-		decodeResponse = DecodeGetAccountPortfolioResponse(c.decoder, c.RestoreResponseBody)
+		encodeRequest  = EncodeGetGuildPortfoliosRequest(c.encoder)
+		decodeResponse = DecodeGetGuildPortfoliosResponse(c.decoder, c.RestoreResponseBody)
 	)
 	return func(ctx context.Context, v interface{}) (interface{}, error) {
-		req, err := c.BuildGetAccountPortfolioRequest(ctx, v)
+		req, err := c.BuildGetGuildPortfoliosRequest(ctx, v)
 		if err != nil {
 			return nil, err
 		}
 		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.GetGuildPortfoliosDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("GuildsService", "GetGuildPortfolios", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// GetAccountPortfolio returns an endpoint that makes HTTP requests to the
+// GuildsService service GetAccountPortfolio server.
+func (c *Client) GetAccountPortfolio() goa.Endpoint {
+	var (
+		decodeResponse = DecodeGetAccountPortfolioResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildGetAccountPortfolioRequest(ctx, v)
 		if err != nil {
 			return nil, err
 		}

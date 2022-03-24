@@ -31,7 +31,9 @@ type Service interface {
 	LeaveGuild(context.Context, *LeaveGuildPayload) (res *LeaveGuildResult, err error)
 	// Get the guild markets
 	GetGuildMarkets(context.Context, *GetGuildMarketsPayload) (res *GetGuildMarketsResult, err error)
-	// Get current account portfolio
+	// Get the guild markets
+	GetGuildPortfolios(context.Context, *GetGuildPortfoliosPayload) (res *GetGuildPortfoliosResult, err error)
+	// Get current account portfolio snapshot
 	GetAccountPortfolio(context.Context, *GetAccountPortfolioPayload) (res *GetAccountPortfolioResult, err error)
 	// Get current account portfolios snapshots all the time
 	GetAccountPortfolios(context.Context, *GetAccountPortfoliosPayload) (res *GetAccountPortfoliosResult, err error)
@@ -45,7 +47,7 @@ const ServiceName = "GuildsService"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [10]string{"GetAllGuilds", "GetSingleGuild", "GetGuildMembers", "GetGuildMasterAddress", "GetGuildDefaultMember", "EnterGuild", "LeaveGuild", "GetGuildMarkets", "GetAccountPortfolio", "GetAccountPortfolios"}
+var MethodNames = [11]string{"GetAllGuilds", "GetSingleGuild", "GetGuildMembers", "GetGuildMasterAddress", "GetGuildDefaultMember", "EnterGuild", "LeaveGuild", "GetGuildMarkets", "GetGuildPortfolios", "GetAccountPortfolio", "GetAccountPortfolios"}
 
 type Balance struct {
 	Denom            string
@@ -76,7 +78,6 @@ type EnterGuildResult struct {
 // GetAccountPortfolioPayload is the payload type of the GuildsService service
 // GetAccountPortfolio method.
 type GetAccountPortfolioPayload struct {
-	GuildID          string
 	InjectiveAddress string
 }
 
@@ -89,8 +90,9 @@ type GetAccountPortfolioResult struct {
 // GetAccountPortfoliosPayload is the payload type of the GuildsService service
 // GetAccountPortfolios method.
 type GetAccountPortfoliosPayload struct {
-	GuildID          string
 	InjectiveAddress string
+	StartTime        *int64
+	EndTime          *int64
 }
 
 // GetAccountPortfoliosResult is the result type of the GuildsService service
@@ -155,6 +157,20 @@ type GetGuildMembersResult struct {
 	Members []*GuildMember
 }
 
+// GetGuildPortfoliosPayload is the payload type of the GuildsService service
+// GetGuildPortfolios method.
+type GetGuildPortfoliosPayload struct {
+	GuildID   string
+	StartTime *int64
+	EndTime   *int64
+}
+
+// GetGuildPortfoliosResult is the result type of the GuildsService service
+// GetGuildPortfolios method.
+type GetGuildPortfoliosResult struct {
+	Portfolios []*SingleGuildPortfolio
+}
+
 // GetSingleGuildPayload is the payload type of the GuildsService service
 // GetSingleGuild method.
 type GetSingleGuildPayload struct {
@@ -170,16 +186,15 @@ type GetSingleGuildResult struct {
 
 // Guild info
 type Guild struct {
-	ID                         string
-	Name                       string
-	Description                string
-	MasterAddress              string
-	SpotBaseRequirement        string
-	SpotQuoteRequirement       string
-	DerivativeQuoteRequirement string
-	StakingRequirement         string
-	Capacity                   int
-	MemberCount                int
+	ID                 string
+	Name               string
+	Description        string
+	MasterAddress      string
+	Requirements       *Requirement
+	StakingRequirement string
+	Capacity           int
+	MemberCount        int
+	CurrentPortfolio   []*Balance
 }
 
 // Guild member metadata
@@ -212,11 +227,23 @@ type Market struct {
 	IsPerpetual bool
 }
 
+type Requirement struct {
+	Denom        string
+	MinAmountUsd float64
+}
+
 // Single account portfio snapshot
 type SingleAccountPortfolio struct {
 	InjectiveAddress string
 	Balances         []*Balance
 	UpdatedAt        int64
+}
+
+// Single guild portfolio snapshot
+type SingleGuildPortfolio struct {
+	GuildID   *string
+	Balances  []*Balance
+	UpdatedAt int64
 }
 
 // MakeNotFound builds a goa.ServiceError from an error.

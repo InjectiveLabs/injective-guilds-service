@@ -83,6 +83,12 @@ type GetGuildMarketsResponseBody struct {
 	Markets []*MarketResponseBody `form:"markets,omitempty" json:"markets,omitempty" xml:"markets,omitempty"`
 }
 
+// GetGuildPortfoliosResponseBody is the type of the "GuildsService" service
+// "GetGuildPortfolios" endpoint HTTP response body.
+type GetGuildPortfoliosResponseBody struct {
+	Portfolios []*SingleGuildPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
+}
+
 // GetAccountPortfolioResponseBody is the type of the "GuildsService" service
 // "GetAccountPortfolio" endpoint HTTP response body.
 type GetAccountPortfolioResponseBody struct {
@@ -393,6 +399,44 @@ type GetGuildMarketsInternalResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
+// GetGuildPortfoliosNotFoundResponseBody is the type of the "GuildsService"
+// service "GetGuildPortfolios" endpoint HTTP response body for the "not_found"
+// error.
+type GetGuildPortfoliosNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// GetGuildPortfoliosInternalResponseBody is the type of the "GuildsService"
+// service "GetGuildPortfolios" endpoint HTTP response body for the "internal"
+// error.
+type GetGuildPortfoliosInternalResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
 // GetAccountPortfolioNotFoundResponseBody is the type of the "GuildsService"
 // service "GetAccountPortfolio" endpoint HTTP response body for the
 // "not_found" error.
@@ -471,16 +515,31 @@ type GetAccountPortfoliosInternalResponseBody struct {
 
 // GuildResponseBody is used to define fields on response body types.
 type GuildResponseBody struct {
-	ID                         *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
-	Name                       *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-	Description                *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
-	MasterAddress              *string `form:"master_address,omitempty" json:"master_address,omitempty" xml:"master_address,omitempty"`
-	SpotBaseRequirement        *string `form:"spot_base_requirement,omitempty" json:"spot_base_requirement,omitempty" xml:"spot_base_requirement,omitempty"`
-	SpotQuoteRequirement       *string `form:"spot_quote_requirement,omitempty" json:"spot_quote_requirement,omitempty" xml:"spot_quote_requirement,omitempty"`
-	DerivativeQuoteRequirement *string `form:"derivative_quote_requirement,omitempty" json:"derivative_quote_requirement,omitempty" xml:"derivative_quote_requirement,omitempty"`
-	StakingRequirement         *string `form:"staking_requirement,omitempty" json:"staking_requirement,omitempty" xml:"staking_requirement,omitempty"`
-	Capacity                   *int    `form:"capacity,omitempty" json:"capacity,omitempty" xml:"capacity,omitempty"`
-	MemberCount                *int    `form:"member_count,omitempty" json:"member_count,omitempty" xml:"member_count,omitempty"`
+	ID                 *string                  `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	Name               *string                  `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	Description        *string                  `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+	MasterAddress      *string                  `form:"master_address,omitempty" json:"master_address,omitempty" xml:"master_address,omitempty"`
+	Requirements       *RequirementResponseBody `form:"requirements,omitempty" json:"requirements,omitempty" xml:"requirements,omitempty"`
+	StakingRequirement *string                  `form:"staking_requirement,omitempty" json:"staking_requirement,omitempty" xml:"staking_requirement,omitempty"`
+	Capacity           *int                     `form:"capacity,omitempty" json:"capacity,omitempty" xml:"capacity,omitempty"`
+	MemberCount        *int                     `form:"member_count,omitempty" json:"member_count,omitempty" xml:"member_count,omitempty"`
+	CurrentPortfolio   []*BalanceResponseBody   `form:"current_portfolio,omitempty" json:"current_portfolio,omitempty" xml:"current_portfolio,omitempty"`
+}
+
+// RequirementResponseBody is used to define fields on response body types.
+type RequirementResponseBody struct {
+	Denom        *string  `form:"denom,omitempty" json:"denom,omitempty" xml:"denom,omitempty"`
+	MinAmountUsd *float64 `form:"min_amount_usd,omitempty" json:"min_amount_usd,omitempty" xml:"min_amount_usd,omitempty"`
+}
+
+// BalanceResponseBody is used to define fields on response body types.
+type BalanceResponseBody struct {
+	Denom            *string  `form:"denom,omitempty" json:"denom,omitempty" xml:"denom,omitempty"`
+	TotalBalance     *string  `form:"total_balance,omitempty" json:"total_balance,omitempty" xml:"total_balance,omitempty"`
+	AvailableBalance *string  `form:"available_balance,omitempty" json:"available_balance,omitempty" xml:"available_balance,omitempty"`
+	UnrealizedPnl    *string  `form:"unrealized_pnl,omitempty" json:"unrealized_pnl,omitempty" xml:"unrealized_pnl,omitempty"`
+	MarginHold       *string  `form:"margin_hold,omitempty" json:"margin_hold,omitempty" xml:"margin_hold,omitempty"`
+	PriceUsd         *float64 `form:"price_usd,omitempty" json:"price_usd,omitempty" xml:"price_usd,omitempty"`
 }
 
 // GuildMemberResponseBody is used to define fields on response body types.
@@ -496,22 +555,20 @@ type MarketResponseBody struct {
 	IsPerpetual *bool   `form:"is_perpetual,omitempty" json:"is_perpetual,omitempty" xml:"is_perpetual,omitempty"`
 }
 
+// SingleGuildPortfolioResponseBody is used to define fields on response body
+// types.
+type SingleGuildPortfolioResponseBody struct {
+	GuildID   *string                `form:"guild_id,omitempty" json:"guild_id,omitempty" xml:"guild_id,omitempty"`
+	Balances  []*BalanceResponseBody `form:"balances,omitempty" json:"balances,omitempty" xml:"balances,omitempty"`
+	UpdatedAt *int64                 `form:"updated_at,omitempty" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
+}
+
 // SingleAccountPortfolioResponseBody is used to define fields on response body
 // types.
 type SingleAccountPortfolioResponseBody struct {
 	InjectiveAddress *string                `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
 	Balances         []*BalanceResponseBody `form:"balances,omitempty" json:"balances,omitempty" xml:"balances,omitempty"`
 	UpdatedAt        *int64                 `form:"updated_at,omitempty" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
-}
-
-// BalanceResponseBody is used to define fields on response body types.
-type BalanceResponseBody struct {
-	Denom            *string  `form:"denom,omitempty" json:"denom,omitempty" xml:"denom,omitempty"`
-	TotalBalance     *string  `form:"total_balance,omitempty" json:"total_balance,omitempty" xml:"total_balance,omitempty"`
-	AvailableBalance *string  `form:"available_balance,omitempty" json:"available_balance,omitempty" xml:"available_balance,omitempty"`
-	UnrealizedPnl    *string  `form:"unrealized_pnl,omitempty" json:"unrealized_pnl,omitempty" xml:"unrealized_pnl,omitempty"`
-	MarginHold       *string  `form:"margin_hold,omitempty" json:"margin_hold,omitempty" xml:"margin_hold,omitempty"`
-	PriceUsd         *float64 `form:"price_usd,omitempty" json:"price_usd,omitempty" xml:"price_usd,omitempty"`
 }
 
 // NewEnterGuildRequestBody builds the HTTP request body from the payload of
@@ -870,6 +927,50 @@ func NewGetGuildMarketsInternal(body *GetGuildMarketsInternalResponseBody) *goa.
 	return v
 }
 
+// NewGetGuildPortfoliosResultOK builds a "GuildsService" service
+// "GetGuildPortfolios" endpoint result from a HTTP "OK" response.
+func NewGetGuildPortfoliosResultOK(body *GetGuildPortfoliosResponseBody) *guildsservice.GetGuildPortfoliosResult {
+	v := &guildsservice.GetGuildPortfoliosResult{}
+	if body.Portfolios != nil {
+		v.Portfolios = make([]*guildsservice.SingleGuildPortfolio, len(body.Portfolios))
+		for i, val := range body.Portfolios {
+			v.Portfolios[i] = unmarshalSingleGuildPortfolioResponseBodyToGuildsserviceSingleGuildPortfolio(val)
+		}
+	}
+
+	return v
+}
+
+// NewGetGuildPortfoliosNotFound builds a GuildsService service
+// GetGuildPortfolios endpoint not_found error.
+func NewGetGuildPortfoliosNotFound(body *GetGuildPortfoliosNotFoundResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
+// NewGetGuildPortfoliosInternal builds a GuildsService service
+// GetGuildPortfolios endpoint internal error.
+func NewGetGuildPortfoliosInternal(body *GetGuildPortfoliosInternalResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
 // NewGetAccountPortfolioResultOK builds a "GuildsService" service
 // "GetAccountPortfolio" endpoint result from a HTTP "OK" response.
 func NewGetAccountPortfolioResultOK(body *GetAccountPortfolioResponseBody) *guildsservice.GetAccountPortfolioResult {
@@ -1009,6 +1110,19 @@ func ValidateGetGuildMarketsResponseBody(body *GetGuildMarketsResponseBody) (err
 	for _, e := range body.Markets {
 		if e != nil {
 			if err2 := ValidateMarketResponseBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// ValidateGetGuildPortfoliosResponseBody runs the validations defined on
+// GetGuildPortfoliosResponseBody
+func ValidateGetGuildPortfoliosResponseBody(body *GetGuildPortfoliosResponseBody) (err error) {
+	for _, e := range body.Portfolios {
+		if e != nil {
+			if err2 := ValidateSingleGuildPortfolioResponseBody(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -1424,6 +1538,54 @@ func ValidateGetGuildMarketsInternalResponseBody(body *GetGuildMarketsInternalRe
 	return
 }
 
+// ValidateGetGuildPortfoliosNotFoundResponseBody runs the validations defined
+// on GetGuildPortfolios_not_found_Response_Body
+func ValidateGetGuildPortfoliosNotFoundResponseBody(body *GetGuildPortfoliosNotFoundResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateGetGuildPortfoliosInternalResponseBody runs the validations defined
+// on GetGuildPortfolios_internal_Response_Body
+func ValidateGetGuildPortfoliosInternalResponseBody(body *GetGuildPortfoliosInternalResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
 // ValidateGetAccountPortfolioNotFoundResponseBody runs the validations defined
 // on GetAccountPortfolio_not_found_Response_Body
 func ValidateGetAccountPortfolioNotFoundResponseBody(body *GetAccountPortfolioNotFoundResponseBody) (err error) {
@@ -1534,14 +1696,8 @@ func ValidateGuildResponseBody(body *GuildResponseBody) (err error) {
 	if body.MasterAddress == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("master_address", "body"))
 	}
-	if body.SpotBaseRequirement == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("spot_base_requirement", "body"))
-	}
-	if body.SpotQuoteRequirement == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("spot_quote_requirement", "body"))
-	}
-	if body.DerivativeQuoteRequirement == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("derivative_quote_requirement", "body"))
+	if body.Requirements == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("requirements", "body"))
 	}
 	if body.StakingRequirement == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("staking_requirement", "body"))
@@ -1551,6 +1707,54 @@ func ValidateGuildResponseBody(body *GuildResponseBody) (err error) {
 	}
 	if body.MemberCount == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("member_count", "body"))
+	}
+	if body.Requirements != nil {
+		if err2 := ValidateRequirementResponseBody(body.Requirements); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	for _, e := range body.CurrentPortfolio {
+		if e != nil {
+			if err2 := ValidateBalanceResponseBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// ValidateRequirementResponseBody runs the validations defined on
+// RequirementResponseBody
+func ValidateRequirementResponseBody(body *RequirementResponseBody) (err error) {
+	if body.Denom == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("denom", "body"))
+	}
+	if body.MinAmountUsd == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("min_amount_usd", "body"))
+	}
+	return
+}
+
+// ValidateBalanceResponseBody runs the validations defined on
+// BalanceResponseBody
+func ValidateBalanceResponseBody(body *BalanceResponseBody) (err error) {
+	if body.Denom == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("denom", "body"))
+	}
+	if body.TotalBalance == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("total_balance", "body"))
+	}
+	if body.AvailableBalance == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("available_balance", "body"))
+	}
+	if body.UnrealizedPnl == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("unrealized_pnl", "body"))
+	}
+	if body.MarginHold == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("margin_hold", "body"))
+	}
+	if body.PriceUsd == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("price_usd", "body"))
 	}
 	return
 }
@@ -1581,6 +1785,25 @@ func ValidateMarketResponseBody(body *MarketResponseBody) (err error) {
 	return
 }
 
+// ValidateSingleGuildPortfolioResponseBody runs the validations defined on
+// SingleGuildPortfolioResponseBody
+func ValidateSingleGuildPortfolioResponseBody(body *SingleGuildPortfolioResponseBody) (err error) {
+	if body.Balances == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("balances", "body"))
+	}
+	if body.UpdatedAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("updated_at", "body"))
+	}
+	for _, e := range body.Balances {
+		if e != nil {
+			if err2 := ValidateBalanceResponseBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
 // ValidateSingleAccountPortfolioResponseBody runs the validations defined on
 // SingleAccountPortfolioResponseBody
 func ValidateSingleAccountPortfolioResponseBody(body *SingleAccountPortfolioResponseBody) (err error) {
@@ -1599,30 +1822,6 @@ func ValidateSingleAccountPortfolioResponseBody(body *SingleAccountPortfolioResp
 				err = goa.MergeErrors(err, err2)
 			}
 		}
-	}
-	return
-}
-
-// ValidateBalanceResponseBody runs the validations defined on
-// BalanceResponseBody
-func ValidateBalanceResponseBody(body *BalanceResponseBody) (err error) {
-	if body.Denom == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("denom", "body"))
-	}
-	if body.TotalBalance == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("total_balance", "body"))
-	}
-	if body.AvailableBalance == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("available_balance", "body"))
-	}
-	if body.UnrealizedPnl == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("unrealized_pnl", "body"))
-	}
-	if body.MarginHold == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("margin_hold", "body"))
-	}
-	if body.PriceUsd == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("price_usd", "body"))
 	}
 	return
 }
