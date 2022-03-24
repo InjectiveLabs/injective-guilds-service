@@ -49,12 +49,14 @@ var Balance = Type("Balance", func() {
 	Field(3, "available_balance", String)
 	Field(4, "unrealized_pnl", String)
 	Field(5, "margin_hold", String)
+	Field(6, "price_usd", Float64)
 
 	Required("denom")
 	Required("total_balance")
 	Required("available_balance")
 	Required("unrealized_pnl")
 	Required("margin_hold")
+	Required("price_usd")
 })
 
 var SingleAccountPortfolio = Type("SingleAccountPortfolio", func() {
