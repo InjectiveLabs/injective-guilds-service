@@ -1111,6 +1111,7 @@ func unmarshalBalanceResponseBodyToGuildsserviceBalance(v *BalanceResponseBody) 
 		AvailableBalance: *v.AvailableBalance,
 		UnrealizedPnl:    *v.UnrealizedPnl,
 		MarginHold:       *v.MarginHold,
+		PriceUsd:         *v.PriceUsd,
 	}
 
 	return res

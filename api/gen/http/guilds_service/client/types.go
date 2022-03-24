@@ -501,11 +501,12 @@ type SingleAccountPortfolioResponseBody struct {
 
 // BalanceResponseBody is used to define fields on response body types.
 type BalanceResponseBody struct {
-	Denom            *string `form:"denom,omitempty" json:"denom,omitempty" xml:"denom,omitempty"`
-	TotalBalance     *string `form:"total_balance,omitempty" json:"total_balance,omitempty" xml:"total_balance,omitempty"`
-	AvailableBalance *string `form:"available_balance,omitempty" json:"available_balance,omitempty" xml:"available_balance,omitempty"`
-	UnrealizedPnl    *string `form:"unrealized_pnl,omitempty" json:"unrealized_pnl,omitempty" xml:"unrealized_pnl,omitempty"`
-	MarginHold       *string `form:"margin_hold,omitempty" json:"margin_hold,omitempty" xml:"margin_hold,omitempty"`
+	Denom            *string  `form:"denom,omitempty" json:"denom,omitempty" xml:"denom,omitempty"`
+	TotalBalance     *string  `form:"total_balance,omitempty" json:"total_balance,omitempty" xml:"total_balance,omitempty"`
+	AvailableBalance *string  `form:"available_balance,omitempty" json:"available_balance,omitempty" xml:"available_balance,omitempty"`
+	UnrealizedPnl    *string  `form:"unrealized_pnl,omitempty" json:"unrealized_pnl,omitempty" xml:"unrealized_pnl,omitempty"`
+	MarginHold       *string  `form:"margin_hold,omitempty" json:"margin_hold,omitempty" xml:"margin_hold,omitempty"`
+	PriceUsd         *float64 `form:"price_usd,omitempty" json:"price_usd,omitempty" xml:"price_usd,omitempty"`
 }
 
 // NewEnterGuildRequestBody builds the HTTP request body from the payload of
@@ -1614,6 +1615,9 @@ func ValidateBalanceResponseBody(body *BalanceResponseBody) (err error) {
 	}
 	if body.MarginHold == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("margin_hold", "body"))
+	}
+	if body.PriceUsd == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("price_usd", "body"))
 	}
 	return
 }

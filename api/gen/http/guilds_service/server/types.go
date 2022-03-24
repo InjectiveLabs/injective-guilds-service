@@ -501,11 +501,12 @@ type SingleAccountPortfolioResponseBody struct {
 
 // BalanceResponseBody is used to define fields on response body types.
 type BalanceResponseBody struct {
-	Denom            string `form:"denom" json:"denom" xml:"denom"`
-	TotalBalance     string `form:"total_balance" json:"total_balance" xml:"total_balance"`
-	AvailableBalance string `form:"available_balance" json:"available_balance" xml:"available_balance"`
-	UnrealizedPnl    string `form:"unrealized_pnl" json:"unrealized_pnl" xml:"unrealized_pnl"`
-	MarginHold       string `form:"margin_hold" json:"margin_hold" xml:"margin_hold"`
+	Denom            string  `form:"denom" json:"denom" xml:"denom"`
+	TotalBalance     string  `form:"total_balance" json:"total_balance" xml:"total_balance"`
+	AvailableBalance string  `form:"available_balance" json:"available_balance" xml:"available_balance"`
+	UnrealizedPnl    string  `form:"unrealized_pnl" json:"unrealized_pnl" xml:"unrealized_pnl"`
+	MarginHold       string  `form:"margin_hold" json:"margin_hold" xml:"margin_hold"`
+	PriceUsd         float64 `form:"price_usd" json:"price_usd" xml:"price_usd"`
 }
 
 // NewGetAllGuildsResponseBody builds the HTTP response body from the result of

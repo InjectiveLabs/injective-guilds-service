@@ -53,6 +53,7 @@ type Balance struct {
 	AvailableBalance string
 	UnrealizedPnl    string
 	MarginHold       string
+	PriceUsd         float64
 }
 
 // EnterGuildPayload is the payload type of the GuildsService service

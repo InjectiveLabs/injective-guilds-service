@@ -833,6 +833,7 @@ func marshalGuildsserviceBalanceToBalanceResponseBody(v *guildsservice.Balance) 
 		AvailableBalance: v.AvailableBalance,
 		UnrealizedPnl:    v.UnrealizedPnl,
 		MarginHold:       v.MarginHold,
+		PriceUsd:         v.PriceUsd,
 	}
 
 	return res
