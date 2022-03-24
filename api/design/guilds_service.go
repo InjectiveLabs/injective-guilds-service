@@ -42,7 +42,7 @@ var _ = Service("GuildsService", func() {
 
 	Method("GetSingleGuild", func() {
 		// TODO: add example later
-		Description("Get a single guild")
+		Description("Get a single guild base on ID")
 
 		Payload(func() {
 			Field(1, "guildID", String)
@@ -65,7 +65,7 @@ var _ = Service("GuildsService", func() {
 	})
 
 	Method("GetGuildMembers", func() {
-		Description("Get members")
+		Description("Get all members a given guild (include default member)")
 
 		Payload(func() {
 			// TODO: Basic validation
@@ -111,6 +111,7 @@ var _ = Service("GuildsService", func() {
 	})
 
 	Method("GetGuildDefaultMember", func() {
+		Description("Get default guild member")
 		// TODO: Need address only ?
 		Payload(func() {
 			// TODO: Basic validation
@@ -123,7 +124,7 @@ var _ = Service("GuildsService", func() {
 		})
 
 		HTTP(func() {
-			GET("/guilds/{guildID}/default-guild-member")
+			GET("/guilds/{guildID}/default-member")
 
 			Response(CodeOK)
 			Response("not_found", 404)
@@ -132,10 +133,14 @@ var _ = Service("GuildsService", func() {
 	})
 
 	Method("EnterGuild", func() {
+		Description("Enter the guild: Should supply public_key, message, signature in base64")
+
 		Payload(func() {
 			Field(0, "guildID", String)
 			Field(1, "public_key", String)
-			Field(2, "message", String)
+			Field(2, "message", String, func() {
+				Description("Supply base64 json encoded string cointaining {\"action\": \"enter-guild\", \"expired_at\": unixTimestamp }")
+			})
 			Field(3, "signature", String)
 
 			Required("guildID")
@@ -158,10 +163,14 @@ var _ = Service("GuildsService", func() {
 	})
 
 	Method("LeaveGuild", func() {
+		Description("Enter the guild: Should supply public_key, message, signature in base64")
+
 		Payload(func() {
 			Field(0, "guildID", String)
 			Field(1, "public_key", String)
-			Field(2, "message", String)
+			Field(2, "message", String, func() {
+				Description("Supply base64 json encoded string cointaining {\"action\": \"leave-guild\", \"expired_at\": unixTimestamp}")
+			})
 			Field(3, "signature", String)
 
 			Required("guildID")
@@ -184,6 +193,8 @@ var _ = Service("GuildsService", func() {
 
 	// Markets
 	Method("GetGuildMarkets", func() {
+		Description("Get the guild markets")
+
 		Payload(func() {
 			// TODO: Basic validation
 			Field(1, "guildID", String)
@@ -205,6 +216,8 @@ var _ = Service("GuildsService", func() {
 
 	// Account's Porfolio(s)
 	Method("GetAccountPortfolio", func() {
+		Description("Get current account portfolio")
+
 		Payload(func() {
 			Field(1, "guildID", String)
 			Field(2, "injective_address", String)
@@ -228,6 +241,8 @@ var _ = Service("GuildsService", func() {
 	})
 
 	Method("GetAccountPortfolios", func() {
+		Description("Get current account portfolios snapshots all the time")
+
 		Payload(func() {
 			Field(1, "guildID", String)
 			Field(2, "injective_address", String)

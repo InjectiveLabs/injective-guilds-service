@@ -40,7 +40,7 @@ paths:
       tags:
       - GuildsService
       summary: GetSingleGuild GuildsService
-      description: Get a single guild
+      description: Get a single guild base on ID
       operationId: GuildsService#GetSingleGuild
       parameters:
       - name: guildID
@@ -62,11 +62,12 @@ paths:
             $ref: '#/definitions/GuildsServiceGetSingleGuildInternalResponseBody'
       schemes:
       - http
-  /guilds/{guildID}/default-guild-member:
+  /guilds/{guildID}/default-member:
     get:
       tags:
       - GuildsService
       summary: GetGuildDefaultMember GuildsService
+      description: Get default guild member
       operationId: GuildsService#GetGuildDefaultMember
       parameters:
       - name: guildID
@@ -120,6 +121,7 @@ paths:
       tags:
       - GuildsService
       summary: GetGuildMarkets GuildsService
+      description: Get the guild markets
       operationId: GuildsService#GetGuildMarkets
       parameters:
       - name: guildID
@@ -146,6 +148,8 @@ paths:
       tags:
       - GuildsService
       summary: EnterGuild GuildsService
+      description: 'Enter the guild: Should supply public_key, message, signature
+        in base64'
       operationId: GuildsService#EnterGuild
       parameters:
       - name: guildID
@@ -180,6 +184,8 @@ paths:
       tags:
       - GuildsService
       summary: LeaveGuild GuildsService
+      description: 'Enter the guild: Should supply public_key, message, signature
+        in base64'
       operationId: GuildsService#LeaveGuild
       parameters:
       - name: guildID
@@ -215,7 +221,7 @@ paths:
       tags:
       - GuildsService
       summary: GetGuildMembers GuildsService
-      description: Get members
+      description: Get all members a given guild (include default member)
       operationId: GuildsService#GetGuildMembers
       parameters:
       - name: guildID
@@ -242,6 +248,7 @@ paths:
       tags:
       - GuildsService
       summary: GetAccountPortfolio GuildsService
+      description: Get current account portfolio
       operationId: GuildsService#GetAccountPortfolio
       parameters:
       - name: injective_address
@@ -272,6 +279,7 @@ paths:
       tags:
       - GuildsService
       summary: GetAccountPortfolios GuildsService
+      description: Get current account portfolios snapshots all the time
       operationId: GuildsService#GetAccountPortfolios
       parameters:
       - name: injective_address
@@ -507,6 +515,8 @@ definitions:
     properties:
       message:
         type: string
+        description: 'Supply base64 json encoded string cointaining {"action": "enter-guild",
+          "expired_at": unixTimestamp }'
         example: Illum dolor error porro laudantium.
       public_key:
         type: string
@@ -1758,6 +1768,8 @@ definitions:
     properties:
       message:
         type: string
+        description: 'Supply base64 json encoded string cointaining {"action": "leave-guild",
+          "expired_at": unixTimestamp}'
         example: Neque eveniet repellendus et rerum facilis quibusdam.
       public_key:
         type: string

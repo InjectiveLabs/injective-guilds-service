@@ -228,15 +228,15 @@ Usage:
 
 COMMAND:
     get-all-guilds: Get all guilds
-    get-single-guild: Get a single guild
-    get-guild-members: Get members
+    get-single-guild: Get a single guild base on ID
+    get-guild-members: Get all members a given guild (include default member)
     get-guild-master-address: Get master address of given guild
-    get-guild-default-member: GetGuildDefaultMember implements GetGuildDefaultMember.
-    enter-guild: EnterGuild implements EnterGuild.
-    leave-guild: LeaveGuild implements LeaveGuild.
-    get-guild-markets: GetGuildMarkets implements GetGuildMarkets.
-    get-account-portfolio: GetAccountPortfolio implements GetAccountPortfolio.
-    get-account-portfolios: GetAccountPortfolios implements GetAccountPortfolios.
+    get-guild-default-member: Get default guild member
+    enter-guild: Enter the guild: Should supply public_key, message, signature in base64
+    leave-guild: Enter the guild: Should supply public_key, message, signature in base64
+    get-guild-markets: Get the guild markets
+    get-account-portfolio: Get current account portfolio
+    get-account-portfolios: Get current account portfolios snapshots all the time
 
 Additional help:
     %[1]s guilds-service COMMAND --help
@@ -255,7 +255,7 @@ Example:
 func guildsServiceGetSingleGuildUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-single-guild -guild-id STRING
 
-Get a single guild
+Get a single guild base on ID
     -guild-id STRING: 
 
 Example:
@@ -266,7 +266,7 @@ Example:
 func guildsServiceGetGuildMembersUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-guild-members -guild-id STRING
 
-Get members
+Get all members a given guild (include default member)
     -guild-id STRING: 
 
 Example:
@@ -288,7 +288,7 @@ Example:
 func guildsServiceGetGuildDefaultMemberUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-guild-default-member -guild-id STRING
 
-GetGuildDefaultMember implements GetGuildDefaultMember.
+Get default guild member
     -guild-id STRING: 
 
 Example:
@@ -299,7 +299,7 @@ Example:
 func guildsServiceEnterGuildUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service enter-guild -body JSON -guild-id STRING
 
-EnterGuild implements EnterGuild.
+Enter the guild: Should supply public_key, message, signature in base64
     -body JSON: 
     -guild-id STRING: 
 
@@ -315,7 +315,7 @@ Example:
 func guildsServiceLeaveGuildUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service leave-guild -body JSON -guild-id STRING
 
-LeaveGuild implements LeaveGuild.
+Enter the guild: Should supply public_key, message, signature in base64
     -body JSON: 
     -guild-id STRING: 
 
@@ -331,7 +331,7 @@ Example:
 func guildsServiceGetGuildMarketsUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-guild-markets -guild-id STRING
 
-GetGuildMarkets implements GetGuildMarkets.
+Get the guild markets
     -guild-id STRING: 
 
 Example:
@@ -342,7 +342,7 @@ Example:
 func guildsServiceGetAccountPortfolioUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-account-portfolio -guild-id STRING -injective-address STRING
 
-GetAccountPortfolio implements GetAccountPortfolio.
+Get current account portfolio
     -guild-id STRING: 
     -injective-address STRING: 
 
@@ -354,7 +354,7 @@ Example:
 func guildsServiceGetAccountPortfoliosUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service get-account-portfolios -guild-id STRING -injective-address STRING
 
-GetAccountPortfolios implements GetAccountPortfolios.
+Get current account portfolios snapshots all the time
     -guild-id STRING: 
     -injective-address STRING: 
 

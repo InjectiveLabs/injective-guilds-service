@@ -16,6 +16,8 @@ import (
 // "EnterGuild" endpoint HTTP request body.
 type EnterGuildRequestBody struct {
 	PublicKey string `form:"public_key" json:"public_key" xml:"public_key"`
+	// Supply base64 json encoded string cointaining {"action": "enter-guild",
+	// "expired_at": unixTimestamp }
 	Message   string `form:"message" json:"message" xml:"message"`
 	Signature string `form:"signature" json:"signature" xml:"signature"`
 }
@@ -24,6 +26,8 @@ type EnterGuildRequestBody struct {
 // "LeaveGuild" endpoint HTTP request body.
 type LeaveGuildRequestBody struct {
 	PublicKey string `form:"public_key" json:"public_key" xml:"public_key"`
+	// Supply base64 json encoded string cointaining {"action": "leave-guild",
+	// "expired_at": unixTimestamp}
 	Message   string `form:"message" json:"message" xml:"message"`
 	Signature string `form:"signature" json:"signature" xml:"signature"`
 }

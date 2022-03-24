@@ -33,7 +33,7 @@ func GetGuildMasterAddressGuildsServicePath(guildID string) string {
 
 // GetGuildDefaultMemberGuildsServicePath returns the URL path to the GuildsService service GetGuildDefaultMember HTTP endpoint.
 func GetGuildDefaultMemberGuildsServicePath(guildID string) string {
-	return fmt.Sprintf("/guilds/%v/default-guild-member", guildID)
+	return fmt.Sprintf("/guilds/%v/default-member", guildID)
 }
 
 // EnterGuildGuildsServicePath returns the URL path to the GuildsService service EnterGuild HTTP endpoint.

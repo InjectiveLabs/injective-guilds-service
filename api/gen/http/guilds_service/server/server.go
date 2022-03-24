@@ -70,7 +70,7 @@ func New(
 			{"GetSingleGuild", "GET", "/guilds/{guildID}"},
 			{"GetGuildMembers", "GET", "/guilds/{guildID}/members"},
 			{"GetGuildMasterAddress", "GET", "/guilds/{guildID}/guild-master"},
-			{"GetGuildDefaultMember", "GET", "/guilds/{guildID}/default-guild-member"},
+			{"GetGuildDefaultMember", "GET", "/guilds/{guildID}/default-member"},
 			{"EnterGuild", "POST", "/guilds/{guildID}/member"},
 			{"LeaveGuild", "DELETE", "/guilds/{guildID}/member"},
 			{"GetGuildMarkets", "GET", "/guilds/{guildID}/markets"},
@@ -80,7 +80,7 @@ func New(
 			{"CORS", "OPTIONS", "/guilds/{guildID}"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/members"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/guild-master"},
-			{"CORS", "OPTIONS", "/guilds/{guildID}/default-guild-member"},
+			{"CORS", "OPTIONS", "/guilds/{guildID}/default-member"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/member"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/markets"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/portfolio"},
@@ -345,7 +345,7 @@ func MountGetGuildDefaultMemberHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("GET", "/guilds/{guildID}/default-guild-member", f)
+	mux.Handle("GET", "/guilds/{guildID}/default-member", f)
 }
 
 // NewGetGuildDefaultMemberHandler creates a HTTP handler which loads the HTTP
@@ -652,7 +652,7 @@ func MountCORSHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("OPTIONS", "/guilds/{guildID}", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/members", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/guild-master", h.ServeHTTP)
-	mux.Handle("OPTIONS", "/guilds/{guildID}/default-guild-member", h.ServeHTTP)
+	mux.Handle("OPTIONS", "/guilds/{guildID}/default-member", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/member", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/markets", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/portfolio", h.ServeHTTP)

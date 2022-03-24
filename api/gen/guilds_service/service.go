@@ -17,23 +17,23 @@ import (
 type Service interface {
 	// Get all guilds
 	GetAllGuilds(context.Context) (res *GetAllGuildsResult, err error)
-	// Get a single guild
+	// Get a single guild base on ID
 	GetSingleGuild(context.Context, *GetSingleGuildPayload) (res *GetSingleGuildResult, err error)
-	// Get members
+	// Get all members a given guild (include default member)
 	GetGuildMembers(context.Context, *GetGuildMembersPayload) (res *GetGuildMembersResult, err error)
 	// Get master address of given guild
 	GetGuildMasterAddress(context.Context, *GetGuildMasterAddressPayload) (res *GetGuildMasterAddressResult, err error)
-	// GetGuildDefaultMember implements GetGuildDefaultMember.
+	// Get default guild member
 	GetGuildDefaultMember(context.Context, *GetGuildDefaultMemberPayload) (res *GetGuildDefaultMemberResult, err error)
-	// EnterGuild implements EnterGuild.
+	// Enter the guild: Should supply public_key, message, signature in base64
 	EnterGuild(context.Context, *EnterGuildPayload) (res *EnterGuildResult, err error)
-	// LeaveGuild implements LeaveGuild.
+	// Enter the guild: Should supply public_key, message, signature in base64
 	LeaveGuild(context.Context, *LeaveGuildPayload) (res *LeaveGuildResult, err error)
-	// GetGuildMarkets implements GetGuildMarkets.
+	// Get the guild markets
 	GetGuildMarkets(context.Context, *GetGuildMarketsPayload) (res *GetGuildMarketsResult, err error)
-	// GetAccountPortfolio implements GetAccountPortfolio.
+	// Get current account portfolio
 	GetAccountPortfolio(context.Context, *GetAccountPortfolioPayload) (res *GetAccountPortfolioResult, err error)
-	// GetAccountPortfolios implements GetAccountPortfolios.
+	// Get current account portfolios snapshots all the time
 	GetAccountPortfolios(context.Context, *GetAccountPortfoliosPayload) (res *GetAccountPortfoliosResult, err error)
 }
 
@@ -61,6 +61,8 @@ type Balance struct {
 type EnterGuildPayload struct {
 	GuildID   string
 	PublicKey string
+	// Supply base64 json encoded string cointaining {"action": "enter-guild",
+	// "expired_at": unixTimestamp }
 	Message   string
 	Signature string
 }
@@ -191,6 +193,8 @@ type GuildMember struct {
 type LeaveGuildPayload struct {
 	GuildID   string
 	PublicKey string
+	// Supply base64 json encoded string cointaining {"action": "leave-guild",
+	// "expired_at": unixTimestamp}
 	Message   string
 	Signature string
 }
