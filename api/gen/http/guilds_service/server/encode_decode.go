@@ -873,7 +873,10 @@ func marshalGuildsserviceGuildToGuildResponseBody(v *guildsservice.Guild) *Guild
 		MemberCount:        v.MemberCount,
 	}
 	if v.Requirements != nil {
-		res.Requirements = marshalGuildsserviceRequirementToRequirementResponseBody(v.Requirements)
+		res.Requirements = make([]*RequirementResponseBody, len(v.Requirements))
+		for i, val := range v.Requirements {
+			res.Requirements[i] = marshalGuildsserviceRequirementToRequirementResponseBody(val)
+		}
 	}
 	if v.CurrentPortfolio != nil {
 		res.CurrentPortfolio = make([]*BalanceResponseBody, len(v.CurrentPortfolio))

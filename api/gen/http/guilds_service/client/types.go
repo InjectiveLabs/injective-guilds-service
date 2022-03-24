@@ -515,15 +515,15 @@ type GetAccountPortfoliosInternalResponseBody struct {
 
 // GuildResponseBody is used to define fields on response body types.
 type GuildResponseBody struct {
-	ID                 *string                  `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
-	Name               *string                  `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-	Description        *string                  `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
-	MasterAddress      *string                  `form:"master_address,omitempty" json:"master_address,omitempty" xml:"master_address,omitempty"`
-	Requirements       *RequirementResponseBody `form:"requirements,omitempty" json:"requirements,omitempty" xml:"requirements,omitempty"`
-	StakingRequirement *string                  `form:"staking_requirement,omitempty" json:"staking_requirement,omitempty" xml:"staking_requirement,omitempty"`
-	Capacity           *int                     `form:"capacity,omitempty" json:"capacity,omitempty" xml:"capacity,omitempty"`
-	MemberCount        *int                     `form:"member_count,omitempty" json:"member_count,omitempty" xml:"member_count,omitempty"`
-	CurrentPortfolio   []*BalanceResponseBody   `form:"current_portfolio,omitempty" json:"current_portfolio,omitempty" xml:"current_portfolio,omitempty"`
+	ID                 *string                    `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	Name               *string                    `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	Description        *string                    `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+	MasterAddress      *string                    `form:"master_address,omitempty" json:"master_address,omitempty" xml:"master_address,omitempty"`
+	Requirements       []*RequirementResponseBody `form:"requirements,omitempty" json:"requirements,omitempty" xml:"requirements,omitempty"`
+	StakingRequirement *string                    `form:"staking_requirement,omitempty" json:"staking_requirement,omitempty" xml:"staking_requirement,omitempty"`
+	Capacity           *int                       `form:"capacity,omitempty" json:"capacity,omitempty" xml:"capacity,omitempty"`
+	MemberCount        *int                       `form:"member_count,omitempty" json:"member_count,omitempty" xml:"member_count,omitempty"`
+	CurrentPortfolio   []*BalanceResponseBody     `form:"current_portfolio,omitempty" json:"current_portfolio,omitempty" xml:"current_portfolio,omitempty"`
 }
 
 // RequirementResponseBody is used to define fields on response body types.
@@ -1708,9 +1708,11 @@ func ValidateGuildResponseBody(body *GuildResponseBody) (err error) {
 	if body.MemberCount == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("member_count", "body"))
 	}
-	if body.Requirements != nil {
-		if err2 := ValidateRequirementResponseBody(body.Requirements); err2 != nil {
-			err = goa.MergeErrors(err, err2)
+	for _, e := range body.Requirements {
+		if e != nil {
+			if err2 := ValidateRequirementResponseBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
 		}
 	}
 	for _, e := range body.CurrentPortfolio {

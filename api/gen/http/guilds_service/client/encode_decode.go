@@ -1156,7 +1156,10 @@ func unmarshalGuildResponseBodyToGuildsserviceGuild(v *GuildResponseBody) *guild
 		Capacity:           *v.Capacity,
 		MemberCount:        *v.MemberCount,
 	}
-	res.Requirements = unmarshalRequirementResponseBodyToGuildsserviceRequirement(v.Requirements)
+	res.Requirements = make([]*guildsservice.Requirement, len(v.Requirements))
+	for i, val := range v.Requirements {
+		res.Requirements[i] = unmarshalRequirementResponseBodyToGuildsserviceRequirement(val)
+	}
 	if v.CurrentPortfolio != nil {
 		res.CurrentPortfolio = make([]*guildsservice.Balance, len(v.CurrentPortfolio))
 		for i, val := range v.CurrentPortfolio {

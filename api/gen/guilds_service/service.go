@@ -190,7 +190,7 @@ type Guild struct {
 	Name               string
 	Description        string
 	MasterAddress      string
-	Requirements       *Requirement
+	Requirements       []*Requirement
 	StakingRequirement string
 	Capacity           int
 	MemberCount        int
