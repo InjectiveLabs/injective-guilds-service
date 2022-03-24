@@ -106,6 +106,7 @@ func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMemb
 		result = append(result, &svc.GuildMember{
 			InjectiveAddress:     m.InjectiveAddress.String(),
 			IsDefaultGuildMember: m.IsDefaultGuildMember,
+			Since:                m.Since.UnixMilli(),
 		})
 	}
 

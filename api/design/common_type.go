@@ -63,9 +63,7 @@ var SingleAccountPortfolio = Type("SingleAccountPortfolio", func() {
 	Description("Single account portfio snapshot")
 	Field(1, "injective_address", String)
 	Field(2, "balances", ArrayOf(Balance))
-	Field(3, "updated_at", String, func() {
-		Format(FormatDateTime)
-	})
+	Field(3, "updated_at", Int64)
 	Required("injective_address")
 	Required("balances")
 	Required("updated_at")

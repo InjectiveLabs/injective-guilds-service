@@ -312,30 +312,30 @@ definitions:
     properties:
       available_balance:
         type: string
-        example: Quia minima enim ut.
+        example: Est porro omnis beatae.
       denom:
         type: string
-        example: Delectus asperiores minima.
+        example: Dolores sit ut nobis est.
       margin_hold:
         type: string
-        example: Sit molestias nam.
+        example: Ipsum beatae aut cumque natus optio ut.
       price_usd:
         type: number
-        example: 0.8384615182272547
+        example: 0.6956295004825596
         format: double
       total_balance:
         type: string
-        example: Est porro omnis beatae.
+        example: Delectus asperiores minima.
       unrealized_pnl:
         type: string
-        example: Ipsum beatae aut cumque natus optio ut.
+        example: Quia minima enim ut.
     example:
-      available_balance: Minima ducimus tenetur nihil architecto.
-      denom: Corporis praesentium voluptatum quia quae libero iste.
-      margin_hold: Dolores officiis est illum dolorum.
-      price_usd: 0.819667164923011
-      total_balance: Voluptatibus maiores ipsa nihil dolore corrupti in.
-      unrealized_pnl: Saepe hic.
+      available_balance: Libero iste quia voluptatibus.
+      denom: Molestias nam et dolor corporis.
+      margin_hold: Tenetur nihil.
+      price_usd: 0.5234374745441847
+      total_balance: Voluptatum quia.
+      unrealized_pnl: Ipsa nihil dolore corrupti in placeat minima.
     required:
     - denom
     - total_balance
@@ -353,13 +353,19 @@ definitions:
       is_default_guild_member:
         type: boolean
         example: true
+      since:
+        type: integer
+        example: 3646980768347727693
+        format: int64
     description: Guild member metadata
     example:
-      injective_address: Veniam ut vitae veniam dicta temporibus et.
+      injective_address: Ut vitae veniam dicta temporibus et.
       is_default_guild_member: false
+      since: 6310213334638981144
     required:
     - injective_address
     - is_default_guild_member
+    - since
   GuildResponseBody:
     title: GuildResponseBody
     type: object
@@ -456,7 +462,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -471,7 +477,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -489,7 +495,7 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
@@ -517,17 +523,17 @@ definitions:
         type: string
         description: 'Supply base64 json encoded string cointaining {"action": "enter-guild",
           "expired_at": unixTimestamp }'
-        example: Illum dolor error porro laudantium.
+        example: Cupiditate praesentium sunt aliquam deleniti unde.
       public_key:
         type: string
-        example: Sed quos voluptas.
+        example: Porro laudantium sit itaque.
       signature:
         type: string
-        example: Itaque expedita cupiditate praesentium sunt.
+        example: Labore est ex.
     example:
-      message: Labore est ex.
-      public_key: Deleniti unde.
-      signature: Velit ipsum minus.
+      message: Perspiciatis cupiditate ex quod molestias.
+      public_key: Velit ipsum minus.
+      signature: Laudantium commodi officia autem.
     required:
     - public_key
     - message
@@ -538,9 +544,9 @@ definitions:
     properties:
       join_status:
         type: string
-        example: Nam quasi.
+        example: Expedita numquam vero et quo nihil hic.
     example:
-      join_status: Numquam vero et quo nihil hic.
+      join_status: Dolor repellendus non aut sed illum.
   GuildsServiceGetAccountPortfolioInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -548,7 +554,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -570,15 +576,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: Internal Server Error (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: false
+      temporary: true
+      timeout: true
     required:
     - name
     - id
@@ -593,7 +599,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -611,19 +617,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: Not found (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -691,19 +697,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: false
     description: Internal Server Error (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -718,7 +724,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -740,7 +746,7 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: Not found (default view)
     example:
       fault: false
@@ -765,6 +771,33 @@ definitions:
         items:
           $ref: '#/definitions/SingleAccountPortfolioResponseBody'
         example:
+        - balances:
+          - available_balance: At facere ratione.
+            denom: Quos aut omnis quia omnis et.
+            margin_hold: Corporis omnis vitae maxime aperiam.
+            price_usd: 0.039941893792281795
+            total_balance: Ab sequi quasi dolores et repellat odio.
+            unrealized_pnl: Et commodi necessitatibus at magni doloribus consequuntur.
+          - available_balance: At facere ratione.
+            denom: Quos aut omnis quia omnis et.
+            margin_hold: Corporis omnis vitae maxime aperiam.
+            price_usd: 0.039941893792281795
+            total_balance: Ab sequi quasi dolores et repellat odio.
+            unrealized_pnl: Et commodi necessitatibus at magni doloribus consequuntur.
+          - available_balance: At facere ratione.
+            denom: Quos aut omnis quia omnis et.
+            margin_hold: Corporis omnis vitae maxime aperiam.
+            price_usd: 0.039941893792281795
+            total_balance: Ab sequi quasi dolores et repellat odio.
+            unrealized_pnl: Et commodi necessitatibus at magni doloribus consequuntur.
+          - available_balance: At facere ratione.
+            denom: Quos aut omnis quia omnis et.
+            margin_hold: Corporis omnis vitae maxime aperiam.
+            price_usd: 0.039941893792281795
+            total_balance: Ab sequi quasi dolores et repellat odio.
+            unrealized_pnl: Et commodi necessitatibus at magni doloribus consequuntur.
+          injective_address: Cupiditate qui ab accusantium modi alias officiis.
+          updated_at: "1990-04-13T17:06:03Z"
         - balances:
           - available_balance: At facere ratione.
             denom: Quos aut omnis quia omnis et.
@@ -1145,7 +1178,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1167,7 +1200,7 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: Internal Server Error (default view)
     example:
       fault: true
@@ -1220,7 +1253,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -1238,6 +1271,7 @@ definitions:
       default_member:
         injective_address: Nihil quia quo eligendi omnis.
         is_default_guild_member: true
+        since: 1803131455148249831
   GuildsServiceGetGuildMarketsInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -1267,15 +1301,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: Internal Server Error (default view)
     example:
       fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: true
+      temporary: true
+      timeout: false
     required:
     - name
     - id
@@ -1290,7 +1324,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1308,19 +1342,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: false
     description: Not found (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: false
+      temporary: false
+      timeout: true
     required:
     - name
     - id
@@ -1341,14 +1375,8 @@ definitions:
           market_id: Totam fugit possimus et nostrum voluptatem.
         - is_perpetual: false
           market_id: Totam fugit possimus et nostrum voluptatem.
-        - is_perpetual: false
-          market_id: Totam fugit possimus et nostrum voluptatem.
-        - is_perpetual: false
-          market_id: Totam fugit possimus et nostrum voluptatem.
     example:
       markets:
-      - is_perpetual: false
-        market_id: Totam fugit possimus et nostrum voluptatem.
       - is_perpetual: false
         market_id: Totam fugit possimus et nostrum voluptatem.
       - is_perpetual: false
@@ -1360,7 +1388,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1385,11 +1413,11 @@ definitions:
         example: false
     description: Internal Server Error (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: false
     required:
     - name
@@ -1405,7 +1433,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1430,11 +1458,11 @@ definitions:
         example: false
     description: Not found (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: true
     required:
     - name
@@ -1449,9 +1477,9 @@ definitions:
     properties:
       master_address:
         type: string
-        example: Enim nam rerum perferendis pariatur velit.
+        example: Nam rerum perferendis pariatur.
     example:
-      master_address: Quos iste magni.
+      master_address: Non quos iste magni id rerum.
   GuildsServiceGetGuildMembersInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -1489,7 +1517,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -1504,7 +1532,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1529,11 +1557,11 @@ definitions:
         example: true
     description: Not found (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: true
     required:
     - name
@@ -1554,16 +1582,24 @@ definitions:
         example:
         - injective_address: Nihil quia quo eligendi omnis.
           is_default_guild_member: true
+          since: 1803131455148249831
         - injective_address: Nihil quia quo eligendi omnis.
           is_default_guild_member: true
-        - injective_address: Nihil quia quo eligendi omnis.
-          is_default_guild_member: true
+          since: 1803131455148249831
     example:
       members:
       - injective_address: Nihil quia quo eligendi omnis.
         is_default_guild_member: true
+        since: 1803131455148249831
       - injective_address: Nihil quia quo eligendi omnis.
         is_default_guild_member: true
+        since: 1803131455148249831
+      - injective_address: Nihil quia quo eligendi omnis.
+        is_default_guild_member: true
+        since: 1803131455148249831
+      - injective_address: Nihil quia quo eligendi omnis.
+        is_default_guild_member: true
+        since: 1803131455148249831
   GuildsServiceGetSingleGuildInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -1701,15 +1737,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: Internal Server Error (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: true
+      temporary: true
+      timeout: false
     required:
     - name
     - id
@@ -1742,18 +1778,18 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: true
     description: Not found (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -1770,17 +1806,17 @@ definitions:
         type: string
         description: 'Supply base64 json encoded string cointaining {"action": "leave-guild",
           "expired_at": unixTimestamp}'
-        example: Neque eveniet repellendus et rerum facilis quibusdam.
+        example: Quibusdam repellat voluptatem distinctio laborum suscipit.
       public_key:
         type: string
-        example: Est enim dolor accusamus vel sit libero.
+        example: Repellendus et rerum.
       signature:
         type: string
-        example: Voluptatem distinctio laborum suscipit voluptates ut sit.
+        example: Ut sit tempora.
     example:
-      message: Quas vitae aliquid ex a non.
-      public_key: Non cupiditate enim corrupti ut deleniti aut.
-      signature: Fugiat doloribus alias et.
+      message: Corrupti quas vitae aliquid ex.
+      public_key: Cupiditate enim corrupti ut deleniti.
+      signature: Non autem fugiat.
     required:
     - public_key
     - message
@@ -1791,23 +1827,23 @@ definitions:
     properties:
       leave_status:
         type: string
-        example: Perspiciatis cupiditate ex quod molestias.
+        example: Illum cum maiores quidem voluptas eos.
     example:
-      leave_status: Laudantium commodi officia autem.
+      leave_status: Illo aut.
   MarketResponseBody:
     title: MarketResponseBody
     type: object
     properties:
       is_perpetual:
         type: boolean
-        example: true
+        example: false
       market_id:
         type: string
-        example: Est aut consequatur nihil vel qui iste.
+        example: Alias et illum est aut.
     description: Market supported by guild
     example:
       is_perpetual: false
-      market_id: Amet rerum nulla ut cupiditate vero quas.
+      market_id: Vel qui iste qui magnam amet.
     required:
     - market_id
     - is_perpetual
@@ -1832,12 +1868,24 @@ definitions:
           price_usd: 0.039941893792281795
           total_balance: Ab sequi quasi dolores et repellat odio.
           unrealized_pnl: Et commodi necessitatibus at magni doloribus consequuntur.
+        - available_balance: At facere ratione.
+          denom: Quos aut omnis quia omnis et.
+          margin_hold: Corporis omnis vitae maxime aperiam.
+          price_usd: 0.039941893792281795
+          total_balance: Ab sequi quasi dolores et repellat odio.
+          unrealized_pnl: Et commodi necessitatibus at magni doloribus consequuntur.
+        - available_balance: At facere ratione.
+          denom: Quos aut omnis quia omnis et.
+          margin_hold: Corporis omnis vitae maxime aperiam.
+          price_usd: 0.039941893792281795
+          total_balance: Ab sequi quasi dolores et repellat odio.
+          unrealized_pnl: Et commodi necessitatibus at magni doloribus consequuntur.
       injective_address:
         type: string
-        example: Dolores sit ut nobis est.
+        example: Tempora et dicta omnis minima.
       updated_at:
         type: string
-        example: "1984-04-11T18:20:32Z"
+        example: "1972-04-07T00:05:56Z"
         format: date-time
     description: Single account portfio snapshot
     example:
@@ -1854,8 +1902,8 @@ definitions:
         price_usd: 0.039941893792281795
         total_balance: Ab sequi quasi dolores et repellat odio.
         unrealized_pnl: Et commodi necessitatibus at magni doloribus consequuntur.
-      injective_address: Est reiciendis.
-      updated_at: "2007-08-24T16:46:30Z"
+      injective_address: Aspernatur et fugit iusto suscipit recusandae ipsum.
+      updated_at: "2006-01-21T21:14:43Z"
     required:
     - injective_address
     - balances

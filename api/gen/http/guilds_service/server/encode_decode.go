@@ -784,6 +784,7 @@ func marshalGuildsserviceGuildMemberToGuildMemberResponseBody(v *guildsservice.G
 	res := &GuildMemberResponseBody{
 		InjectiveAddress:     v.InjectiveAddress,
 		IsDefaultGuildMember: v.IsDefaultGuildMember,
+		Since:                v.Since,
 	}
 
 	return res

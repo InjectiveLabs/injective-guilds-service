@@ -487,6 +487,7 @@ type GuildResponseBody struct {
 type GuildMemberResponseBody struct {
 	InjectiveAddress     string `form:"injective_address" json:"injective_address" xml:"injective_address"`
 	IsDefaultGuildMember bool   `form:"is_default_guild_member" json:"is_default_guild_member" xml:"is_default_guild_member"`
+	Since                int64  `form:"since" json:"since" xml:"since"`
 }
 
 // MarketResponseBody is used to define fields on response body types.

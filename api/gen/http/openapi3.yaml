@@ -148,6 +148,7 @@ paths:
                 default_member:
                   injective_address: Nihil quia quo eligendi omnis.
                   is_default_guild_member: true
+                  since: 1803131455148249831
         "404":
           description: Not Found response.
           content:
@@ -397,12 +398,10 @@ paths:
                 members:
                 - injective_address: Nihil quia quo eligendi omnis.
                   is_default_guild_member: true
+                  since: 1803131455148249831
                 - injective_address: Nihil quia quo eligendi omnis.
                   is_default_guild_member: true
-                - injective_address: Nihil quia quo eligendi omnis.
-                  is_default_guild_member: true
-                - injective_address: Nihil quia quo eligendi omnis.
-                  is_default_guild_member: true
+                  since: 1803131455148249831
         "404":
           description: Not Found response.
           content:
@@ -683,7 +682,7 @@ components:
           example: Provident unde aut.
         public_key:
           type: string
-          example: Repellat fugiat ut.
+          example: Asperiores vel repellat fugiat ut.
         signature:
           type: string
           example: Officiis maiores recusandae non nobis officia.
@@ -731,7 +730,7 @@ components:
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: false
+          example: true
       description: Not found
       example:
         id: 3F1FKVRR
@@ -1006,28 +1005,28 @@ components:
             spot_base_requirement: Magni nihil voluptatem voluptatibus nostrum magnam.
             spot_quote_requirement: Omnis labore consequatur commodi.
             staking_requirement: Omnis expedita recusandae minima ipsam quis.
+          - capacity: 8951321949525420916
+            derivative_quote_requirement: Alias voluptas soluta id quo dolorem aut.
+            description: Consequatur provident excepturi nam vel in repudiandae.
+            id: Fugiat quo qui ea qui ut.
+            master_address: Consequatur quaerat voluptatem ullam aliquid.
+            member_count: 4200925254206743201
+            name: At et velit minima inventore.
+            spot_base_requirement: Magni nihil voluptatem voluptatibus nostrum magnam.
+            spot_quote_requirement: Omnis labore consequatur commodi.
+            staking_requirement: Omnis expedita recusandae minima ipsam quis.
+          - capacity: 8951321949525420916
+            derivative_quote_requirement: Alias voluptas soluta id quo dolorem aut.
+            description: Consequatur provident excepturi nam vel in repudiandae.
+            id: Fugiat quo qui ea qui ut.
+            master_address: Consequatur quaerat voluptatem ullam aliquid.
+            member_count: 4200925254206743201
+            name: At et velit minima inventore.
+            spot_base_requirement: Magni nihil voluptatem voluptatibus nostrum magnam.
+            spot_quote_requirement: Omnis labore consequatur commodi.
+            staking_requirement: Omnis expedita recusandae minima ipsam quis.
       example:
         guilds:
-        - capacity: 8951321949525420916
-          derivative_quote_requirement: Alias voluptas soluta id quo dolorem aut.
-          description: Consequatur provident excepturi nam vel in repudiandae.
-          id: Fugiat quo qui ea qui ut.
-          master_address: Consequatur quaerat voluptatem ullam aliquid.
-          member_count: 4200925254206743201
-          name: At et velit minima inventore.
-          spot_base_requirement: Magni nihil voluptatem voluptatibus nostrum magnam.
-          spot_quote_requirement: Omnis labore consequatur commodi.
-          staking_requirement: Omnis expedita recusandae minima ipsam quis.
-        - capacity: 8951321949525420916
-          derivative_quote_requirement: Alias voluptas soluta id quo dolorem aut.
-          description: Consequatur provident excepturi nam vel in repudiandae.
-          id: Fugiat quo qui ea qui ut.
-          master_address: Consequatur quaerat voluptatem ullam aliquid.
-          member_count: 4200925254206743201
-          name: At et velit minima inventore.
-          spot_base_requirement: Magni nihil voluptatem voluptatibus nostrum magnam.
-          spot_quote_requirement: Omnis labore consequatur commodi.
-          staking_requirement: Omnis expedita recusandae minima ipsam quis.
         - capacity: 8951321949525420916
           derivative_quote_requirement: Alias voluptas soluta id quo dolorem aut.
           description: Consequatur provident excepturi nam vel in repudiandae.
@@ -1057,6 +1056,7 @@ components:
         default_member:
           injective_address: Nihil quia quo eligendi omnis.
           is_default_guild_member: true
+          since: 1803131455148249831
     GetGuildMarketsResponseBody:
       type: object
       properties:
@@ -1080,9 +1080,9 @@ components:
       properties:
         master_address:
           type: string
-          example: Numquam fugiat asperiores aut quisquam.
+          example: Aut quisquam inventore.
       example:
-        master_address: Est quaerat tenetur id cumque eius asperiores.
+        master_address: Quaerat tenetur id cumque.
     GetGuildMembersResponseBody:
       type: object
       properties:
@@ -1094,20 +1094,24 @@ components:
           example:
           - injective_address: Nihil quia quo eligendi omnis.
             is_default_guild_member: true
+            since: 1803131455148249831
           - injective_address: Nihil quia quo eligendi omnis.
             is_default_guild_member: true
-          - injective_address: Nihil quia quo eligendi omnis.
-            is_default_guild_member: true
+            since: 1803131455148249831
       example:
         members:
         - injective_address: Nihil quia quo eligendi omnis.
           is_default_guild_member: true
+          since: 1803131455148249831
         - injective_address: Nihil quia quo eligendi omnis.
           is_default_guild_member: true
+          since: 1803131455148249831
         - injective_address: Nihil quia quo eligendi omnis.
           is_default_guild_member: true
+          since: 1803131455148249831
         - injective_address: Nihil quia quo eligendi omnis.
           is_default_guild_member: true
+          since: 1803131455148249831
     GetSingleGuildResponseBody:
       type: object
       properties:
@@ -1130,49 +1134,49 @@ components:
       properties:
         capacity:
           type: integer
-          example: 3589325729832051866
+          example: 5308926189428879663
           format: int64
         derivative_quote_requirement:
           type: string
-          example: Et omnis enim tempore natus et.
+          example: Consequatur temporibus minima laudantium.
         description:
           type: string
-          example: Vel sit modi voluptate repellat.
+          example: Eveniet libero consectetur saepe recusandae est sequi.
         id:
           type: string
-          example: Inventore non.
+          example: Doloremque corporis voluptatem ut.
         master_address:
           type: string
-          example: Et maiores nostrum ut cupiditate et placeat.
+          example: Vel sit modi voluptate repellat.
         member_count:
           type: integer
-          example: 5732921458189209190
+          example: 8068048672850937221
           format: int64
         name:
           type: string
-          example: Eveniet libero consectetur saepe recusandae est sequi.
+          example: Inventore non.
         spot_base_requirement:
           type: string
-          example: Non officiis dolorem nesciunt.
+          example: Et maiores nostrum ut cupiditate et placeat.
         spot_quote_requirement:
           type: string
-          example: Consequatur temporibus minima laudantium.
+          example: Non officiis dolorem nesciunt.
         staking_requirement:
           type: string
-          example: Reprehenderit laborum aspernatur.
+          example: Et omnis enim tempore natus et.
       description: Guild info
       example:
-        capacity: 2507770661796387845
-        derivative_quote_requirement: Blanditiis sit laboriosam necessitatibus eligendi
-          non sit.
-        description: Quia hic ipsam.
-        id: Consequatur aut saepe molestiae incidunt sed.
-        master_address: At consequuntur sint.
-        member_count: 7181677606416856434
-        name: Adipisci quia dolorem quod sed expedita.
-        spot_base_requirement: Quos aliquam sed temporibus error non molestiae.
-        spot_quote_requirement: Illum quae.
-        staking_requirement: Voluptatem repudiandae rem deserunt.
+        capacity: 8239269337833966479
+        derivative_quote_requirement: Quae numquam blanditiis sit laboriosam necessitatibus
+          eligendi.
+        description: Dolorem quod.
+        id: Aspernatur inventore quod rerum consequatur aut saepe.
+        master_address: Expedita quaerat quia hic.
+        member_count: 3582883949521998331
+        name: Incidunt sed quo adipisci.
+        spot_base_requirement: Rerum at consequuntur sint animi.
+        spot_quote_requirement: Aliquam sed temporibus error non molestiae est.
+        staking_requirement: Sit et voluptatem repudiandae.
       required:
       - id
       - name
@@ -1189,17 +1193,23 @@ components:
       properties:
         injective_address:
           type: string
-          example: Laboriosam culpa.
+          example: Rem tenetur laboriosam culpa et.
         is_default_guild_member:
           type: boolean
-          example: true
+          example: false
+        since:
+          type: integer
+          example: 7182487698934487110
+          format: int64
       description: Guild member metadata
       example:
-        injective_address: Et in velit atque beatae.
-        is_default_guild_member: false
+        injective_address: Velit atque beatae eum harum.
+        is_default_guild_member: true
+        since: 2081026964911509397
       required:
       - injective_address
       - is_default_guild_member
+      - since
     LeaveGuildResponseBody:
       type: object
       properties:

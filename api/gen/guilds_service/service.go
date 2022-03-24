@@ -186,6 +186,7 @@ type Guild struct {
 type GuildMember struct {
 	InjectiveAddress     string
 	IsDefaultGuildMember bool
+	Since                int64
 }
 
 // LeaveGuildPayload is the payload type of the GuildsService service

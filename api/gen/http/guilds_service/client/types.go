@@ -487,6 +487,7 @@ type GuildResponseBody struct {
 type GuildMemberResponseBody struct {
 	InjectiveAddress     *string `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
 	IsDefaultGuildMember *bool   `form:"is_default_guild_member,omitempty" json:"is_default_guild_member,omitempty" xml:"is_default_guild_member,omitempty"`
+	Since                *int64  `form:"since,omitempty" json:"since,omitempty" xml:"since,omitempty"`
 }
 
 // MarketResponseBody is used to define fields on response body types.
@@ -1562,6 +1563,9 @@ func ValidateGuildMemberResponseBody(body *GuildMemberResponseBody) (err error) 
 	}
 	if body.IsDefaultGuildMember == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("is_default_guild_member", "body"))
+	}
+	if body.Since == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("since", "body"))
 	}
 	return
 }

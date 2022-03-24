@@ -1064,6 +1064,7 @@ func unmarshalGuildMemberResponseBodyToGuildsserviceGuildMember(v *GuildMemberRe
 	res := &guildsservice.GuildMember{
 		InjectiveAddress:     *v.InjectiveAddress,
 		IsDefaultGuildMember: *v.IsDefaultGuildMember,
+		Since:                *v.Since,
 	}
 
 	return res
