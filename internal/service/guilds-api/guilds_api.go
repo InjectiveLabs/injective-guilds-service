@@ -45,7 +45,6 @@ func NewService(ctx context.Context, dbSvc db.DBService, exchangeProvider exchan
 		portfolioHelper:  helper,
 		logger:           log.WithField("svc", "guilds_api"),
 		grants: []string{
-			// TODO: Unlock these fields to test
 			"/injective.exchange.v1beta1.MsgCreateSpotLimitOrder",
 			"/injective.exchange.v1beta1.MsgCreateSpotMarketOrder",
 			"/injective.exchange.v1beta1.MsgCancelSpotOrder",
