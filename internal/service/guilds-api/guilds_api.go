@@ -92,12 +92,10 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 
 // Get members
 func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMembersPayload) (res *svc.GetGuildMembersResult, err error) {
-	isDefaultMember := false
 	members, err := s.dbSvc.ListGuildMembers(
 		ctx,
 		model.MemberFilter{
-			GuildID:         &payload.GuildID,
-			IsDefaultMember: &isDefaultMember,
+			GuildID: &payload.GuildID,
 		},
 	)
 	if err != nil {
