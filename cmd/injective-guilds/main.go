@@ -18,10 +18,9 @@ var (
 	masterAddr        *string
 	defaultMemberAddr *string
 
-	minSpotBase        *int
-	minSpotQuote       *int
-	minDerivativeQuote *int
-	minStaking         *int
+	spotRequirements       *[]string
+	derivativeRequirements *[]string
+	minStaking             *int
 
 	dbURL         *string
 	exchangeURL   *string
@@ -37,7 +36,6 @@ func main() {
 	setConfig()
 	app.Command("api", "start Guilds service HTTP API server", cmdApi)
 	app.Command("process", "start Guilds process, which takes portfolios snapshots and handle disqualification", cmdProcess)
-	app.Command("update-denom", "update all denom-coinID map to database", cmdUpdateDenom)
 	app.Command("add-guild", "add a guild", cmdAddGuild)
 	app.Command("delete-guild", "delete a guild", cmdDeleteGuild)
 

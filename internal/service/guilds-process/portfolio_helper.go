@@ -72,7 +72,7 @@ func (p *PortfolioHelper) CaptureSingleMemberPortfolio(
 	if addDenomPrices {
 		prices, err = p.GetDenomPrices(ctx, model.GetGuildDenoms(guild))
 		if err != nil {
-			return nil, fmt.Errorf("get margin hold err: %w", err)
+			return nil, fmt.Errorf("get denom price err: %w", err)
 		}
 	}
 

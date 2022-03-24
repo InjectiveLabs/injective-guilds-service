@@ -6,7 +6,6 @@ import (
 
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
-	cli "github.com/jawher/mow.cli"
 	log "github.com/xlab/suplog"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -116,20 +115,4 @@ func actionUpdateDenom() {
 		log.Fatal("asset-price desn't support: ", notFoundCoins)
 	}
 	fmt.Println("!!! Bravo, all coins price are supported")
-}
-
-func cmdUpdateDenom(c *cli.Cmd) {
-	dbURL = c.String(cli.StringOpt{
-		Name:  "db-url",
-		Desc:  "database url",
-		Value: "mongodb://localhost:27017",
-	})
-
-	assetPriceURL = c.String(cli.StringOpt{
-		Name:  "asset-price-url",
-		Desc:  "asset price service url",
-		Value: "https://k8s.mainnet.asset.injective.network",
-	})
-
-	c.Action = actionUpdateDenom
 }

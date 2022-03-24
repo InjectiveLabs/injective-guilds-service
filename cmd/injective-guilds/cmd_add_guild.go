@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
@@ -17,6 +19,8 @@ import (
 	log "github.com/xlab/suplog"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+const defaultMinRequirement = float64(250.0)
 
 func parseAddGuildArgs(c *cli.Cmd) {
 	spotIDs = c.Strings(cli.StringsOpt{
@@ -79,22 +83,16 @@ func parseAddGuildArgs(c *cli.Cmd) {
 		Value: "https://k8s.mainnet.asset.injective.network",
 	})
 
-	minSpotBase = c.Int(cli.IntOpt{
-		Name:  "min-spot-base",
-		Desc:  "min spot base usd amount",
-		Value: 250,
+	spotRequirements = c.Strings(cli.StringsOpt{
+		Name:  "spot-require",
+		Desc:  "minimum requirements to join this guild. BaseRequirement/QuoteRequirement",
+		Value: []string{},
 	})
 
-	minSpotQuote = c.Int(cli.IntOpt{
-		Name:  "min-spot-quote",
-		Desc:  "min spot quote usd amount",
-		Value: 250,
-	})
-
-	minDerivativeQuote = c.Int(cli.IntOpt{
-		Name:  "min-derivative-quote",
-		Desc:  "min derivative base usd amount",
-		Value: 250,
+	derivativeRequirements = c.Strings(cli.StringsOpt{
+		Name:  "derivative-require",
+		Desc:  "minimum requirements to join this guild. QuoteRequirement for derivative market",
+		Value: []string{},
 	})
 
 	minStaking = c.Int(cli.IntOpt{
@@ -117,6 +115,19 @@ func validateAddGuildArgs() {
 	panicIf(err)
 }
 
+func toMinAmounts(s string) (res []float64, err error) {
+	parts := strings.Split(s, "/")
+	for _, p := range parts {
+		f, err := strconv.ParseFloat(p, 64)
+		if err != nil {
+			return nil, err
+		}
+
+		res = append(res, f)
+	}
+	return res, nil
+}
+
 func addGuildAction() {
 	validateAddGuildArgs()
 
@@ -135,6 +146,9 @@ func addGuildAction() {
 
 	spotClient := spotExchangePB.NewInjectiveSpotExchangeRPCClient(exchangeProvider.GetExchangeConn())
 	derivativeClient := derivativeExchangePB.NewInjectiveDerivativeExchangeRPCClient(exchangeProvider.GetExchangeConn())
+
+	denomIDToMinAmount := make(map[string]float64)
+	srIndex := 0
 
 	log.Info("checking markets using exchange api service")
 
@@ -176,8 +190,16 @@ func addGuildAction() {
 			TakerFeeRate: takerFeeRate,
 			MakerFeeRate: marketFeeRate,
 		})
+
+		floats, err := toMinAmounts((*spotRequirements)[srIndex])
+		fmt.Println("floats:", floats)
+		denomIDToMinAmount[market.GetBaseDenom()] += floats[0]
+		denomIDToMinAmount[market.GetQuoteDenom()] += floats[1]
+
+		srIndex++
 	}
 
+	drIndex := 0
 	for _, m := range *derivativeIDs {
 		log.Info(fmt.Sprintf(">>> checking derivative market id: %s", m))
 		req := &derivativeExchangePB.MarketRequest{
@@ -202,6 +224,18 @@ func addGuildAction() {
 				UpdatedAt: market.GetQuoteTokenMeta().GetUpdatedAt(),
 			},
 		})
+
+		floats, err := toMinAmounts((*derivativeRequirements)[drIndex])
+		denomIDToMinAmount[market.GetQuoteDenom()] += floats[0]
+		drIndex++
+	}
+
+	denomRequirements := make([]*model.DenomRequirement, 0)
+	for k, v := range denomIDToMinAmount {
+		denomRequirements = append(denomRequirements, &model.DenomRequirement{
+			Denom:        k,
+			MinAmountUSD: v,
+		})
 	}
 
 	master, _ := cosmtypes.AccAddressFromBech32(*masterAddr)
@@ -210,8 +244,10 @@ func addGuildAction() {
 		Name:          *name,
 		Description:   *description,
 		MasterAddress: model.Address{AccAddress: master},
-		Markets:       markets,
-		Capacity:      *capacity,
+
+		Requirements: denomRequirements,
+		Markets:      markets,
+		Capacity:     *capacity,
 	}
 
 	log.Info("adding guild: ", *name)
@@ -232,7 +268,7 @@ func addGuildAction() {
 	err = dbSvc.AddAccountPortfolios(ctx, []*model.AccountPortfolio{portfolio})
 	panicIf(err)
 
-	log.Info("🍺 all done")
+	log.Info("🍺 all done, guild created = ", *id)
 }
 
 func cmdAddGuild(c *cli.Cmd) {
@@ -242,16 +278,14 @@ func cmdAddGuild(c *cli.Cmd) {
 	// database url: --db-url
 	// exchange url: --exchange-url
 	// spot market (can supply many --spot-id): --spot-id
+	// spot requirements: --requirement baseTokenAmountInUSD/quoteTokenAmountInUSD
 	// derivative market (can supply many --derivative-id): --derivative-id
+	// derivative requirements: --requirement quoteTokenAmountInUSD
+	// min staking requirements: --min-staking
 	// capacity: --capactity
 	// master address: --master
 	// default member address: --default-member
 	// returns guild id
-	// example: go run cmd/injective-guilds/*.go add-guild \
-	// --derivative-id=0xc559df216747fc11540e638646c384ad977617d6d8f0ea5ffdfc18d52e58ab01 \
-	// --spot-id=0xfbc729e93b05b4c48916c1433c9f9c2ddb24605a73483303ea0f87a8886b52af \
-	// --name=testguild --description "a test guild" --master=inj1awx03zmnnlsjuvp7x8ac3lphw50p0nea6p2584 \
-	// --default-member=inj1zggdm44ln2gu7c5d2ge4wyr4wfs0cfn5lyfw4k --exchange-url=sentry2.injective.network:9910
 	parseAddGuildArgs(c)
 	c.Action = addGuildAction
 }
