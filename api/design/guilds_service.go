@@ -230,6 +230,8 @@ var _ = Service("GuildsService", func() {
 
 		HTTP(func() {
 			GET("/guilds/{guildID}/portfolios")
+			Param("start_time")
+			Param("end_time")
 
 			Response(CodeOK)
 			Response("not_found", StatusNotFound)
@@ -274,6 +276,8 @@ var _ = Service("GuildsService", func() {
 
 		HTTP(func() {
 			GET("/members/{injective_address}/portfolios")
+			Param("start_time")
+			Param("end_time")
 
 			Response(CodeOK)
 			Response("not_found", StatusNotFound)
