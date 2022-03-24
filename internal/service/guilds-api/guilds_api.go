@@ -328,7 +328,7 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 		Data: &svc.SingleAccountPortfolio{
 			InjectiveAddress: address.String(),
 			Balances:         balances,
-			UpdatedAt:        updatedAt.String(),
+			UpdatedAt:        updatedAt.UnixMilli(),
 		},
 	}, nil
 }
@@ -364,7 +364,7 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 		result = append(result, &svc.SingleAccountPortfolio{
 			InjectiveAddress: address.String(),
 			Balances:         balances,
-			UpdatedAt:        p.UpdatedAt.String(),
+			UpdatedAt:        p.UpdatedAt.UnixMilli(),
 		})
 	}
 
