@@ -42,11 +42,22 @@ func NewService(ctx context.Context, dbSvc db.DBService, exchangeProvider exchan
 		exchangeProvider: exchangeProvider,
 		portfolioHelper:  helper,
 		logger:           log.WithField("svc", "guilds_api"),
-		grants: []string{
-			// TODO: Double check with Peiyun for these grants
-			"/injective.exchange.v1beta1.MsgCreateSpotLimitOrder",
-			"/injective.exchange.v1beta1.MsgCreateDerivativeLimitOrder",
-			"/injective.exchange.v1beta1.MsgCancelDerivativeLimitOrder",
+		grants:           []string{
+			// TODO: Unlock these fields to test
+			// "/injective.exchange.v1beta1.MsgCreateSpotLimitOrder",
+			// "/injective.exchange.v1beta1.MsgCreateSpotMarketOrder",
+			// "/injective.exchange.v1beta1.MsgCancelSpotOrder",
+			// "/injective.exchange.v1beta1.MsgBatchUpdateOrders",
+			// "/injective.exchange.v1beta1.MsgBatchCancelSpotOrders",
+			// "/injective.exchange.v1beta1.MsgDeposit",
+			// "/injective.exchange.v1beta1.MsgWithdraw",
+			// "/injective.exchange.v1beta1.MsgCreateDerivativeLimitOrder",
+			// "/injective.exchange.v1beta1.MsgCreateDerivativeMarketOrder",
+			// "/injective.exchange.v1beta1.MsgCancelDerivativeOrder",
+			// "/injective.exchange.v1beta1.MsgBatchUpdateOrders",
+			// "/injective.exchange.v1beta1.MsgBatchCancelDerivativeOrders",
+			// "/injective.exchange.v1beta1.MsgDeposit",
+			// "/injective.exchange.v1beta1.MsgWithdraw",
 		},
 	}, nil
 }

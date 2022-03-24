@@ -11,24 +11,26 @@ import (
 )
 
 func cmdProcess(c *cli.Cmd) {
-	cfg := config.LoadGuildsProcessConfig()
-	err := cfg.Validate()
-	panicIf(err)
+	c.Action = func() {
+		cfg := config.LoadGuildsProcessConfig()
+		err := cfg.Validate()
+		panicIf(err)
 
-	// setup logger
-	log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
-	guildsProcess, err := guildsprocess.NewProcess(cfg)
-	panicIf(err)
+		// setup logger
+		log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
+		guildsProcess, err := guildsprocess.NewProcess(cfg)
+		panicIf(err)
 
-	// run process(es) and hold until interrupt
-	ctx := context.Background()
-	cancelCtx, cancelFn := context.WithCancel(ctx)
-	guildsProcess.Run(cancelCtx)
+		// run process(es) and hold until interrupt
+		ctx := context.Background()
+		cancelCtx, cancelFn := context.WithCancel(ctx)
+		guildsProcess.Run(cancelCtx)
 
-	closer.Bind(func() {
-		cancelFn()
-		guildsProcess.GracefullyShutdown(ctx)
-	})
+		closer.Bind(func() {
+			cancelFn()
+			guildsProcess.GracefullyShutdown(ctx)
+		})
 
-	closer.Hold()
+		closer.Hold()
+	}
 }

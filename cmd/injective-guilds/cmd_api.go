@@ -141,23 +141,25 @@ func (s *APIServer) GracefullyShutdown() {
 }
 
 func cmdApi(c *cli.Cmd) {
-	cfg := config.LoadGuildsAPIServerConfig()
-	err := cfg.Validate()
-	panicIf(err)
+	c.Action = func() {
+		cfg := config.LoadGuildsAPIServerConfig()
+		err := cfg.Validate()
+		panicIf(err)
 
-	assetPriceURL = &cfg.AssetPriceURL
-	dbURL = &cfg.DBConnectionURL
-	actionUpdateDenom()
+		assetPriceURL = &cfg.AssetPriceURL
+		dbURL = &cfg.DBConnectionURL
+		actionUpdateDenom()
 
-	apiServer, err := NewServer(cfg)
-	panicIf(err)
+		apiServer, err := NewServer(cfg)
+		panicIf(err)
 
-	err = apiServer.ListenAndServe(context.Background())
-	panicIf(err)
+		err = apiServer.ListenAndServe(context.Background())
+		panicIf(err)
 
-	closer.Bind(func() {
-		apiServer.GracefullyShutdown()
-	})
-	// wait until os signal then gracefully shutdown
-	closer.Hold()
+		closer.Bind(func() {
+			apiServer.GracefullyShutdown()
+		})
+		// wait until os signal then gracefully shutdown
+		closer.Hold()
+	}
 }
