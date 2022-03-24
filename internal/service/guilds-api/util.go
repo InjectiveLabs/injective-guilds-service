@@ -19,11 +19,20 @@ type MemberMessage struct {
 }
 
 func modelGuildToResponse(m *model.Guild) *svc.Guild {
+	var requirements []*svc.Requirement
+	for _, req := range m.Requirements {
+		requirements = append(requirements, &svc.Requirement{
+			Denom:        req.Denom,
+			MinAmountUsd: req.MinAmountUSD,
+		})
+	}
+
 	return &svc.Guild{
 		ID:            m.ID.Hex(),
 		Name:          m.Name,
 		Description:   m.Description,
 		MasterAddress: m.MasterAddress.String(),
+		Requirements:  requirements,
 		Capacity:      m.Capacity,
 		MemberCount:   m.MemberCount,
 	}

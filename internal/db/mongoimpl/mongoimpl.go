@@ -98,6 +98,56 @@ func (s *MongoImpl) EnsureIndex(ctx context.Context) error {
 	return nil
 }
 
+func (s *MongoImpl) ListGuildPortfolios(
+	ctx context.Context,
+	filter model.GuildPortfoliosFilter,
+) (result []*model.GuildPortfolio, err error) {
+	guildObjectID, err := primitive.ObjectIDFromHex(filter.GuildID)
+	if err != nil {
+		return nil, fmt.Errorf("cannot parse guildID: %w", err)
+	}
+
+	portfolioFilter := bson.M{
+		"guild_id": guildObjectID,
+	}
+
+	var updatedAtFilter bson.M
+	if filter.StartTime != nil {
+		updatedAtFilter["$gte"] = *filter.StartTime
+	}
+
+	if filter.EndTime != nil {
+		updatedAtFilter["$lt"] = *filter.EndTime
+	}
+
+	if len(updatedAtFilter) > 0 {
+		portfolioFilter["updated_at"] = updatedAtFilter
+	}
+
+	opt := &options.FindOptions{}
+	opt.SetSort(bson.M{"updated_at": -1})
+	if filter.Limit != nil {
+		opt.SetLimit(*filter.Limit)
+	}
+
+	cur, err := s.guildPortfolioCollection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	for cur.Next(ctx) {
+		var guildPortfolio model.GuildPortfolio
+		err := cur.Decode(&guildPortfolio)
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, &guildPortfolio)
+	}
+
+	return result, nil
+}
+
 func (s *MongoImpl) AddGuild(ctx context.Context, guild *model.Guild) (*primitive.ObjectID, error) {
 	insertOneRes, err := s.guildCollection.InsertOne(ctx, guild)
 	if err != nil {

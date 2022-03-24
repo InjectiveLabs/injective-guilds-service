@@ -295,6 +295,58 @@ func (s *service) GetGuildMarkets(ctx context.Context, payload *svc.GetGuildMark
 	}, nil
 }
 
+func (s *service) GetGuildPortfolios(
+	ctx context.Context,
+	payload *svc.GetGuildPortfoliosPayload,
+) (res *svc.GetGuildPortfoliosResult, err error) {
+	filter := model.GuildPortfoliosFilter{
+		GuildID: payload.GuildID,
+	}
+
+	var to = time.Now()
+	if payload.EndTime != nil {
+		to = time.UnixMilli(*payload.EndTime)
+	}
+	filter.StartTime = &to
+
+	var from time.Time
+	if payload.StartTime != nil {
+		from = time.UnixMilli(*payload.StartTime)
+		filter.StartTime = &from
+	}
+
+	portfolios, err := s.dbSvc.ListGuildPortfolios(ctx, filter)
+	if err != nil {
+		return nil, svc.MakeInternal(fmt.Errorf("list guild portfolio err: %w", err))
+	}
+
+	result := make([]*svc.SingleGuildPortfolio, 0)
+	// expected result to be sort by timestamp
+	for _, p := range portfolios {
+		var balances []*svc.Balance
+		for _, b := range p.Balances {
+			balances = append(balances, &svc.Balance{
+				Denom:            b.Denom,
+				PriceUsd:         b.PriceUSD,
+				TotalBalance:     b.TotalBalance.String(),
+				AvailableBalance: b.AvailableBalance.String(),
+				UnrealizedPnl:    b.UnrealizedPNL.String(),
+				MarginHold:       b.MarginHold.String(),
+			})
+		}
+
+		result = append(result, &svc.SingleGuildPortfolio{
+			GuildID:   &payload.GuildID,
+			Balances:  balances,
+			UpdatedAt: p.UpdatedAt.UnixMilli(),
+		})
+	}
+
+	return &svc.GetGuildPortfoliosResult{
+		Portfolios: result,
+	}, nil
+}
+
 func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccountPortfolioPayload) (res *svc.GetAccountPortfolioResult, err error) {
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {

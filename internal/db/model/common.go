@@ -3,6 +3,7 @@ package model
 import (
 	"bytes"
 	"encoding/binary"
+	"time"
 
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
@@ -137,12 +138,13 @@ type MemberFilter struct {
 
 type AccountPortfoliosFilter struct {
 	InjectiveAddress Address
-	StartTime        *int64
-	EndTime          *int64
+	StartTime        *time.Time
+	EndTime          *time.Time
 }
 
 type GuildPortfoliosFilter struct {
 	GuildID   string
-	StartTime *int64
-	EndTime   *int64
+	StartTime *time.Time
+	EndTime   *time.Time
+	Limit     *int64
 }

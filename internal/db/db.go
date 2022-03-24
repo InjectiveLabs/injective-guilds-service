@@ -10,6 +10,7 @@ import (
 type DBService interface {
 	ListAllGuilds(ctx context.Context) ([]*model.Guild, error)
 	GetSingleGuild(ctx context.Context, guildID string) (*model.Guild, error)
+	ListGuildPortfolios(ctx context.Context, filter model.GuildPortfoliosFilter) ([]*model.GuildPortfolio, error)
 	// TODO: *primitive.ObjectID -> string
 	AddGuild(ctx context.Context, guild *model.Guild) (*primitive.ObjectID, error)
 	AddGuildPortfolios(ctx context.Context, portfolios []*model.GuildPortfolio) error
