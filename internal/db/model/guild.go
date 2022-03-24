@@ -83,8 +83,9 @@ type AccountPortfolio struct {
 type GuildMember struct {
 	GuildID primitive.ObjectID `bson:"guild_id" json:"guild_id"`
 
-	InjectiveAddress     Address `bson:"injective_address" json:"injective_address"`
-	IsDefaultGuildMember bool    `bson:"is_default_guild_member" json:"is_default_guild_member"` // json might not need here
+	InjectiveAddress     Address   `bson:"injective_address" json:"injective_address"`
+	IsDefaultGuildMember bool      `bson:"is_default_guild_member" json:"is_default_guild_member"` // json might not need here
+	Since                time.Time `bson:"since" json:"since"`
 }
 
 func GetGuildDenoms(guild *Guild) []string {

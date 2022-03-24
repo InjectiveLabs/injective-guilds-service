@@ -231,6 +231,7 @@ func (s *MongoImpl) upsertMember(
 		"$set": bson.M{
 			"guild_id":                guildID,
 			"is_default_guild_member": isDefaultMember,
+			"since":                   time.Now(),
 		},
 	}
 	updOpt := &options.UpdateOptions{}
