@@ -216,7 +216,7 @@ type Market struct {
 type SingleAccountPortfolio struct {
 	InjectiveAddress string
 	Balances         []*Balance
-	UpdatedAt        string
+	UpdatedAt        int64
 }
 
 // MakeNotFound builds a goa.ServiceError from an error.

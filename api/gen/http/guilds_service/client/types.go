@@ -501,7 +501,7 @@ type MarketResponseBody struct {
 type SingleAccountPortfolioResponseBody struct {
 	InjectiveAddress *string                `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
 	Balances         []*BalanceResponseBody `form:"balances,omitempty" json:"balances,omitempty" xml:"balances,omitempty"`
-	UpdatedAt        *string                `form:"updated_at,omitempty" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
+	UpdatedAt        *int64                 `form:"updated_at,omitempty" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
 }
 
 // BalanceResponseBody is used to define fields on response body types.
@@ -1599,9 +1599,6 @@ func ValidateSingleAccountPortfolioResponseBody(body *SingleAccountPortfolioResp
 				err = goa.MergeErrors(err, err2)
 			}
 		}
-	}
-	if body.UpdatedAt != nil {
-		err = goa.MergeErrors(err, goa.ValidateFormat("body.updated_at", *body.UpdatedAt, goa.FormatDateTime))
 	}
 	return
 }

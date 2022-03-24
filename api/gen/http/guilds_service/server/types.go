@@ -501,7 +501,7 @@ type MarketResponseBody struct {
 type SingleAccountPortfolioResponseBody struct {
 	InjectiveAddress string                 `form:"injective_address" json:"injective_address" xml:"injective_address"`
 	Balances         []*BalanceResponseBody `form:"balances" json:"balances" xml:"balances"`
-	UpdatedAt        string                 `form:"updated_at" json:"updated_at" xml:"updated_at"`
+	UpdatedAt        int64                  `form:"updated_at" json:"updated_at" xml:"updated_at"`
 }
 
 // BalanceResponseBody is used to define fields on response body types.
