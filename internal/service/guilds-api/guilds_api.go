@@ -352,6 +352,7 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 		for _, b := range p.Balances {
 			balances = append(balances, &svc.Balance{
 				Denom:            b.Denom,
+				PriceUsd:         b.PriceUSD,
 				TotalBalance:     b.TotalBalance.String(),
 				AvailableBalance: b.AvailableBalance.String(),
 				UnrealizedPnl:    b.UnrealizedPNL.String(),
