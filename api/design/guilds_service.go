@@ -191,7 +191,6 @@ var _ = Service("GuildsService", func() {
 		})
 	})
 
-	// Markets
 	Method("GetGuildMarkets", func() {
 		Description("Get the guild markets")
 
@@ -214,15 +213,35 @@ var _ = Service("GuildsService", func() {
 		})
 	})
 
-	// Account's Porfolio(s)
-	Method("GetAccountPortfolio", func() {
-		Description("Get current account portfolio")
+	Method("GetGuildPortfolios", func() {
+		Description("Get the guild markets")
 
 		Payload(func() {
+			// TODO: Basic validation
 			Field(1, "guildID", String)
-			Field(2, "injective_address", String)
-
+			Field(2, "start_time", Int64)
+			Field(3, "end_time", Int64)
 			Required("guildID")
+		})
+
+		Result(func() {
+			Field(1, "portfolios", ArrayOf(SingleGuildPortfolio))
+		})
+
+		HTTP(func() {
+			GET("/guilds/{guildID}/portfolios")
+
+			Response(CodeOK)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
+		})
+	})
+
+	Method("GetAccountPortfolio", func() {
+		Description("Get current account portfolio snapshot")
+
+		Payload(func() {
+			Field(1, "injective_address", String)
 			Required("injective_address")
 		})
 
@@ -231,8 +250,7 @@ var _ = Service("GuildsService", func() {
 		})
 
 		HTTP(func() {
-			GET("/guilds/{guildID}/portfolio")
-			Param("injective_address")
+			GET("/members/{injective_address}/portfolio")
 
 			Response(CodeOK)
 			Response("not_found", StatusNotFound)
@@ -244,10 +262,9 @@ var _ = Service("GuildsService", func() {
 		Description("Get current account portfolios snapshots all the time")
 
 		Payload(func() {
-			Field(1, "guildID", String)
-			Field(2, "injective_address", String)
-
-			Required("guildID")
+			Field(1, "injective_address", String)
+			Field(2, "start_time", Int64)
+			Field(3, "end_time", Int64)
 			Required("injective_address")
 		})
 
@@ -256,8 +273,7 @@ var _ = Service("GuildsService", func() {
 		})
 
 		HTTP(func() {
-			GET("/guilds/{guildID}/portfolios")
-			Param("injective_address")
+			GET("/members/{injective_address}/portfolios")
 
 			Response(CodeOK)
 			Response("not_found", StatusNotFound)

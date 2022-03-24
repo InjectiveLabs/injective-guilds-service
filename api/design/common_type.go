@@ -14,6 +14,14 @@ var Market = Type("Market", func() {
 	Required("is_perpetual")
 })
 
+var Requirement = Type("Requirement", func() {
+	Field(1, "denom", String)
+	Field(2, "min_amount_usd", Float64)
+
+	Required("denom")
+	Required("min_amount_usd")
+})
+
 var Guild = Type("Guild", func() {
 	Description("Guild info")
 
@@ -22,22 +30,18 @@ var Guild = Type("Guild", func() {
 	Field(3, "description", String)
 
 	Field(4, "master_address", String)
-	Field(5, "spot_base_requirement", String)
-	Field(6, "spot_quote_requirement", String)
-	Field(7, "derivative_quote_requirement", String)
+	Field(5, "requirements", Requirement)
 
-	Field(8, "staking_requirement", String)
-	Field(9, "capacity", Int)
-	Field(10, "member_count", Int)
+	Field(6, "staking_requirement", String)
+	Field(7, "capacity", Int)
+	Field(8, "member_count", Int)
+	Field(9, "current_portfolio", ArrayOf(Balance))
 
 	Required("id")
 	Required("name")
 	Required("description")
 	Required("master_address")
-	Required("spot_base_requirement")
-	Required("spot_quote_requirement")
-	Required("derivative_quote_requirement")
-
+	Required("requirements")
 	Required("staking_requirement")
 	Required("capacity")
 	Required("member_count")
@@ -65,6 +69,15 @@ var SingleAccountPortfolio = Type("SingleAccountPortfolio", func() {
 	Field(2, "balances", ArrayOf(Balance))
 	Field(3, "updated_at", Int64)
 	Required("injective_address")
+	Required("balances")
+	Required("updated_at")
+})
+
+var SingleGuildPortfolio = Type("SingleGuildPortfolio", func() {
+	Description("Single guild portfolio snapshot")
+	Field(0, "guild_id", String)
+	Field(1, "balances", ArrayOf(Balance))
+	Field(2, "updated_at", Int64)
 	Required("balances")
 	Required("updated_at")
 })

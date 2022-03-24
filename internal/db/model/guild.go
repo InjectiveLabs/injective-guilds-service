@@ -35,6 +35,11 @@ type TokenMeta struct {
 	UpdatedAt int64  `bson:"updated_at" json:"updated_at"`
 }
 
+type DenomRequirement struct {
+	Denom        string  `bson:"denom" json:"denom"`
+	MinAmountUSD float64 `bson:"min_amount_usd" json:"min_amount_usd"`
+}
+
 type Guild struct {
 	ID primitive.ObjectID `bson:"_id,omitempty" json:"guild_id"`
 
@@ -43,10 +48,7 @@ type Guild struct {
 	MasterAddress Address `bson:"master_address" json:"master_address"`
 
 	// Requirements are in USD
-	SpotBaseRequirement        int `bson:"spot_base_requirement" json:"spot_base_requirement"`
-	SpotQuoteRequirement       int `bson:"spot_quote_requirement" json:"spot_quote_requirement"`
-	DerivativeQuoteRequirement int `bson:"derivative_quote_requirement" json:"derivative_quote_requirement"`
-	StakingRequirement         int `bson:"staking_requirement" json:"staking_requirement"`
+	Requirements []*DenomRequirement `bson:"denom_requirements" json:"denom_requirements"`
 
 	Capacity    int `bson:"capacity" json:"capacity"`
 	MemberCount int `bson:"member_count" json:"member_count"`
@@ -75,6 +77,13 @@ type AccountPortfolio struct {
 
 	InjectiveAddress Address    `bson:"injective_address" json:"injective_address"`
 	Balances         []*Balance `bson:"balances" json:"balances"`
+	// timestamp when this gets update
+	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
+}
+
+type GuildPortfolio struct {
+	GuildID  primitive.ObjectID `bson:"guild_id" json:"guild_id"`
+	Balances []*Balance         `bson:"balances" json:"balances"`
 	// timestamp when this gets update
 	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
 }

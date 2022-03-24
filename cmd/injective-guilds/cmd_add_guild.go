@@ -207,15 +207,11 @@ func addGuildAction() {
 	master, _ := cosmtypes.AccAddressFromBech32(*masterAddr)
 	defaultMember, _ := cosmtypes.AccAddressFromBech32(*defaultMemberAddr)
 	guild := &model.Guild{
-		Name:                       *name,
-		Description:                *description,
-		MasterAddress:              model.Address{AccAddress: master},
-		SpotBaseRequirement:        *minSpotBase,
-		SpotQuoteRequirement:       *minSpotQuote,
-		DerivativeQuoteRequirement: *minDerivativeQuote,
-		StakingRequirement:         *minStaking,
-		Markets:                    markets,
-		Capacity:                   *capacity,
+		Name:          *name,
+		Description:   *description,
+		MasterAddress: model.Address{AccAddress: master},
+		Markets:       markets,
+		Capacity:      *capacity,
 	}
 
 	log.Info("adding guild: ", *name)
