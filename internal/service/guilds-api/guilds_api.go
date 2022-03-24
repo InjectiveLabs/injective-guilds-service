@@ -2,7 +2,6 @@ package guildsapi
 
 import (
 	"context"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"time"
@@ -12,12 +11,15 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	guildsprocess "github.com/InjectiveLabs/injective-guilds-service/internal/service/guilds-process"
-	"github.com/InjectiveLabs/sdk-go/chain/crypto/ethsecp256k1"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 	log "github.com/xlab/suplog"
 )
 
-const expirationTimeLayout = "2006-01-02T15:04:05.000Z"
+const (
+	expirationTimeLayout = "2006-01-02T15:04:05.000Z"
+	ActionEnterGuild     = "enter-guild"
+	ActionLeaveGuild     = "leave-guild"
+)
 
 type GuildsAPI = svc.Service
 
@@ -63,7 +65,6 @@ func NewService(ctx context.Context, dbSvc db.DBService, exchangeProvider exchan
 }
 
 // TODO: Refine error handling
-
 func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult, err error) {
 	guilds, err := s.dbSvc.ListAllGuilds(ctx)
 	if err != nil {
@@ -192,46 +193,14 @@ func (s *service) isAddressQualified(ctx context.Context, guild *model.Guild, ad
 	return true, nil
 }
 
-// input are base64 strings
-func verifySigAndDeriveAddress(
-	publicKeyBase64 string,
-	signatureBase64 string,
-	messageBase64 string,
-) (cosmtypes.AccAddress, error) {
-	// parse
-	// TODO: Add timestamp check
-	messageBytes, err := base64.StdEncoding.DecodeString(messageBase64)
-	if err != nil {
-		return nil, fmt.Errorf("bad message: %w", err)
-	}
-
-	signatureBytes, err := base64.StdEncoding.DecodeString(signatureBase64)
-	if err != nil {
-		return nil, fmt.Errorf("bad signature: %w", err)
-	}
-
-	publicKeyBytes, err := base64.StdEncoding.DecodeString(publicKeyBase64)
-	if err != nil {
-		return nil, fmt.Errorf("bad publicKey: %w", err)
-	}
-
-	// verify message, reference: https://pkg.go.dev/github.com/cosmos/cosmos-sdk/crypto/keyring
-	pubKey := &ethsecp256k1.PubKey{
-		Key: publicKeyBytes,
-	}
-
-	if !pubKey.VerifySignature(messageBytes, signatureBytes) {
-		return nil, fmt.Errorf("cannot verify message and signature")
-	}
-
-	// derive address
-	return cosmtypes.AccAddress(pubKey.Address()), nil
-}
-
 func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
-	accAddress, err := verifySigAndDeriveAddress(payload.PublicKey, payload.Signature, payload.Message)
+	accAddress, msgInfo, err := verifySigAndExtractInfo(payload.PublicKey, payload.Signature, payload.Message)
 	if err != nil {
 		return nil, svc.MakeInvalidArg(err)
+	}
+
+	if msgInfo.Action != ActionEnterGuild {
+		return nil, svc.MakeInvalidArg(fmt.Errorf("invalid action, should be %s", ActionEnterGuild))
 	}
 
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
@@ -287,9 +256,13 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 }
 
 func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload) (res *svc.LeaveGuildResult, err error) {
-	accAddress, err := verifySigAndDeriveAddress(payload.PublicKey, payload.Signature, payload.Message)
+	accAddress, msgInfo, err := verifySigAndExtractInfo(payload.PublicKey, payload.Signature, payload.Message)
 	if err != nil {
 		return nil, svc.MakeInvalidArg(err)
+	}
+
+	if msgInfo.Action != ActionLeaveGuild {
+		return nil, svc.MakeInvalidArg(fmt.Errorf("invalid action, should be %s", ActionLeaveGuild))
 	}
 
 	// remove member from database
@@ -324,7 +297,6 @@ func (s *service) GetGuildMarkets(ctx context.Context, payload *svc.GetGuildMark
 	}, nil
 }
 
-// GetAccountPortfolio implements GetAccountPortfolio.
 func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccountPortfolioPayload) (res *svc.GetAccountPortfolioResult, err error) {
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
