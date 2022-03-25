@@ -521,27 +521,6 @@ func (s *MongoImpl) AddAccountPortfolios(
 	return err
 }
 
-func (s *MongoImpl) ListDenomCoinID(ctx context.Context) (result []*model.DenomCoinID, err error) {
-	filter := bson.M{}
-	cur, err := s.denomCollection.Find(ctx, filter)
-	if err != nil {
-		return nil, err
-	}
-	defer cur.Close(ctx)
-
-	for cur.Next(ctx) {
-		var denomCoinID model.DenomCoinID
-		err := cur.Decode(&denomCoinID)
-		if err != nil {
-			return nil, err
-		}
-
-		result = append(result, &denomCoinID)
-	}
-
-	return result, nil
-}
-
 func (s *MongoImpl) Disconnect(ctx context.Context) error {
 	return s.client.Disconnect(ctx)
 }

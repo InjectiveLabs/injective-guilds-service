@@ -16,6 +16,8 @@ func cmdProcess(c *cli.Cmd) {
 		err := cfg.Validate()
 		panicIf(err)
 
+		doubleCheckDenomConfig(cfg.AssetPriceURL)
+
 		// setup logger
 		log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
 		guildsProcess, err := guildsprocess.NewProcess(cfg)

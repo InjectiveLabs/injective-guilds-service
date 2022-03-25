@@ -90,7 +90,7 @@ func (s *APIServer) ListenAndServe(ctx context.Context) error {
 
 	// new server + listenFn
 	s.server = &http.Server{Addr: address, Handler: s.handlers}
-	listenFn := func() {
+	go func() {
 		var err error
 		if tls {
 			log.Infoln("listening with tls:", s.server.Addr)
@@ -108,9 +108,8 @@ func (s *APIServer) ListenAndServe(ctx context.Context) error {
 			// call to gracefully close everything after an error occurs
 			closer.Close()
 		}
-	}
+	}()
 
-	go listenFn()
 	return nil
 }
 
@@ -146,9 +145,7 @@ func cmdApi(c *cli.Cmd) {
 		err := cfg.Validate()
 		panicIf(err)
 
-		assetPriceURL = &cfg.AssetPriceURL
-		dbURL = &cfg.DBConnectionURL
-		actionUpdateDenom()
+		doubleCheckDenomConfig(cfg.AssetPriceURL)
 
 		apiServer, err := NewServer(cfg)
 		panicIf(err)

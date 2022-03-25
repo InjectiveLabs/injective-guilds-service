@@ -19,15 +19,12 @@ type MemberMessage struct {
 }
 
 func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio) *svc.Guild {
-	var requirements []*svc.Requirement
-	for _, req := range m.Requirements {
-		requirements = append(requirements, &svc.Requirement{
-			Denom:        req.Denom,
-			MinAmountUsd: req.MinAmountUSD,
-		})
-	}
+	var (
+		requirements []*svc.Requirement
+		balances     []*svc.Balance
+		// denomToUsdPrice = make(map[string]float64)
+	)
 
-	var balances []*svc.Balance
 	for _, b := range portfolio.Balances {
 		balances = append(balances, &svc.Balance{
 			Denom:            b.Denom,
@@ -36,6 +33,14 @@ func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio) *svc.
 			UnrealizedPnl:    b.UnrealizedPNL.String(),
 			MarginHold:       b.MarginHold.String(),
 			PriceUsd:         b.PriceUSD,
+		})
+	}
+
+	for _, req := range m.Requirements {
+		// IMPORTANT: We want to return this price, so that FE and BE will be sync-ed for result
+		requirements = append(requirements, &svc.Requirement{
+			Denom:        req.Denom,
+			MinAmountUsd: req.MinAmountUSD,
 		})
 	}
 

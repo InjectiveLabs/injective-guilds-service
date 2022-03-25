@@ -31,7 +31,6 @@ type qualificationResult struct {
 	status string
 	detail string
 }
-
 type service struct {
 	svc.Service
 	exchangeProvider exchange.DataProvider

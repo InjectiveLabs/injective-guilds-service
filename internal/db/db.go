@@ -24,8 +24,5 @@ type DBService interface {
 	ListAccountPortfolios(ctx context.Context, filter model.AccountPortfoliosFilter) ([]*model.AccountPortfolio, error)
 	AddAccountPortfolios(ctx context.Context, portfolios []*model.AccountPortfolio) error
 
-	// denom
-	// TODO: Remove this ugly code
-	ListDenomCoinID(ctx context.Context) ([]*model.DenomCoinID, error)
 	Disconnect(ctx context.Context) error
 }

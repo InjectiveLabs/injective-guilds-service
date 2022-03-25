@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
@@ -244,19 +245,9 @@ func (p *PortfolioHelper) GetDenomPrices(ctx context.Context, denoms []string) (
 // basically, we need Denom -> CoinID to get coin price
 // decide to store usd price in db at the moment, will use historical price later
 func (p *PortfolioHelper) UpdateDenomToCoinIDMap(ctx context.Context) error {
-	denomCoinID, err := p.dbSvc.ListDenomCoinID(ctx)
-	if err != nil {
-		return err
-	}
-
-	// add a check to make sure denoms are added
-	if len(denomCoinID) == 0 {
-		return errors.New("cannot find denom to coin-id, should run update-denom first")
-	}
-
 	p.denomToCoinID = make(map[string]string)
-	for _, d := range denomCoinID {
-		p.denomToCoinID[d.Denom] = d.CoinID
+	for k, v := range config.DenomConfigs {
+		p.denomToCoinID[k] = v.CoinID
 	}
 	return nil
 }
