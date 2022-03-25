@@ -97,7 +97,22 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 			portfolio = *portfolios[0]
 		}
 
-		result = append(result, modelGuildToResponse(g, &portfolio))
+		guildID := g.ID.Hex()
+		isDefaultMember := true
+		defaultMember, err := s.dbSvc.ListGuildMembers(ctx, model.MemberFilter{
+			GuildID:         &guildID,
+			IsDefaultMember: &isDefaultMember,
+		})
+
+		if err != nil {
+			return nil, svc.MakeInternal(err)
+		}
+
+		if len(defaultMember) == 0 {
+			return nil, svc.MakeInternal(errors.New("guild has no default member"))
+		}
+
+		result = append(result, modelGuildToResponse(g, &portfolio, defaultMember[0]))
 	}
 
 	return &svc.GetAllGuildsResult{Guilds: result}, nil
@@ -128,8 +143,22 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 		portfolio = *portfolios[0]
 	}
 
+	guildID := guild.ID.Hex()
+	isDefaultMember := true
+	defaultMember, err := s.dbSvc.ListGuildMembers(ctx, model.MemberFilter{
+		GuildID:         &guildID,
+		IsDefaultMember: &isDefaultMember,
+	})
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	if len(defaultMember) == 0 {
+		return nil, svc.MakeInternal(errors.New("guild has no default member"))
+	}
+
 	return &svc.GetSingleGuildResult{
-		Guild: modelGuildToResponse(guild, &portfolio),
+		Guild: modelGuildToResponse(guild, &portfolio, defaultMember[0]),
 	}, nil
 }
 

@@ -18,11 +18,10 @@ type MemberMessage struct {
 	ExpiredAt int64  `json:"expired_at"` // unix timestamp, second
 }
 
-func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio) *svc.Guild {
+func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio, defaultMember *model.GuildMember) *svc.Guild {
 	var (
 		requirements []*svc.Requirement
 		balances     []*svc.Balance
-		// denomToUsdPrice = make(map[string]float64)
 	)
 
 	for _, b := range portfolio.Balances {
@@ -37,7 +36,7 @@ func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio) *svc.
 	}
 
 	for _, req := range m.Requirements {
-		// IMPORTANT: We want to return this price, so that FE and BE will be sync-ed for result
+		// IMPORTANT: We want to return price, so that FE and BE will be sync-ed for result
 		requirements = append(requirements, &svc.Requirement{
 			Denom:        req.Denom,
 			MinAmountUsd: req.MinAmountUSD,
@@ -53,14 +52,15 @@ func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio) *svc.
 	}
 
 	return &svc.Guild{
-		ID:               m.ID.Hex(),
-		Name:             m.Name,
-		Description:      m.Description,
-		MasterAddress:    m.MasterAddress.String(),
-		Requirements:     requirements,
-		Capacity:         m.Capacity,
-		MemberCount:      m.MemberCount,
-		CurrentPortfolio: currentPortfolio,
+		ID:                   m.ID.Hex(),
+		Name:                 m.Name,
+		Description:          m.Description,
+		MasterAddress:        m.MasterAddress.String(),
+		Requirements:         requirements,
+		Capacity:             m.Capacity,
+		MemberCount:          m.MemberCount,
+		CurrentPortfolio:     currentPortfolio,
+		DefaultMemberAddress: defaultMember.InjectiveAddress.String(),
 	}
 }
 
