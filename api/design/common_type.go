@@ -38,6 +38,7 @@ var Guild = Type("Guild", func() {
 	Field(7, "capacity", Int)
 	Field(8, "member_count", Int)
 	Field(9, "current_portfolio", SingleGuildPortfolio)
+	Field(10, "default_member_address", String)
 
 	Required("id")
 	Required("name")
@@ -47,6 +48,7 @@ var Guild = Type("Guild", func() {
 	Required("staking_requirement")
 	Required("capacity")
 	Required("member_count")
+	Required("default_member_address")
 })
 
 var Balance = Type("Balance", func() {
