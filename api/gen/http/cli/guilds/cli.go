@@ -283,7 +283,7 @@ Get a single guild base on ID
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-single-guild --guild-id "Quo dolorem aut officiis omnis."
+    %[1]s guilds-service get-single-guild --guild-id "Ipsa omnis."
 `, os.Args[0])
 }
 
@@ -294,7 +294,7 @@ Get all members a given guild (include default member)
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-members --guild-id "In eaque recusandae qui culpa id aut."
+    %[1]s guilds-service get-guild-members --guild-id "Dolore atque aperiam officiis necessitatibus dicta est."
 `, os.Args[0])
 }
 
@@ -305,7 +305,7 @@ Get master address of given guild
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-master-address --guild-id "Dicta est aut nihil quia quo eligendi."
+    %[1]s guilds-service get-guild-master-address --guild-id "Eum vel quia nemo et placeat."
 `, os.Args[0])
 }
 
@@ -316,7 +316,7 @@ Get default guild member
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-default-member --guild-id "Commodi soluta dolores aut."
+    %[1]s guilds-service get-guild-default-member --guild-id "Alias at magnam ut magnam."
 `, os.Args[0])
 }
 
@@ -329,10 +329,10 @@ Enter the guild: Should supply public_key, message, signature in base64
 
 Example:
     %[1]s guilds-service enter-guild --body '{
-      "message": "Et placeat id.",
-      "public_key": "Harum eum vel quia.",
-      "signature": "At quasi necessitatibus maxime enim."
-   }' --guild-id "Id alias at magnam ut."
+      "message": "Provident odio deserunt.",
+      "public_key": "Iste eaque nesciunt.",
+      "signature": "Enim ab enim similique ipsa ut voluptatem."
+   }' --guild-id "Labore incidunt molestiae cum error voluptatem."
 `, os.Args[0])
 }
 
@@ -345,10 +345,10 @@ Enter the guild: Should supply public_key, message, signature in base64
 
 Example:
     %[1]s guilds-service leave-guild --body '{
-      "message": "Voluptatem ut labore.",
-      "public_key": "Ab enim similique ipsa.",
-      "signature": "Molestiae cum."
-   }' --guild-id "Voluptatem autem animi corrupti."
+      "message": "Nulla et ipsum autem inventore sed maxime.",
+      "public_key": "Et eaque qui.",
+      "signature": "Magnam dolorem nostrum velit non ipsa."
+   }' --guild-id "Autem est sit nesciunt ea et velit."
 `, os.Args[0])
 }
 
@@ -359,7 +359,7 @@ Get the guild markets
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-markets --guild-id "Veritatis molestias iusto."
+    %[1]s guilds-service get-guild-markets --guild-id "Cum vel voluptas voluptatibus molestiae possimus."
 `, os.Args[0])
 }
 
@@ -372,7 +372,7 @@ Get the guild markets
     -end-time INT64: 
 
 Example:
-    %[1]s guilds-service get-guild-portfolios --guild-id "Magnam dolorem nostrum velit non ipsa." --start-time 8528018350153521747 --end-time 5685294770704805443
+    %[1]s guilds-service get-guild-portfolios --guild-id "Accusantium modi." --start-time 5028863164679081464 --end-time 4392618078200310795
 `, os.Args[0])
 }
 
@@ -383,7 +383,7 @@ Get current account member status
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-info --injective-address "Cum cumque."
+    %[1]s guilds-service get-account-info --injective-address "Ab sequi quasi dolores et repellat odio."
 `, os.Args[0])
 }
 
@@ -394,7 +394,7 @@ Get current account portfolio snapshot
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-portfolio --injective-address "Cum vel voluptas voluptatibus molestiae possimus."
+    %[1]s guilds-service get-account-portfolio --injective-address "Et commodi necessitatibus at magni doloribus consequuntur."
 `, os.Args[0])
 }
 
@@ -407,6 +407,6 @@ Get current account portfolios snapshots all the time
     -end-time INT64: 
 
 Example:
-    %[1]s guilds-service get-account-portfolios --injective-address "Accusantium modi." --start-time 5028863164679081464 --end-time 4392618078200310795
+    %[1]s guilds-service get-account-portfolios --injective-address "Assumenda recusandae in odio est." --start-time 4825428882259966840 --end-time 8962513835541784180
 `, os.Args[0])
 }

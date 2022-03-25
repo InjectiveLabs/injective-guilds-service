@@ -201,15 +201,16 @@ type GetSingleGuildResult struct {
 
 // Guild info
 type Guild struct {
-	ID                 string
-	Name               string
-	Description        string
-	MasterAddress      string
-	Requirements       []*Requirement
-	StakingRequirement string
-	Capacity           int
-	MemberCount        int
-	CurrentPortfolio   *SingleGuildPortfolio
+	ID                   string
+	Name                 string
+	Description          string
+	MasterAddress        string
+	Requirements         []*Requirement
+	StakingRequirement   string
+	Capacity             int
+	MemberCount          int
+	CurrentPortfolio     *SingleGuildPortfolio
+	DefaultMemberAddress string
 }
 
 // Guild member metadata

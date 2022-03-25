@@ -934,13 +934,14 @@ func marshalGuildsserviceGuildToGuildResponseBody(v *guildsservice.Guild) *Guild
 		return nil
 	}
 	res := &GuildResponseBody{
-		ID:                 v.ID,
-		Name:               v.Name,
-		Description:        v.Description,
-		MasterAddress:      v.MasterAddress,
-		StakingRequirement: v.StakingRequirement,
-		Capacity:           v.Capacity,
-		MemberCount:        v.MemberCount,
+		ID:                   v.ID,
+		Name:                 v.Name,
+		Description:          v.Description,
+		MasterAddress:        v.MasterAddress,
+		StakingRequirement:   v.StakingRequirement,
+		Capacity:             v.Capacity,
+		MemberCount:          v.MemberCount,
+		DefaultMemberAddress: v.DefaultMemberAddress,
 	}
 	if v.Requirements != nil {
 		res.Requirements = make([]*RequirementResponseBody, len(v.Requirements))

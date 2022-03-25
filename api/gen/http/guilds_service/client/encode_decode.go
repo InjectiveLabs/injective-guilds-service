@@ -1245,13 +1245,14 @@ func unmarshalGuildResponseBodyToGuildsserviceGuild(v *GuildResponseBody) *guild
 		return nil
 	}
 	res := &guildsservice.Guild{
-		ID:                 *v.ID,
-		Name:               *v.Name,
-		Description:        *v.Description,
-		MasterAddress:      *v.MasterAddress,
-		StakingRequirement: *v.StakingRequirement,
-		Capacity:           *v.Capacity,
-		MemberCount:        *v.MemberCount,
+		ID:                   *v.ID,
+		Name:                 *v.Name,
+		Description:          *v.Description,
+		MasterAddress:        *v.MasterAddress,
+		StakingRequirement:   *v.StakingRequirement,
+		Capacity:             *v.Capacity,
+		MemberCount:          *v.MemberCount,
+		DefaultMemberAddress: *v.DefaultMemberAddress,
 	}
 	res.Requirements = make([]*guildsservice.Requirement, len(v.Requirements))
 	for i, val := range v.Requirements {

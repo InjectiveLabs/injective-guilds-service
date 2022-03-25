@@ -560,15 +560,16 @@ type GetAccountPortfoliosInternalResponseBody struct {
 
 // GuildResponseBody is used to define fields on response body types.
 type GuildResponseBody struct {
-	ID                 string                            `form:"id" json:"id" xml:"id"`
-	Name               string                            `form:"name" json:"name" xml:"name"`
-	Description        string                            `form:"description" json:"description" xml:"description"`
-	MasterAddress      string                            `form:"master_address" json:"master_address" xml:"master_address"`
-	Requirements       []*RequirementResponseBody        `form:"requirements" json:"requirements" xml:"requirements"`
-	StakingRequirement string                            `form:"staking_requirement" json:"staking_requirement" xml:"staking_requirement"`
-	Capacity           int                               `form:"capacity" json:"capacity" xml:"capacity"`
-	MemberCount        int                               `form:"member_count" json:"member_count" xml:"member_count"`
-	CurrentPortfolio   *SingleGuildPortfolioResponseBody `form:"current_portfolio,omitempty" json:"current_portfolio,omitempty" xml:"current_portfolio,omitempty"`
+	ID                   string                            `form:"id" json:"id" xml:"id"`
+	Name                 string                            `form:"name" json:"name" xml:"name"`
+	Description          string                            `form:"description" json:"description" xml:"description"`
+	MasterAddress        string                            `form:"master_address" json:"master_address" xml:"master_address"`
+	Requirements         []*RequirementResponseBody        `form:"requirements" json:"requirements" xml:"requirements"`
+	StakingRequirement   string                            `form:"staking_requirement" json:"staking_requirement" xml:"staking_requirement"`
+	Capacity             int                               `form:"capacity" json:"capacity" xml:"capacity"`
+	MemberCount          int                               `form:"member_count" json:"member_count" xml:"member_count"`
+	CurrentPortfolio     *SingleGuildPortfolioResponseBody `form:"current_portfolio,omitempty" json:"current_portfolio,omitempty" xml:"current_portfolio,omitempty"`
+	DefaultMemberAddress string                            `form:"default_member_address" json:"default_member_address" xml:"default_member_address"`
 }
 
 // RequirementResponseBody is used to define fields on response body types.
