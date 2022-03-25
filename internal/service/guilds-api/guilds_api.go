@@ -272,20 +272,38 @@ func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address s
 	}, nil
 }
 
+func (s *service) getLatestGuildPortfolio(ctx context.Context, guildID string) (*model.GuildPortfolio, error) {
+	limit := int64(1)
+	portfolios, err := s.dbSvc.ListGuildPortfolios(ctx, model.GuildPortfoliosFilter{
+		GuildID: guildID,
+		Limit:   &limit,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(portfolios) == 0 {
+		return nil, errors.New("portfolio not found")
+	}
+
+	return portfolios[0], nil
+}
+
 func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapshot *model.AccountPortfolio) (*qualificationResult, error) {
 	if snapshot == nil {
 		return nil, fmt.Errorf("no snapshot found to check")
 	}
 
-	// TODO: Check this
-	// for _, b := range snapshot.Balances {
-	// 	if b.AvailableBalance != b.TotalBalance {
-	// 		return &qualificationResult{
-	// 			status: StatusUnqualified,
-	// 			detail: fmt.Sprintf("Denom %s has available balance != total balance", b.Denom),
-	// 		}, nil
-	// 	}
-	// }
+	// get latest portfolio to have price in usd, we will compare min price with this snapshot
+	portfolio, err := s.getLatestGuildPortfolio(ctx, guild.ID.Hex())
+	if err != nil {
+		return nil, fmt.Errorf("get latest portfolio err: %w", err)
+	}
+
+	denomToUsdPrice := make(map[string]float64)
+	for _, b := range portfolio.Balances {
+		denomToUsdPrice[b.Denom] = b.PriceUSD
+	}
 
 	denomToDecimal := make(map[string]int)
 	for _, market := range guild.Markets {
@@ -303,6 +321,7 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 		denomToMinAmount[req.Denom] = req.MinAmountUSD
 	}
 
+	// we will use price usd from latest guild portfolio snapshot
 	for _, b := range snapshot.Balances {
 		availBalance, _ := decimal.NewFromString(b.AvailableBalance.String())
 		dec, exist := denomToDecimal[b.Denom]
@@ -315,7 +334,12 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 			return nil, fmt.Errorf("failed check denom not belongs to market")
 		}
 
-		usdInDecimal := decimal.NewFromFloat(b.PriceUSD)
+		priceUsd, exist := denomToUsdPrice[b.Denom]
+		if !exist {
+			return nil, fmt.Errorf("failed to check denom price in usd")
+		}
+
+		usdInDecimal := decimal.NewFromFloat(priceUsd)
 		availBalanceFloat := availBalance.Shift(int32(dec)).Mul(usdInDecimal)
 		if !availBalanceFloat.GreaterThanOrEqual(decimal.NewFromFloat(min)) {
 			return &qualificationResult{
