@@ -142,6 +142,7 @@ func (s *MongoImpl) ListGuildPortfolios(
 	if err != nil {
 		return nil, err
 	}
+	defer cur.Close(ctx)
 
 	for cur.Next(ctx) {
 		var guildPortfolio model.GuildPortfolio
@@ -211,6 +212,7 @@ func (s *MongoImpl) ListAllGuilds(ctx context.Context) (result []*model.Guild, e
 	if err != nil {
 		return nil, err
 	}
+	defer cur.Close(ctx)
 
 	for cur.Next(ctx) {
 		var guild model.Guild
@@ -284,6 +286,7 @@ func (s *MongoImpl) ListGuildMembers(
 	if err != nil {
 		return nil, err
 	}
+	defer cur.Close(ctx)
 
 	for cur.Next(ctx) {
 		var member model.GuildMember
@@ -490,6 +493,7 @@ func (s *MongoImpl) ListAccountPortfolios(
 	if err != nil {
 		return nil, err
 	}
+	defer cur.Close(ctx)
 
 	for cur.Next(ctx) {
 		var portfolio model.AccountPortfolio
@@ -523,6 +527,7 @@ func (s *MongoImpl) ListDenomCoinID(ctx context.Context) (result []*model.DenomC
 	if err != nil {
 		return nil, err
 	}
+	defer cur.Close(ctx)
 
 	for cur.Next(ctx) {
 		var denomCoinID model.DenomCoinID

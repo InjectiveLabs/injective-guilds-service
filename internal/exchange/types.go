@@ -59,6 +59,17 @@ type Grants struct {
 	}
 }
 
+type BankAccountBalances struct {
+	Balances []struct {
+		Denom  string `json:"denom"`
+		Amount string `json:"amount"`
+	}
+	Pagination struct {
+		NextKey *string `json:"next_key"`
+		Total   string  `json:"total"`
+	}
+}
+
 type CoinPrice struct {
 	ID                           string
 	Symbol                       string
@@ -98,7 +109,7 @@ type DataProvider interface {
 	GetPositions(ctx context.Context, subaccount string) ([]*DerivativePosition, error)
 
 	GetGrants(ctx context.Context, granter, grantee string) (*Grants, error)
-	GetBankBalance(ctx context.Context, address string)
+	GetBankBalance(ctx context.Context, address string) (*BankAccountBalances, error)
 	GetPriceUSD(ctx context.Context, coinIDs []string) ([]*CoinPrice, error)
 
 	GetExchangeConn() *grpc.ClientConn

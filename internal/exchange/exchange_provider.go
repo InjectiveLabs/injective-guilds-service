@@ -331,6 +331,33 @@ func (p *exchangeProvider) GetPriceUSD(ctx context.Context, coinIDs []string) ([
 	return res.Data, nil
 }
 
+func (p *exchangeProvider) GetBankBalance(ctx context.Context, address string) (*BankAccountBalances, error) {
+	url := fmt.Sprintf(
+		"%s/cosmos/bank/v1beta1/balances/%s?pagination.limit=1000",
+		p.lcdAddr, address,
+	)
+	resp, err := p.httpClient.Get(url)
+
+	if err != nil {
+		return nil, fmt.Errorf("request err: %w", err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("request err: bad status: %d", resp.StatusCode)
+	}
+
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read request body err: %w", err)
+	}
+
+	var res BankAccountBalances
+	if err := json.Unmarshal(bytes, &res); err != nil {
+		return nil, fmt.Errorf("failed marshal bankaccount resp: %w", err)
+	}
+
+	return &res, nil
+}
+
 func (p *exchangeProvider) GetExchangeConn() *grpc.ClientConn {
 	return p.conn
 }

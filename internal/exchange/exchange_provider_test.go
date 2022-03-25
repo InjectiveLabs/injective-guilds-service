@@ -66,3 +66,28 @@ func TestAssetPrice(t *testing.T) {
 		fmt.Printf("Price of '%s': %.4f\n", p.ID, p.CurrentPrice)
 	}
 }
+
+func TestBankAccount(t *testing.T) {
+	// integration test
+	provider, err := NewExchangeProvider("sentry2.injective.network:9910", "https://lcd.injective.network", "https://k8s.mainnet.asset.injective.network")
+	if err != nil {
+		panic(err)
+	}
+	defer provider.Close()
+
+	ctx := context.Background()
+	bank, err := provider.GetBankBalance(
+		ctx,
+		"inj14au322k9munkmx5wrchz9q30juf5wjgz2cfqku",
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	assert.Equal(t, len(bank.Balances), 1)
+	for _, b := range bank.Balances {
+		assert.Equal(t, "inj", b.Denom)
+	}
+
+	fmt.Printf("%#v\n", bank)
+}
