@@ -195,6 +195,11 @@ func (s *MongoImpl) DeleteGuild(ctx context.Context, guildID string) error {
 			return nil, err
 		}
 
+		_, err = s.guildPortfolioCollection.DeleteMany(ctx, filter)
+		if err != nil {
+			return nil, err
+		}
+
 		return nil, nil
 	})
 	return err
