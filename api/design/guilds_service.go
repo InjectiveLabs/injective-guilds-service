@@ -151,6 +151,7 @@ var _ = Service("GuildsService", func() {
 
 		Result(func() {
 			Field(1, "join_status", String)
+			Field(2, "message", String)
 		})
 
 		HTTP(func() {

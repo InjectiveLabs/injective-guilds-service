@@ -20,9 +20,17 @@ const (
 	expirationTimeLayout = "2006-01-02T15:04:05Z"
 	ActionEnterGuild     = "enter-guild"
 	ActionLeaveGuild     = "leave-guild"
+
+	StatusQualified   = "qualified"
+	StatusUnqualified = "unqualified"
 )
 
 type GuildsAPI = svc.Service
+
+type qualificationResult struct {
+	status string
+	detail string
+}
 
 type service struct {
 	svc.Service
@@ -192,12 +200,12 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 	}, nil
 }
 
-func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address string) (bool, error) {
+func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address string) (*qualificationResult, error) {
 	// Currently, we can handle it on UI (discussed) => skip for now
 	// check grants
 	grants, err := s.exchangeProvider.GetGrants(ctx, address, guild.MasterAddress.String())
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	msgToExpiration := make(map[string]time.Time)
@@ -205,7 +213,7 @@ func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address s
 	for _, g := range grants.Grants {
 		t, err := time.Parse(expirationTimeLayout, g.Expiration)
 		if err != nil {
-			return false, fmt.Errorf("time parse err: %w", err)
+			return nil, fmt.Errorf("time parse err: %w", err)
 		}
 
 		msgToExpiration[g.Authorization.Msg] = t
@@ -216,25 +224,36 @@ func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address s
 	for _, expectedMsg := range s.grants {
 		expiration, ok := msgToExpiration[expectedMsg]
 		if !ok {
-			return false, nil
+			return &qualificationResult{
+				status: StatusUnqualified,
+				detail: fmt.Sprintf("%s not granted", expectedMsg),
+			}, nil
 		}
 
 		if expiration.Before(now) {
-			return false, nil
+			return &qualificationResult{
+				status: StatusUnqualified,
+				detail: fmt.Sprintf("%s expired", expectedMsg),
+			}, nil
 		}
 	}
 
-	return true, nil
+	return &qualificationResult{
+		status: StatusQualified,
+	}, nil
 }
 
-func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapshot *model.AccountPortfolio) (bool, error) {
+func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapshot *model.AccountPortfolio) (*qualificationResult, error) {
 	if snapshot == nil {
-		return false, fmt.Errorf("no snapshot found to check")
+		return nil, fmt.Errorf("no snapshot found to check")
 	}
 
 	for _, b := range snapshot.Balances {
 		if b.AvailableBalance != b.TotalBalance {
-			return false, nil
+			return &qualificationResult{
+				status: StatusUnqualified,
+				detail: fmt.Sprintf("Denom %s has available balance != total balance", b.Denom),
+			}, nil
 		}
 	}
 
@@ -258,31 +277,39 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 		availBalance, _ := decimal.NewFromString(b.AvailableBalance.String())
 		dec, exist := denomToDecimal[b.Denom]
 		if !exist {
-			return false, fmt.Errorf("failed check denom not belongs to market")
+			return nil, fmt.Errorf("failed check denom not belongs to market")
 		}
 
 		min, exist := denomToMinAmount[b.Denom]
 		if !exist {
-			return false, fmt.Errorf("failed check denom not belongs to market")
+			return nil, fmt.Errorf("failed check denom not belongs to market")
 		}
 
 		usdInDecimal := decimal.NewFromFloat(b.PriceUSD)
 		if !availBalance.Shift(int32(dec)).Mul(usdInDecimal).GreaterThanOrEqual(decimal.NewFromFloat(min)) {
-			return false, nil
+			return &qualificationResult{
+				status: StatusUnqualified,
+				detail: fmt.Sprintf("", b.Denom),
+			}, nil
 		}
 	}
-	return true, nil
+	return &qualificationResult{
+		status: StatusQualified,
+	}, nil
 }
 
-func (s *service) isAddressQualified(ctx context.Context, guild *model.Guild, portfolio *model.AccountPortfolio) (bool, error) {
+func (s *service) checkAddressQualification(
+	ctx context.Context,
+	guild *model.Guild, portfolio *model.AccountPortfolio,
+) (*qualificationResult, error) {
 	// Total Balance == Available Balance
-	balanceQualified, err := s.checkBalances(ctx, guild, portfolio)
+	balanceQualifyResult, err := s.checkBalances(ctx, guild, portfolio)
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	if !balanceQualified {
-		return false, nil
+	if balanceQualifyResult.status != StatusQualified {
+		return balanceQualifyResult, nil
 	}
 
 	return s.checkGrants(ctx, guild, portfolio.InjectiveAddress.String())
@@ -318,15 +345,16 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	}
 
 	// check qualification
-	qualified, err := s.isAddressQualified(ctx, guild, portfolio)
+	qualificationResult, err := s.checkAddressQualification(ctx, guild, portfolio)
 	if err != nil {
 		return nil, svc.MakeInternal(fmt.Errorf("check qualification error: %w", err))
 	}
 
-	if !qualified {
-		joinStatus := "address_not_qualified"
+	if qualificationResult.status != StatusQualified {
+		joinStatus := "not_qualified"
 		return &svc.EnterGuildResult{
 			JoinStatus: &joinStatus,
+			Message:    &qualificationResult.detail,
 		}, nil
 	}
 
