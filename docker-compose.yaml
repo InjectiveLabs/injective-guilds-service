@@ -27,6 +27,7 @@ services:
     ports:
       - "9930:9930"
     command: injective-guilds api
+    restart: always
   injective-guilds-process:
     build:
       context: .
@@ -52,12 +53,14 @@ services:
       - GUILDS_PROCESS_STATSD_MOCKING=false
       - GUILDS_PROCESS_STATSD_DISABLED=false
     command: injective-guilds process
+    restart: always
   # below mongo config is for dev/test env, not for production
   # we already have a mongo setup on production
   mongo:
     container_name: mongo
     image: mongo
     command: mongod --replSet rs0 --port 27017 --bind_ip 0.0.0.0
+    restart: always
   # # a trick to setup mongo replset
   mongo-setup:
     container_name: mongo-setup
@@ -66,5 +69,6 @@ services:
     image: mongo
     entrypoint: |
       bash -c "sleep 10 && mongo --host mongo:27017 --eval 'rs.initiate()'"
+
 
   
