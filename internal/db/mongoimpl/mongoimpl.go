@@ -391,7 +391,7 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 			}
 		}
 
-		upsertRes, err := s.upsertMember(sessCtx, guildObjectID, address, false)
+		upsertRes, err := s.upsertMember(sessCtx, guildObjectID, address, isDefaultMember)
 		if err != nil {
 			return nil, err
 		}
