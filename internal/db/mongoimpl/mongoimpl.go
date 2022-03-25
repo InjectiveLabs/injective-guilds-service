@@ -271,6 +271,10 @@ func (s *MongoImpl) ListGuildMembers(
 		filter["is_default_guild_member"] = *memberFilter.IsDefaultMember
 	}
 
+	if memberFilter.InjectiveAddress != nil {
+		filter["injective_address"] = *memberFilter.InjectiveAddress
+	}
+
 	cur, err := s.memberCollection.Find(ctx, filter)
 	if err != nil {
 		return nil, err

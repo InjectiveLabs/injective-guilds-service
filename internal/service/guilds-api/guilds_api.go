@@ -149,6 +149,7 @@ func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMemb
 	var result []*svc.GuildMember
 	for _, m := range members {
 		result = append(result, &svc.GuildMember{
+			GuildID:              &payload.GuildID,
 			InjectiveAddress:     m.InjectiveAddress.String(),
 			IsDefaultGuildMember: m.IsDefaultGuildMember,
 			Since:                m.Since.UnixMilli(),
@@ -470,6 +471,37 @@ func (s *service) GetGuildPortfolios(
 
 	return &svc.GetGuildPortfoliosResult{
 		Portfolios: result,
+	}, nil
+}
+
+func (s *service) GetAccountInfo(ctx context.Context, payload *svc.GetAccountInfoPayload) (res *svc.GetAccountInfoResult, err error) {
+	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
+	if err != nil {
+		return nil, svc.MakeInvalidArg(err)
+	}
+
+	members, err := s.dbSvc.ListGuildMembers(
+		ctx,
+		model.MemberFilter{
+			InjectiveAddress: &model.Address{AccAddress: address},
+		},
+	)
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	if len(members) == 0 {
+		return nil, svc.MakeNotFound(errors.New("member not found"))
+	}
+	guildID := members[0].GuildID.Hex()
+
+	return &svc.GetAccountInfoResult{
+		Data: &svc.GuildMember{
+			GuildID:              &guildID,
+			InjectiveAddress:     members[0].InjectiveAddress.String(),
+			IsDefaultGuildMember: members[0].IsDefaultGuildMember,
+			Since:                members[0].Since.UnixMilli(),
+		},
 	}, nil
 }
 

@@ -132,8 +132,9 @@ func (h *Hash) UnmarshalBSONValue(t bsontype.Type, src []byte) error {
 }
 
 type MemberFilter struct {
-	GuildID         *string
-	IsDefaultMember *bool
+	GuildID          *string
+	IsDefaultMember  *bool
+	InjectiveAddress *Address
 }
 
 type AccountPortfoliosFilter struct {
