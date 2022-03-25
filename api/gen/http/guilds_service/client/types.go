@@ -69,6 +69,7 @@ type GetGuildDefaultMemberResponseBody struct {
 // "EnterGuild" endpoint HTTP response body.
 type EnterGuildResponseBody struct {
 	JoinStatus *string `form:"join_status,omitempty" json:"join_status,omitempty" xml:"join_status,omitempty"`
+	Message    *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
 // LeaveGuildResponseBody is the type of the "GuildsService" service
@@ -808,6 +809,7 @@ func NewGetGuildDefaultMemberInternal(body *GetGuildDefaultMemberInternalRespons
 func NewEnterGuildResultOK(body *EnterGuildResponseBody) *guildsservice.EnterGuildResult {
 	v := &guildsservice.EnterGuildResult{
 		JoinStatus: body.JoinStatus,
+		Message:    body.Message,
 	}
 
 	return v

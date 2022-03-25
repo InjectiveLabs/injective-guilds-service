@@ -73,6 +73,7 @@ type EnterGuildPayload struct {
 // method.
 type EnterGuildResult struct {
 	JoinStatus *string
+	Message    *string
 }
 
 // GetAccountPortfolioPayload is the payload type of the GuildsService service
