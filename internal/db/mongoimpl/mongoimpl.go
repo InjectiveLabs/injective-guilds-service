@@ -138,7 +138,7 @@ func (s *MongoImpl) ListGuildPortfolios(
 		opt.SetLimit(*filter.Limit)
 	}
 
-	cur, err := s.guildPortfolioCollection.Find(ctx, portfolioFilter)
+	cur, err := s.guildPortfolioCollection.Find(ctx, portfolioFilter, opt)
 	if err != nil {
 		return nil, err
 	}
@@ -374,23 +374,21 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 
 	_, err = s.session.WithTransaction(ctx, func(sessCtx mongo.SessionContext) (interface{}, error) {
 		// add default member don't require any check
-		// just insert
-		if isDefaultMember {
-			return s.upsertMember(sessCtx, guildObjectID, address, true)
-		}
+		// just insert (check for unique only)
+		if !isDefaultMember {
+			guild, err := s.GetSingleGuild(sessCtx, guildID)
+			if err != nil {
+				return nil, err
+			}
 
-		guild, err := s.GetSingleGuild(sessCtx, guildID)
-		if err != nil {
-			return nil, err
-		}
+			if guild.MemberCount >= guild.Capacity {
+				return nil, ErrMemberExceedCap
+			}
 
-		if guild.MemberCount >= guild.Capacity {
-			return nil, ErrMemberExceedCap
-		}
-
-		_, err = s.adjustMemberCount(sessCtx, guildObjectID, 1)
-		if err != nil {
-			return nil, err
+			_, err = s.adjustMemberCount(sessCtx, guildObjectID, 1)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		upsertRes, err := s.upsertMember(sessCtx, guildObjectID, address, false)
@@ -398,7 +396,7 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 			return nil, err
 		}
 
-		// duplicate member
+		// duplicate member, revert transaction
 		if upsertRes.UpsertedCount < 1 {
 			return nil, ErrAlreadyMember
 		}
