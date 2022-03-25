@@ -7,6 +7,7 @@ import (
 	"time"
 
 	svc "github.com/InjectiveLabs/injective-guilds-service/api/gen/guilds_service"
+	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
@@ -302,6 +303,12 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 
 	denomToUsdPrice := make(map[string]float64)
 	for _, b := range portfolio.Balances {
+		if _, isStableCoin := config.StableCoinDenoms[b.Denom]; isStableCoin {
+			// price can be fluctuate, let's consider it 1$ for stable coins
+			denomToUsdPrice[b.Denom] = 1
+			continue
+		}
+
 		denomToUsdPrice[b.Denom] = b.PriceUSD
 	}
 

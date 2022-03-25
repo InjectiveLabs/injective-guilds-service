@@ -42,7 +42,13 @@ func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio, defau
 
 	for _, req := range m.Requirements {
 		displayDecimal := config.DenomConfigs[req.Denom].DisplayDecimal
-		priceUsd := denomToUsdPrice[req.Denom]
+
+		var priceUsd float64
+		if _, isStableCoin := config.StableCoinDenoms[req.Denom]; isStableCoin {
+			priceUsd = 1
+		}
+		priceUsd = denomToUsdPrice[req.Denom]
+
 		roundedFloat := math.Ceil(req.MinAmountUSD*math.Pow10(displayDecimal)/priceUsd) / math.Pow10(displayDecimal)
 
 		// IMPORTANT: We want to return price, so that FE and BE will be sync-ed for result

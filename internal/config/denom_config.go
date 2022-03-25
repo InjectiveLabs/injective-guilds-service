@@ -5,7 +5,13 @@ type DenomConfig struct {
 	DisplayDecimal int
 }
 
-// First we can hardcoded it
+var StableCoinDenoms = map[string]bool{
+	"peggy0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48":                      true,
+	"peggy0xdAC17F958D2ee523a2206206994597C13D831ec7":                      true,
+	"ibc/B448C0CA358B958301D328CCDC5D5AD642FC30A6D3AE106FF721DB315F3DDE5C": true,
+}
+
+// First we can hardcod it
 // TODO: Use env var+json
 var DenomConfigs = map[string]*DenomConfig{
 	"peggy0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2": {
@@ -80,6 +86,4 @@ var DenomConfigs = map[string]*DenomConfig{
 		CoinID:         "chihuahua-token",
 		DisplayDecimal: 1,
 	},
-	// TODO: Add quant-network to support list
-	// "peggy0x4a220E6096B25EADb88358cb44068A3248254675":                      "quant-network",
 }
