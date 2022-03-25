@@ -58,12 +58,15 @@ paths:
                   name: Numquam id et quaerat cum in.
                   requirements:
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
-                  staking_requirement: Hic accusantium est nobis dolores.
+                  staking_requirement: Accusantium est nobis dolores.
                 - capacity: 2512663142570487689
                   current_portfolio:
                     balances:
@@ -100,12 +103,15 @@ paths:
                   name: Numquam id et quaerat cum in.
                   requirements:
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
-                  staking_requirement: Hic accusantium est nobis dolores.
+                  staking_requirement: Accusantium est nobis dolores.
                 - capacity: 2512663142570487689
                   current_portfolio:
                     balances:
@@ -142,12 +148,15 @@ paths:
                   name: Numquam id et quaerat cum in.
                   requirements:
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
-                  staking_requirement: Hic accusantium est nobis dolores.
+                  staking_requirement: Accusantium est nobis dolores.
         "404":
           description: Not Found response.
           content:
@@ -228,12 +237,15 @@ paths:
                   name: Numquam id et quaerat cum in.
                   requirements:
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
                   - denom: Ut at ut suscipit iste.
+                    min_amount: 0.050755328491643874
                     min_amount_usd: 0.9039688716427491
-                  staking_requirement: Hic accusantium est nobis dolores.
+                  staking_requirement: Accusantium est nobis dolores.
         "404":
           description: Not Found response.
           content:
@@ -1234,12 +1246,15 @@ components:
             name: Numquam id et quaerat cum in.
             requirements:
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
-            staking_requirement: Hic accusantium est nobis dolores.
+            staking_requirement: Accusantium est nobis dolores.
           - capacity: 2512663142570487689
             current_portfolio:
               balances:
@@ -1276,12 +1291,15 @@ components:
             name: Numquam id et quaerat cum in.
             requirements:
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
-            staking_requirement: Hic accusantium est nobis dolores.
+            staking_requirement: Accusantium est nobis dolores.
           - capacity: 2512663142570487689
             current_portfolio:
               balances:
@@ -1318,12 +1336,15 @@ components:
             name: Numquam id et quaerat cum in.
             requirements:
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
-            staking_requirement: Hic accusantium est nobis dolores.
+            staking_requirement: Accusantium est nobis dolores.
           - capacity: 2512663142570487689
             current_portfolio:
               balances:
@@ -1360,12 +1381,15 @@ components:
             name: Numquam id et quaerat cum in.
             requirements:
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
             - denom: Ut at ut suscipit iste.
+              min_amount: 0.050755328491643874
               min_amount_usd: 0.9039688716427491
-            staking_requirement: Hic accusantium est nobis dolores.
+            staking_requirement: Accusantium est nobis dolores.
       example:
         guilds:
         - capacity: 2512663142570487689
@@ -1404,12 +1428,15 @@ components:
           name: Numquam id et quaerat cum in.
           requirements:
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
-          staking_requirement: Hic accusantium est nobis dolores.
+          staking_requirement: Accusantium est nobis dolores.
         - capacity: 2512663142570487689
           current_portfolio:
             balances:
@@ -1446,12 +1473,15 @@ components:
           name: Numquam id et quaerat cum in.
           requirements:
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
-          staking_requirement: Hic accusantium est nobis dolores.
+          staking_requirement: Accusantium est nobis dolores.
         - capacity: 2512663142570487689
           current_portfolio:
             balances:
@@ -1488,12 +1518,15 @@ components:
           name: Numquam id et quaerat cum in.
           requirements:
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
-          staking_requirement: Hic accusantium est nobis dolores.
+          staking_requirement: Accusantium est nobis dolores.
     GetGuildDefaultMemberResponseBody:
       type: object
       properties:
@@ -1789,18 +1822,21 @@ components:
           name: Numquam id et quaerat cum in.
           requirements:
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
-          staking_requirement: Hic accusantium est nobis dolores.
+          staking_requirement: Accusantium est nobis dolores.
     Guild:
       type: object
       properties:
         capacity:
           type: integer
-          example: 6269602539982193775
+          example: 8354601168732132634
           format: int64
         current_portfolio:
           $ref: '#/components/schemas/SingleGuildPortfolio'
@@ -1815,7 +1851,7 @@ components:
           example: Ut quia earum et dolorem.
         member_count:
           type: integer
-          example: 1916588750400223988
+          example: 396397476764118609
           format: int64
         name:
           type: string
@@ -1826,12 +1862,17 @@ components:
             $ref: '#/components/schemas/Requirement'
           example:
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
           - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
+            min_amount_usd: 0.9039688716427491
+          - denom: Ut at ut suscipit iste.
+            min_amount: 0.050755328491643874
             min_amount_usd: 0.9039688716427491
         staking_requirement:
           type: string
-          example: Similique facere.
+          example: Saepe est.
       description: Guild info
       example:
         capacity: 2557028788014307751
@@ -1870,10 +1911,13 @@ components:
         name: Recusandae est.
         requirements:
         - denom: Ut at ut suscipit iste.
+          min_amount: 0.050755328491643874
           min_amount_usd: 0.9039688716427491
         - denom: Ut at ut suscipit iste.
+          min_amount: 0.050755328491643874
           min_amount_usd: 0.9039688716427491
         - denom: Ut at ut suscipit iste.
+          min_amount: 0.050755328491643874
           min_amount_usd: 0.9039688716427491
         staking_requirement: Non officiis dolorem nesciunt.
       required:
@@ -1941,16 +1985,22 @@ components:
         denom:
           type: string
           example: Et neque assumenda magnam est eum.
+        min_amount:
+          type: number
+          example: 0.5856792033752247
+          format: double
         min_amount_usd:
           type: number
           example: 0.5923565644459623
           format: double
       example:
-        denom: Fugit iusto.
-        min_amount_usd: 0.182101647713958
+        denom: Iusto suscipit recusandae.
+        min_amount: 0.5693727289843876
+        min_amount_usd: 0.12057120194200992
       required:
       - denom
       - min_amount_usd
+      - min_amount
     SingleAccountPortfolio:
       type: object
       properties:
@@ -2039,7 +2089,7 @@ components:
             unrealized_pnl: Consequatur quaerat voluptatem ullam aliquid.
         guild_id:
           type: string
-          example: Reiciendis perspiciatis enim velit aliquam nisi.
+          example: Velit aliquam nisi.
         updated_at:
           type: integer
           example: 5168430348541739488

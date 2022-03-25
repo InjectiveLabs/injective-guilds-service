@@ -575,6 +575,7 @@ type GuildResponseBody struct {
 type RequirementResponseBody struct {
 	Denom        string  `form:"denom" json:"denom" xml:"denom"`
 	MinAmountUsd float64 `form:"min_amount_usd" json:"min_amount_usd" xml:"min_amount_usd"`
+	MinAmount    float64 `form:"min_amount" json:"min_amount" xml:"min_amount"`
 }
 
 // SingleGuildPortfolioResponseBody is used to define fields on response body

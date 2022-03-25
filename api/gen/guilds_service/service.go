@@ -246,6 +246,7 @@ type Market struct {
 type Requirement struct {
 	Denom        string
 	MinAmountUsd float64
+	MinAmount    float64
 }
 
 // Single account portfio snapshot

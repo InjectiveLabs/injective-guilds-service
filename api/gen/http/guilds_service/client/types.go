@@ -575,6 +575,7 @@ type GuildResponseBody struct {
 type RequirementResponseBody struct {
 	Denom        *string  `form:"denom,omitempty" json:"denom,omitempty" xml:"denom,omitempty"`
 	MinAmountUsd *float64 `form:"min_amount_usd,omitempty" json:"min_amount_usd,omitempty" xml:"min_amount_usd,omitempty"`
+	MinAmount    *float64 `form:"min_amount,omitempty" json:"min_amount,omitempty" xml:"min_amount,omitempty"`
 }
 
 // SingleGuildPortfolioResponseBody is used to define fields on response body
@@ -1878,6 +1879,9 @@ func ValidateRequirementResponseBody(body *RequirementResponseBody) (err error) 
 	}
 	if body.MinAmountUsd == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("min_amount_usd", "body"))
+	}
+	if body.MinAmount == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("min_amount", "body"))
 	}
 	return
 }

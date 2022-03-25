@@ -1271,6 +1271,7 @@ func unmarshalRequirementResponseBodyToGuildsserviceRequirement(v *RequirementRe
 	res := &guildsservice.Requirement{
 		Denom:        *v.Denom,
 		MinAmountUsd: *v.MinAmountUsd,
+		MinAmount:    *v.MinAmount,
 	}
 
 	return res

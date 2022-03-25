@@ -962,6 +962,7 @@ func marshalGuildsserviceRequirementToRequirementResponseBody(v *guildsservice.R
 	res := &RequirementResponseBody{
 		Denom:        v.Denom,
 		MinAmountUsd: v.MinAmountUsd,
+		MinAmount:    v.MinAmount,
 	}
 
 	return res
