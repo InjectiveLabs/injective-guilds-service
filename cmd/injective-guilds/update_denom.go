@@ -114,5 +114,5 @@ func actionUpdateDenom() {
 	if len(notFoundCoins) > 0 {
 		log.Fatal("asset-price desn't support: ", notFoundCoins)
 	}
-	fmt.Println("!!! Bravo, all coins price are supported")
+	log.Info("!!! Bravo, all coins price are supported")
 }

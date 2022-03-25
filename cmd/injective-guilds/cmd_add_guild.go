@@ -192,7 +192,6 @@ func addGuildAction() {
 		})
 
 		floats, err := toMinAmounts((*spotRequirements)[srIndex])
-		fmt.Println("floats:", floats)
 		denomIDToMinAmount[market.GetBaseDenom()] += floats[0]
 		denomIDToMinAmount[market.GetQuoteDenom()] += floats[1]
 

@@ -240,6 +240,27 @@ var _ = Service("GuildsService", func() {
 		})
 	})
 
+	Method("GetAccountInfo", func() {
+		Description("Get current account member status")
+
+		Payload(func() {
+			Field(1, "injective_address", String)
+			Required("injective_address")
+		})
+
+		Result(func() {
+			Field(1, "data", GuildMember)
+		})
+
+		HTTP(func() {
+			GET("/members/{injective_address}")
+
+			Response(CodeOK)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
+		})
+	})
+
 	Method("GetAccountPortfolio", func() {
 		Description("Get current account portfolio snapshot")
 

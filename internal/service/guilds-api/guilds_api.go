@@ -151,7 +151,7 @@ func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMemb
 		result = append(result, &svc.GuildMember{
 			InjectiveAddress:     m.InjectiveAddress.String(),
 			IsDefaultGuildMember: m.IsDefaultGuildMember,
-			Since:                m.Since.UnixMicro(),
+			Since:                m.Since.UnixMilli(),
 		})
 	}
 
@@ -248,14 +248,15 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 		return nil, fmt.Errorf("no snapshot found to check")
 	}
 
-	for _, b := range snapshot.Balances {
-		if b.AvailableBalance != b.TotalBalance {
-			return &qualificationResult{
-				status: StatusUnqualified,
-				detail: fmt.Sprintf("Denom %s has available balance != total balance", b.Denom),
-			}, nil
-		}
-	}
+	// TODO: Check this
+	// for _, b := range snapshot.Balances {
+	// 	if b.AvailableBalance != b.TotalBalance {
+	// 		return &qualificationResult{
+	// 			status: StatusUnqualified,
+	// 			detail: fmt.Sprintf("Denom %s has available balance != total balance", b.Denom),
+	// 		}, nil
+	// 	}
+	// }
 
 	denomToDecimal := make(map[string]int)
 	for _, market := range guild.Markets {
@@ -286,10 +287,11 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 		}
 
 		usdInDecimal := decimal.NewFromFloat(b.PriceUSD)
-		if !availBalance.Shift(int32(dec)).Mul(usdInDecimal).GreaterThanOrEqual(decimal.NewFromFloat(min)) {
+		availBalanceFloat := availBalance.Shift(int32(dec)).Mul(usdInDecimal)
+		if !availBalanceFloat.GreaterThanOrEqual(decimal.NewFromFloat(min)) {
 			return &qualificationResult{
 				status: StatusUnqualified,
-				detail: fmt.Sprintf("", b.Denom),
+				detail: fmt.Sprintf("%s has balance %s <= min %.2f", b.Denom, availBalanceFloat.String(), min),
 			}, nil
 		}
 	}
