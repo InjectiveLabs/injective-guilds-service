@@ -46,8 +46,9 @@ func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio, defau
 		var priceUsd float64
 		if _, isStableCoin := config.StableCoinDenoms[req.Denom]; isStableCoin {
 			priceUsd = 1
+		} else {
+			priceUsd = denomToUsdPrice[req.Denom]
 		}
-		priceUsd = denomToUsdPrice[req.Denom]
 
 		roundedFloat := math.Ceil(req.MinAmountUSD*math.Pow10(displayDecimal)/priceUsd) / math.Pow10(displayDecimal)
 
