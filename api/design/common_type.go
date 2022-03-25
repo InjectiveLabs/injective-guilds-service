@@ -35,7 +35,7 @@ var Guild = Type("Guild", func() {
 	Field(6, "staking_requirement", String)
 	Field(7, "capacity", Int)
 	Field(8, "member_count", Int)
-	Field(9, "current_portfolio", ArrayOf(Balance))
+	Field(9, "current_portfolio", SingleGuildPortfolio)
 
 	Required("id")
 	Required("name")

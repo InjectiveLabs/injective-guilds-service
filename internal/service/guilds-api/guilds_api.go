@@ -400,11 +400,10 @@ func (s *service) GetGuildPortfolios(
 		GuildID: payload.GuildID,
 	}
 
-	var to = time.Now()
 	if payload.EndTime != nil {
-		to = time.UnixMilli(*payload.EndTime)
+		to := time.UnixMilli(*payload.EndTime)
+		filter.EndTime = &to
 	}
-	filter.StartTime = &to
 
 	var from time.Time
 	if payload.StartTime != nil {
