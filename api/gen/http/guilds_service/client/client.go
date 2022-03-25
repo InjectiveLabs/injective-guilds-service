@@ -53,6 +53,10 @@ type Client struct {
 	// GetGuildPortfolios endpoint.
 	GetGuildPortfoliosDoer goahttp.Doer
 
+	// GetAccountInfo Doer is the HTTP client used to make requests to the
+	// GetAccountInfo endpoint.
+	GetAccountInfoDoer goahttp.Doer
+
 	// GetAccountPortfolio Doer is the HTTP client used to make requests to the
 	// GetAccountPortfolio endpoint.
 	GetAccountPortfolioDoer goahttp.Doer
@@ -94,6 +98,7 @@ func NewClient(
 		LeaveGuildDoer:            doer,
 		GetGuildMarketsDoer:       doer,
 		GetGuildPortfoliosDoer:    doer,
+		GetAccountInfoDoer:        doer,
 		GetAccountPortfolioDoer:   doer,
 		GetAccountPortfoliosDoer:  doer,
 		CORSDoer:                  doer,
@@ -286,6 +291,25 @@ func (c *Client) GetGuildPortfolios() goa.Endpoint {
 		resp, err := c.GetGuildPortfoliosDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("GuildsService", "GetGuildPortfolios", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// GetAccountInfo returns an endpoint that makes HTTP requests to the
+// GuildsService service GetAccountInfo server.
+func (c *Client) GetAccountInfo() goa.Endpoint {
+	var (
+		decodeResponse = DecodeGetAccountInfoResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildGetAccountInfoRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.GetAccountInfoDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("GuildsService", "GetAccountInfo", err)
 		}
 		return decodeResponse(resp)
 	}

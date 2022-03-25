@@ -925,6 +925,103 @@ func DecodeGetGuildPortfoliosResponse(decoder func(*http.Response) goahttp.Decod
 	}
 }
 
+// BuildGetAccountInfoRequest instantiates a HTTP request object with method
+// and path set to call the "GuildsService" service "GetAccountInfo" endpoint
+func (c *Client) BuildGetAccountInfoRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	var (
+		injectiveAddress string
+	)
+	{
+		p, ok := v.(*guildsservice.GetAccountInfoPayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("GuildsService", "GetAccountInfo", "*guildsservice.GetAccountInfoPayload", v)
+		}
+		injectiveAddress = p.InjectiveAddress
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetAccountInfoGuildsServicePath(injectiveAddress)}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("GuildsService", "GetAccountInfo", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeGetAccountInfoResponse returns a decoder for responses returned by the
+// GuildsService GetAccountInfo endpoint. restoreBody controls whether the
+// response body should be restored after having been read.
+// DecodeGetAccountInfoResponse may return the following errors:
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
+//	- error: internal error
+func DecodeGetAccountInfoResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body GetAccountInfoResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("GuildsService", "GetAccountInfo", err)
+			}
+			err = ValidateGetAccountInfoResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetAccountInfo", err)
+			}
+			res := NewGetAccountInfoResultOK(&body)
+			return res, nil
+		case http.StatusNotFound:
+			var (
+				body GetAccountInfoNotFoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("GuildsService", "GetAccountInfo", err)
+			}
+			err = ValidateGetAccountInfoNotFoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetAccountInfo", err)
+			}
+			return nil, NewGetAccountInfoNotFound(&body)
+		case http.StatusInternalServerError:
+			var (
+				body GetAccountInfoInternalResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("GuildsService", "GetAccountInfo", err)
+			}
+			err = ValidateGetAccountInfoInternalResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetAccountInfo", err)
+			}
+			return nil, NewGetAccountInfoInternal(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("GuildsService", "GetAccountInfo", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildGetAccountPortfolioRequest instantiates a HTTP request object with
 // method and path set to call the "GuildsService" service
 // "GetAccountPortfolio" endpoint
@@ -1224,6 +1321,7 @@ func unmarshalGuildMemberResponseBodyToGuildsserviceGuildMember(v *GuildMemberRe
 		InjectiveAddress:     *v.InjectiveAddress,
 		IsDefaultGuildMember: *v.IsDefaultGuildMember,
 		Since:                *v.Since,
+		GuildID:              v.GuildID,
 	}
 
 	return res

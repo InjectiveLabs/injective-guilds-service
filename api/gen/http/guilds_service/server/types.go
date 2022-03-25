@@ -90,6 +90,12 @@ type GetGuildPortfoliosResponseBody struct {
 	Portfolios []*SingleGuildPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
 }
 
+// GetAccountInfoResponseBody is the type of the "GuildsService" service
+// "GetAccountInfo" endpoint HTTP response body.
+type GetAccountInfoResponseBody struct {
+	Data *GuildMemberResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
+}
+
 // GetAccountPortfolioResponseBody is the type of the "GuildsService" service
 // "GetAccountPortfolio" endpoint HTTP response body.
 type GetAccountPortfolioResponseBody struct {
@@ -438,6 +444,44 @@ type GetGuildPortfoliosInternalResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
+// GetAccountInfoNotFoundResponseBody is the type of the "GuildsService"
+// service "GetAccountInfo" endpoint HTTP response body for the "not_found"
+// error.
+type GetAccountInfoNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// GetAccountInfoInternalResponseBody is the type of the "GuildsService"
+// service "GetAccountInfo" endpoint HTTP response body for the "internal"
+// error.
+type GetAccountInfoInternalResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
 // GetAccountPortfolioNotFoundResponseBody is the type of the "GuildsService"
 // service "GetAccountPortfolio" endpoint HTTP response body for the
 // "not_found" error.
@@ -553,9 +597,10 @@ type BalanceResponseBody struct {
 
 // GuildMemberResponseBody is used to define fields on response body types.
 type GuildMemberResponseBody struct {
-	InjectiveAddress     string `form:"injective_address" json:"injective_address" xml:"injective_address"`
-	IsDefaultGuildMember bool   `form:"is_default_guild_member" json:"is_default_guild_member" xml:"is_default_guild_member"`
-	Since                int64  `form:"since" json:"since" xml:"since"`
+	InjectiveAddress     string  `form:"injective_address" json:"injective_address" xml:"injective_address"`
+	IsDefaultGuildMember bool    `form:"is_default_guild_member" json:"is_default_guild_member" xml:"is_default_guild_member"`
+	Since                int64   `form:"since" json:"since" xml:"since"`
+	GuildID              *string `form:"guild_id,omitempty" json:"guild_id,omitempty" xml:"guild_id,omitempty"`
 }
 
 // MarketResponseBody is used to define fields on response body types.
@@ -670,6 +715,16 @@ func NewGetGuildPortfoliosResponseBody(res *guildsservice.GetGuildPortfoliosResu
 		for i, val := range res.Portfolios {
 			body.Portfolios[i] = marshalGuildsserviceSingleGuildPortfolioToSingleGuildPortfolioResponseBody(val)
 		}
+	}
+	return body
+}
+
+// NewGetAccountInfoResponseBody builds the HTTP response body from the result
+// of the "GetAccountInfo" endpoint of the "GuildsService" service.
+func NewGetAccountInfoResponseBody(res *guildsservice.GetAccountInfoResult) *GetAccountInfoResponseBody {
+	body := &GetAccountInfoResponseBody{}
+	if res.Data != nil {
+		body.Data = marshalGuildsserviceGuildMemberToGuildMemberResponseBody(res.Data)
 	}
 	return body
 }
@@ -955,6 +1010,34 @@ func NewGetGuildPortfoliosInternalResponseBody(res *goa.ServiceError) *GetGuildP
 	return body
 }
 
+// NewGetAccountInfoNotFoundResponseBody builds the HTTP response body from the
+// result of the "GetAccountInfo" endpoint of the "GuildsService" service.
+func NewGetAccountInfoNotFoundResponseBody(res *goa.ServiceError) *GetAccountInfoNotFoundResponseBody {
+	body := &GetAccountInfoNotFoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewGetAccountInfoInternalResponseBody builds the HTTP response body from the
+// result of the "GetAccountInfo" endpoint of the "GuildsService" service.
+func NewGetAccountInfoInternalResponseBody(res *goa.ServiceError) *GetAccountInfoInternalResponseBody {
+	body := &GetAccountInfoInternalResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
 // NewGetAccountPortfolioNotFoundResponseBody builds the HTTP response body
 // from the result of the "GetAccountPortfolio" endpoint of the "GuildsService"
 // service.
@@ -1093,6 +1176,15 @@ func NewGetGuildPortfoliosPayload(guildID string, startTime *int64, endTime *int
 	v.GuildID = guildID
 	v.StartTime = startTime
 	v.EndTime = endTime
+
+	return v
+}
+
+// NewGetAccountInfoPayload builds a GuildsService service GetAccountInfo
+// endpoint payload.
+func NewGetAccountInfoPayload(injectiveAddress string) *guildsservice.GetAccountInfoPayload {
+	v := &guildsservice.GetAccountInfoPayload{}
+	v.InjectiveAddress = injectiveAddress
 
 	return v
 }

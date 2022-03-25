@@ -24,6 +24,7 @@ type Endpoints struct {
 	LeaveGuild            goa.Endpoint
 	GetGuildMarkets       goa.Endpoint
 	GetGuildPortfolios    goa.Endpoint
+	GetAccountInfo        goa.Endpoint
 	GetAccountPortfolio   goa.Endpoint
 	GetAccountPortfolios  goa.Endpoint
 }
@@ -40,6 +41,7 @@ func NewEndpoints(s Service) *Endpoints {
 		LeaveGuild:            NewLeaveGuildEndpoint(s),
 		GetGuildMarkets:       NewGetGuildMarketsEndpoint(s),
 		GetGuildPortfolios:    NewGetGuildPortfoliosEndpoint(s),
+		GetAccountInfo:        NewGetAccountInfoEndpoint(s),
 		GetAccountPortfolio:   NewGetAccountPortfolioEndpoint(s),
 		GetAccountPortfolios:  NewGetAccountPortfoliosEndpoint(s),
 	}
@@ -57,6 +59,7 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.LeaveGuild = m(e.LeaveGuild)
 	e.GetGuildMarkets = m(e.GetGuildMarkets)
 	e.GetGuildPortfolios = m(e.GetGuildPortfolios)
+	e.GetAccountInfo = m(e.GetAccountInfo)
 	e.GetAccountPortfolio = m(e.GetAccountPortfolio)
 	e.GetAccountPortfolios = m(e.GetAccountPortfolios)
 }
@@ -138,6 +141,15 @@ func NewGetGuildPortfoliosEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*GetGuildPortfoliosPayload)
 		return s.GetGuildPortfolios(ctx, p)
+	}
+}
+
+// NewGetAccountInfoEndpoint returns an endpoint function that calls the method
+// "GetAccountInfo" of service "GuildsService".
+func NewGetAccountInfoEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*GetAccountInfoPayload)
+		return s.GetAccountInfo(ctx, p)
 	}
 }
 

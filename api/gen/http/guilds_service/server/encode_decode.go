@@ -691,6 +691,76 @@ func EncodeGetGuildPortfoliosError(encoder func(context.Context, http.ResponseWr
 	}
 }
 
+// EncodeGetAccountInfoResponse returns an encoder for responses returned by
+// the GuildsService GetAccountInfo endpoint.
+func EncodeGetAccountInfoResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*guildsservice.GetAccountInfoResult)
+		enc := encoder(ctx, w)
+		body := NewGetAccountInfoResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeGetAccountInfoRequest returns a decoder for requests sent to the
+// GuildsService GetAccountInfo endpoint.
+func DecodeGetAccountInfoRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			injectiveAddress string
+
+			params = mux.Vars(r)
+		)
+		injectiveAddress = params["injective_address"]
+		payload := NewGetAccountInfoPayload(injectiveAddress)
+
+		return payload, nil
+	}
+}
+
+// EncodeGetAccountInfoError returns an encoder for errors returned by the
+// GetAccountInfo GuildsService endpoint.
+func EncodeGetAccountInfoError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		var en ErrorNamer
+		if !errors.As(v, &en) {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "not_found":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewGetAccountInfoNotFoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "internal":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewGetAccountInfoInternalResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusInternalServerError)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
 // EncodeGetAccountPortfolioResponse returns an encoder for responses returned
 // by the GuildsService GetAccountPortfolio endpoint.
 func EncodeGetAccountPortfolioResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
@@ -944,6 +1014,7 @@ func marshalGuildsserviceGuildMemberToGuildMemberResponseBody(v *guildsservice.G
 		InjectiveAddress:     v.InjectiveAddress,
 		IsDefaultGuildMember: v.IsDefaultGuildMember,
 		Since:                v.Since,
+		GuildID:              v.GuildID,
 	}
 
 	return res

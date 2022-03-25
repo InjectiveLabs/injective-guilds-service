@@ -33,6 +33,8 @@ type Service interface {
 	GetGuildMarkets(context.Context, *GetGuildMarketsPayload) (res *GetGuildMarketsResult, err error)
 	// Get the guild markets
 	GetGuildPortfolios(context.Context, *GetGuildPortfoliosPayload) (res *GetGuildPortfoliosResult, err error)
+	// Get current account member status
+	GetAccountInfo(context.Context, *GetAccountInfoPayload) (res *GetAccountInfoResult, err error)
 	// Get current account portfolio snapshot
 	GetAccountPortfolio(context.Context, *GetAccountPortfolioPayload) (res *GetAccountPortfolioResult, err error)
 	// Get current account portfolios snapshots all the time
@@ -47,7 +49,7 @@ const ServiceName = "GuildsService"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [11]string{"GetAllGuilds", "GetSingleGuild", "GetGuildMembers", "GetGuildMasterAddress", "GetGuildDefaultMember", "EnterGuild", "LeaveGuild", "GetGuildMarkets", "GetGuildPortfolios", "GetAccountPortfolio", "GetAccountPortfolios"}
+var MethodNames = [12]string{"GetAllGuilds", "GetSingleGuild", "GetGuildMembers", "GetGuildMasterAddress", "GetGuildDefaultMember", "EnterGuild", "LeaveGuild", "GetGuildMarkets", "GetGuildPortfolios", "GetAccountInfo", "GetAccountPortfolio", "GetAccountPortfolios"}
 
 type Balance struct {
 	Denom            string
@@ -74,6 +76,18 @@ type EnterGuildPayload struct {
 type EnterGuildResult struct {
 	JoinStatus *string
 	Message    *string
+}
+
+// GetAccountInfoPayload is the payload type of the GuildsService service
+// GetAccountInfo method.
+type GetAccountInfoPayload struct {
+	InjectiveAddress string
+}
+
+// GetAccountInfoResult is the result type of the GuildsService service
+// GetAccountInfo method.
+type GetAccountInfoResult struct {
+	Data *GuildMember
 }
 
 // GetAccountPortfolioPayload is the payload type of the GuildsService service
@@ -203,6 +217,7 @@ type GuildMember struct {
 	InjectiveAddress     string
 	IsDefaultGuildMember bool
 	Since                int64
+	GuildID              *string
 }
 
 // LeaveGuildPayload is the payload type of the GuildsService service

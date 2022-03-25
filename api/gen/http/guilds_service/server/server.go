@@ -29,6 +29,7 @@ type Server struct {
 	LeaveGuild            http.Handler
 	GetGuildMarkets       http.Handler
 	GetGuildPortfolios    http.Handler
+	GetAccountInfo        http.Handler
 	GetAccountPortfolio   http.Handler
 	GetAccountPortfolios  http.Handler
 	CORS                  http.Handler
@@ -76,6 +77,7 @@ func New(
 			{"LeaveGuild", "DELETE", "/guilds/{guildID}/member"},
 			{"GetGuildMarkets", "GET", "/guilds/{guildID}/markets"},
 			{"GetGuildPortfolios", "GET", "/guilds/{guildID}/portfolios"},
+			{"GetAccountInfo", "GET", "/members/{injective_address}"},
 			{"GetAccountPortfolio", "GET", "/members/{injective_address}/portfolio"},
 			{"GetAccountPortfolios", "GET", "/members/{injective_address}/portfolios"},
 			{"CORS", "OPTIONS", "/guilds"},
@@ -86,6 +88,7 @@ func New(
 			{"CORS", "OPTIONS", "/guilds/{guildID}/member"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/markets"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/portfolios"},
+			{"CORS", "OPTIONS", "/members/{injective_address}"},
 			{"CORS", "OPTIONS", "/members/{injective_address}/portfolio"},
 			{"CORS", "OPTIONS", "/members/{injective_address}/portfolios"},
 		},
@@ -98,6 +101,7 @@ func New(
 		LeaveGuild:            NewLeaveGuildHandler(e.LeaveGuild, mux, decoder, encoder, errhandler, formatter),
 		GetGuildMarkets:       NewGetGuildMarketsHandler(e.GetGuildMarkets, mux, decoder, encoder, errhandler, formatter),
 		GetGuildPortfolios:    NewGetGuildPortfoliosHandler(e.GetGuildPortfolios, mux, decoder, encoder, errhandler, formatter),
+		GetAccountInfo:        NewGetAccountInfoHandler(e.GetAccountInfo, mux, decoder, encoder, errhandler, formatter),
 		GetAccountPortfolio:   NewGetAccountPortfolioHandler(e.GetAccountPortfolio, mux, decoder, encoder, errhandler, formatter),
 		GetAccountPortfolios:  NewGetAccountPortfoliosHandler(e.GetAccountPortfolios, mux, decoder, encoder, errhandler, formatter),
 		CORS:                  NewCORSHandler(),
@@ -118,6 +122,7 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.LeaveGuild = m(s.LeaveGuild)
 	s.GetGuildMarkets = m(s.GetGuildMarkets)
 	s.GetGuildPortfolios = m(s.GetGuildPortfolios)
+	s.GetAccountInfo = m(s.GetAccountInfo)
 	s.GetAccountPortfolio = m(s.GetAccountPortfolio)
 	s.GetAccountPortfolios = m(s.GetAccountPortfolios)
 	s.CORS = m(s.CORS)
@@ -134,6 +139,7 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountLeaveGuildHandler(mux, h.LeaveGuild)
 	MountGetGuildMarketsHandler(mux, h.GetGuildMarkets)
 	MountGetGuildPortfoliosHandler(mux, h.GetGuildPortfolios)
+	MountGetAccountInfoHandler(mux, h.GetAccountInfo)
 	MountGetAccountPortfolioHandler(mux, h.GetAccountPortfolio)
 	MountGetAccountPortfoliosHandler(mux, h.GetAccountPortfolios)
 	MountCORSHandler(mux, h.CORS)
@@ -598,6 +604,57 @@ func NewGetGuildPortfoliosHandler(
 	})
 }
 
+// MountGetAccountInfoHandler configures the mux to serve the "GuildsService"
+// service "GetAccountInfo" endpoint.
+func MountGetAccountInfoHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := HandleGuildsServiceOrigin(h).(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/members/{injective_address}", f)
+}
+
+// NewGetAccountInfoHandler creates a HTTP handler which loads the HTTP request
+// and calls the "GuildsService" service "GetAccountInfo" endpoint.
+func NewGetAccountInfoHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeGetAccountInfoRequest(mux, decoder)
+		encodeResponse = EncodeGetAccountInfoResponse(encoder)
+		encodeError    = EncodeGetAccountInfoError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "GetAccountInfo")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "GuildsService")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
 // MountGetAccountPortfolioHandler configures the mux to serve the
 // "GuildsService" service "GetAccountPortfolio" endpoint.
 func MountGetAccountPortfolioHandler(mux goahttp.Muxer, h http.Handler) {
@@ -713,6 +770,7 @@ func MountCORSHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("OPTIONS", "/guilds/{guildID}/member", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/markets", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/portfolios", h.ServeHTTP)
+	mux.Handle("OPTIONS", "/members/{injective_address}", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/members/{injective_address}/portfolio", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/members/{injective_address}/portfolios", h.ServeHTTP)
 }

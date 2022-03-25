@@ -56,6 +56,11 @@ func GetGuildPortfoliosGuildsServicePath(guildID string) string {
 	return fmt.Sprintf("/guilds/%v/portfolios", guildID)
 }
 
+// GetAccountInfoGuildsServicePath returns the URL path to the GuildsService service GetAccountInfo HTTP endpoint.
+func GetAccountInfoGuildsServicePath(injectiveAddress string) string {
+	return fmt.Sprintf("/members/%v", injectiveAddress)
+}
+
 // GetAccountPortfolioGuildsServicePath returns the URL path to the GuildsService service GetAccountPortfolio HTTP endpoint.
 func GetAccountPortfolioGuildsServicePath(injectiveAddress string) string {
 	return fmt.Sprintf("/members/%v/portfolio", injectiveAddress)

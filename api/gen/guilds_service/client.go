@@ -24,12 +24,13 @@ type Client struct {
 	LeaveGuildEndpoint            goa.Endpoint
 	GetGuildMarketsEndpoint       goa.Endpoint
 	GetGuildPortfoliosEndpoint    goa.Endpoint
+	GetAccountInfoEndpoint        goa.Endpoint
 	GetAccountPortfolioEndpoint   goa.Endpoint
 	GetAccountPortfoliosEndpoint  goa.Endpoint
 }
 
 // NewClient initializes a "GuildsService" service client given the endpoints.
-func NewClient(getAllGuilds, getSingleGuild, getGuildMembers, getGuildMasterAddress, getGuildDefaultMember, enterGuild, leaveGuild, getGuildMarkets, getGuildPortfolios, getAccountPortfolio, getAccountPortfolios goa.Endpoint) *Client {
+func NewClient(getAllGuilds, getSingleGuild, getGuildMembers, getGuildMasterAddress, getGuildDefaultMember, enterGuild, leaveGuild, getGuildMarkets, getGuildPortfolios, getAccountInfo, getAccountPortfolio, getAccountPortfolios goa.Endpoint) *Client {
 	return &Client{
 		GetAllGuildsEndpoint:          getAllGuilds,
 		GetSingleGuildEndpoint:        getSingleGuild,
@@ -40,6 +41,7 @@ func NewClient(getAllGuilds, getSingleGuild, getGuildMembers, getGuildMasterAddr
 		LeaveGuildEndpoint:            leaveGuild,
 		GetGuildMarketsEndpoint:       getGuildMarkets,
 		GetGuildPortfoliosEndpoint:    getGuildPortfolios,
+		GetAccountInfoEndpoint:        getAccountInfo,
 		GetAccountPortfolioEndpoint:   getAccountPortfolio,
 		GetAccountPortfoliosEndpoint:  getAccountPortfolios,
 	}
@@ -140,6 +142,17 @@ func (c *Client) GetGuildPortfolios(ctx context.Context, p *GetGuildPortfoliosPa
 		return
 	}
 	return ires.(*GetGuildPortfoliosResult), nil
+}
+
+// GetAccountInfo calls the "GetAccountInfo" endpoint of the "GuildsService"
+// service.
+func (c *Client) GetAccountInfo(ctx context.Context, p *GetAccountInfoPayload) (res *GetAccountInfoResult, err error) {
+	var ires interface{}
+	ires, err = c.GetAccountInfoEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*GetAccountInfoResult), nil
 }
 
 // GetAccountPortfolio calls the "GetAccountPortfolio" endpoint of the
