@@ -59,6 +59,8 @@ services:
   mongo:
     container_name: mongo
     image: mongo:latest
+    volumes:
+      - ./var/mongo/db:/data/db
     command: mongod --replSet rs0 --port 27017 --bind_ip 0.0.0.0
     restart: always
   # # a trick to setup mongo replset
