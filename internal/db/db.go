@@ -21,7 +21,7 @@ type DBService interface {
 	AddMember(ctx context.Context, guildID string, address model.Address, isDefaultMember bool) error
 	RemoveMember(ctx context.Context, guildID string, address model.Address) error
 	GetAccountPortfolio(ctx context.Context, address model.Address) (*model.AccountPortfolio, error)
-	ListAccountPortfolios(ctx context.Context, address model.Address) ([]*model.AccountPortfolio, error)
+	ListAccountPortfolios(ctx context.Context, filter model.AccountPortfoliosFilter) ([]*model.AccountPortfolio, error)
 	AddAccountPortfolios(ctx context.Context, portfolios []*model.AccountPortfolio) error
 
 	// denom

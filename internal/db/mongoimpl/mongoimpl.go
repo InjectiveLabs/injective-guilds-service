@@ -119,7 +119,7 @@ func (s *MongoImpl) ListGuildPortfolios(
 		"guild_id": guildObjectID,
 	}
 
-	var updatedAtFilter bson.M
+	var updatedAtFilter = make(bson.M)
 	if filter.StartTime != nil {
 		updatedAtFilter["$gte"] = *filter.StartTime
 	}
@@ -138,7 +138,7 @@ func (s *MongoImpl) ListGuildPortfolios(
 		opt.SetLimit(*filter.Limit)
 	}
 
-	cur, err := s.guildPortfolioCollection.Find(ctx, filter)
+	cur, err := s.guildPortfolioCollection.Find(ctx, portfolioFilter)
 	if err != nil {
 		return nil, err
 	}
@@ -455,16 +455,29 @@ func (s *MongoImpl) GetAccountPortfolio(ctx context.Context, address model.Addre
 
 func (s *MongoImpl) ListAccountPortfolios(
 	ctx context.Context,
-	address model.Address,
+	filter model.AccountPortfoliosFilter,
 ) (result []*model.AccountPortfolio, err error) {
-	filter := bson.M{
-		"injective_address": address.String(),
+	portfolioFilter := bson.M{
+		"injective_address": filter.InjectiveAddress.String(),
+	}
+
+	var updatedAtFilter = make(bson.M)
+	if filter.StartTime != nil {
+		updatedAtFilter["$gte"] = *filter.StartTime
+	}
+
+	if filter.EndTime != nil {
+		updatedAtFilter["$lt"] = *filter.EndTime
+	}
+
+	if len(updatedAtFilter) > 0 {
+		portfolioFilter["updated_at"] = updatedAtFilter
 	}
 
 	opts := &options.FindOptions{}
 	opts.SetSort(bson.M{"updated_at": -1})
 
-	cur, err := s.accountPortfolioCollection.Find(ctx, filter, opts)
+	cur, err := s.accountPortfolioCollection.Find(ctx, portfolioFilter, opts)
 	if err != nil {
 		return nil, err
 	}

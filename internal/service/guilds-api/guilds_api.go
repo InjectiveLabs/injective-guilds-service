@@ -74,13 +74,11 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 	var (
 		result []*svc.Guild
 		limit  = int64(1)
-		to     = time.Now()
 	)
 
 	for _, g := range guilds {
 		portfolios, err := s.dbSvc.ListGuildPortfolios(ctx, model.GuildPortfoliosFilter{
 			GuildID: g.ID.Hex(),
-			EndTime: &to,
 			Limit:   &limit,
 		})
 		if err != nil {
@@ -91,6 +89,7 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 		if len(portfolios) > 0 {
 			portfolio = *portfolios[0]
 		}
+
 		result = append(result, modelGuildToResponse(g, &portfolio))
 	}
 
@@ -489,9 +488,21 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 		return nil, svc.MakeInvalidArg(err)
 	}
 
-	portfolios, err := s.dbSvc.ListAccountPortfolios(ctx, model.Address{
-		AccAddress: address,
-	})
+	filter := model.AccountPortfoliosFilter{
+		InjectiveAddress: model.Address{AccAddress: address},
+	}
+
+	if payload.EndTime != nil {
+		endTime := time.UnixMilli(*payload.EndTime)
+		filter.EndTime = &endTime
+	}
+
+	if payload.StartTime != nil {
+		startTime := time.UnixMilli(*payload.StartTime)
+		filter.StartTime = &startTime
+	}
+
+	portfolios, err := s.dbSvc.ListAccountPortfolios(ctx, filter)
 	if err != nil {
 		return nil, svc.MakeInternal(err)
 	}
