@@ -44,13 +44,6 @@ type DerivativePosition struct {
 	MarkPrice  decimal.Decimal
 }
 
-type SpotMarket struct {
-	MarketID string
-}
-
-type DerivativeMarket struct {
-}
-
 type Grants struct {
 	Grants []struct {
 		Authorization struct {
@@ -104,10 +97,8 @@ type DataProvider interface {
 	GetDerivativeOrders(ctx context.Context, marketIDs []string, subaccount string) ([]*DerivativeOrder, error)
 	GetPositions(ctx context.Context, subaccount string) ([]*DerivativePosition, error)
 
-	GetSpotMarket(ctx context.Context, marketID string) (*SpotMarket, error)
-	GetDerivativeMarket(ctx context.Context, marketID string) (*DerivativeMarket, error)
-
 	GetGrants(ctx context.Context, granter, grantee string) (*Grants, error)
+	GetBankBalance(ctx context.Context, address string)
 	GetPriceUSD(ctx context.Context, coinIDs []string) ([]*CoinPrice, error)
 
 	GetExchangeConn() *grpc.ClientConn

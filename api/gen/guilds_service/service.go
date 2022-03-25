@@ -194,7 +194,7 @@ type Guild struct {
 	StakingRequirement string
 	Capacity           int
 	MemberCount        int
-	CurrentPortfolio   []*Balance
+	CurrentPortfolio   *SingleGuildPortfolio
 }
 
 // Guild member metadata

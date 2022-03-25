@@ -40,14 +40,17 @@ func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio) *svc.
 	}
 
 	return &svc.Guild{
-		ID:               m.ID.Hex(),
-		Name:             m.Name,
-		Description:      m.Description,
-		MasterAddress:    m.MasterAddress.String(),
-		Requirements:     requirements,
-		Capacity:         m.Capacity,
-		MemberCount:      m.MemberCount,
-		CurrentPortfolio: balances,
+		ID:            m.ID.Hex(),
+		Name:          m.Name,
+		Description:   m.Description,
+		MasterAddress: m.MasterAddress.String(),
+		Requirements:  requirements,
+		Capacity:      m.Capacity,
+		MemberCount:   m.MemberCount,
+		CurrentPortfolio: &svc.SingleGuildPortfolio{
+			Balances:  balances,
+			UpdatedAt: portfolio.UpdatedAt.UnixMilli(),
+		},
 	}
 }
 

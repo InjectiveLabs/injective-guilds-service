@@ -1161,10 +1161,7 @@ func unmarshalGuildResponseBodyToGuildsserviceGuild(v *GuildResponseBody) *guild
 		res.Requirements[i] = unmarshalRequirementResponseBodyToGuildsserviceRequirement(val)
 	}
 	if v.CurrentPortfolio != nil {
-		res.CurrentPortfolio = make([]*guildsservice.Balance, len(v.CurrentPortfolio))
-		for i, val := range v.CurrentPortfolio {
-			res.CurrentPortfolio[i] = unmarshalBalanceResponseBodyToGuildsserviceBalance(val)
-		}
+		res.CurrentPortfolio = unmarshalSingleGuildPortfolioResponseBodyToGuildsserviceSingleGuildPortfolio(v.CurrentPortfolio)
 	}
 
 	return res
@@ -1182,12 +1179,28 @@ func unmarshalRequirementResponseBodyToGuildsserviceRequirement(v *RequirementRe
 	return res
 }
 
-// unmarshalBalanceResponseBodyToGuildsserviceBalance builds a value of type
-// *guildsservice.Balance from a value of type *BalanceResponseBody.
-func unmarshalBalanceResponseBodyToGuildsserviceBalance(v *BalanceResponseBody) *guildsservice.Balance {
+// unmarshalSingleGuildPortfolioResponseBodyToGuildsserviceSingleGuildPortfolio
+// builds a value of type *guildsservice.SingleGuildPortfolio from a value of
+// type *SingleGuildPortfolioResponseBody.
+func unmarshalSingleGuildPortfolioResponseBodyToGuildsserviceSingleGuildPortfolio(v *SingleGuildPortfolioResponseBody) *guildsservice.SingleGuildPortfolio {
 	if v == nil {
 		return nil
 	}
+	res := &guildsservice.SingleGuildPortfolio{
+		GuildID:   v.GuildID,
+		UpdatedAt: *v.UpdatedAt,
+	}
+	res.Balances = make([]*guildsservice.Balance, len(v.Balances))
+	for i, val := range v.Balances {
+		res.Balances[i] = unmarshalBalanceResponseBodyToGuildsserviceBalance(val)
+	}
+
+	return res
+}
+
+// unmarshalBalanceResponseBodyToGuildsserviceBalance builds a value of type
+// *guildsservice.Balance from a value of type *BalanceResponseBody.
+func unmarshalBalanceResponseBodyToGuildsserviceBalance(v *BalanceResponseBody) *guildsservice.Balance {
 	res := &guildsservice.Balance{
 		Denom:            *v.Denom,
 		TotalBalance:     *v.TotalBalance,
@@ -1225,25 +1238,6 @@ func unmarshalMarketResponseBodyToGuildsserviceMarket(v *MarketResponseBody) *gu
 	res := &guildsservice.Market{
 		MarketID:    *v.MarketID,
 		IsPerpetual: *v.IsPerpetual,
-	}
-
-	return res
-}
-
-// unmarshalSingleGuildPortfolioResponseBodyToGuildsserviceSingleGuildPortfolio
-// builds a value of type *guildsservice.SingleGuildPortfolio from a value of
-// type *SingleGuildPortfolioResponseBody.
-func unmarshalSingleGuildPortfolioResponseBodyToGuildsserviceSingleGuildPortfolio(v *SingleGuildPortfolioResponseBody) *guildsservice.SingleGuildPortfolio {
-	if v == nil {
-		return nil
-	}
-	res := &guildsservice.SingleGuildPortfolio{
-		GuildID:   v.GuildID,
-		UpdatedAt: *v.UpdatedAt,
-	}
-	res.Balances = make([]*guildsservice.Balance, len(v.Balances))
-	for i, val := range v.Balances {
-		res.Balances[i] = unmarshalBalanceResponseBodyToGuildsserviceBalance(val)
 	}
 
 	return res

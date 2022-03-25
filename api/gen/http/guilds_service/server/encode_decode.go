@@ -879,10 +879,7 @@ func marshalGuildsserviceGuildToGuildResponseBody(v *guildsservice.Guild) *Guild
 		}
 	}
 	if v.CurrentPortfolio != nil {
-		res.CurrentPortfolio = make([]*BalanceResponseBody, len(v.CurrentPortfolio))
-		for i, val := range v.CurrentPortfolio {
-			res.CurrentPortfolio[i] = marshalGuildsserviceBalanceToBalanceResponseBody(val)
-		}
+		res.CurrentPortfolio = marshalGuildsserviceSingleGuildPortfolioToSingleGuildPortfolioResponseBody(v.CurrentPortfolio)
 	}
 
 	return res
@@ -900,12 +897,30 @@ func marshalGuildsserviceRequirementToRequirementResponseBody(v *guildsservice.R
 	return res
 }
 
-// marshalGuildsserviceBalanceToBalanceResponseBody builds a value of type
-// *BalanceResponseBody from a value of type *guildsservice.Balance.
-func marshalGuildsserviceBalanceToBalanceResponseBody(v *guildsservice.Balance) *BalanceResponseBody {
+// marshalGuildsserviceSingleGuildPortfolioToSingleGuildPortfolioResponseBody
+// builds a value of type *SingleGuildPortfolioResponseBody from a value of
+// type *guildsservice.SingleGuildPortfolio.
+func marshalGuildsserviceSingleGuildPortfolioToSingleGuildPortfolioResponseBody(v *guildsservice.SingleGuildPortfolio) *SingleGuildPortfolioResponseBody {
 	if v == nil {
 		return nil
 	}
+	res := &SingleGuildPortfolioResponseBody{
+		GuildID:   v.GuildID,
+		UpdatedAt: v.UpdatedAt,
+	}
+	if v.Balances != nil {
+		res.Balances = make([]*BalanceResponseBody, len(v.Balances))
+		for i, val := range v.Balances {
+			res.Balances[i] = marshalGuildsserviceBalanceToBalanceResponseBody(val)
+		}
+	}
+
+	return res
+}
+
+// marshalGuildsserviceBalanceToBalanceResponseBody builds a value of type
+// *BalanceResponseBody from a value of type *guildsservice.Balance.
+func marshalGuildsserviceBalanceToBalanceResponseBody(v *guildsservice.Balance) *BalanceResponseBody {
 	res := &BalanceResponseBody{
 		Denom:            v.Denom,
 		TotalBalance:     v.TotalBalance,
@@ -943,27 +958,6 @@ func marshalGuildsserviceMarketToMarketResponseBody(v *guildsservice.Market) *Ma
 	res := &MarketResponseBody{
 		MarketID:    v.MarketID,
 		IsPerpetual: v.IsPerpetual,
-	}
-
-	return res
-}
-
-// marshalGuildsserviceSingleGuildPortfolioToSingleGuildPortfolioResponseBody
-// builds a value of type *SingleGuildPortfolioResponseBody from a value of
-// type *guildsservice.SingleGuildPortfolio.
-func marshalGuildsserviceSingleGuildPortfolioToSingleGuildPortfolioResponseBody(v *guildsservice.SingleGuildPortfolio) *SingleGuildPortfolioResponseBody {
-	if v == nil {
-		return nil
-	}
-	res := &SingleGuildPortfolioResponseBody{
-		GuildID:   v.GuildID,
-		UpdatedAt: v.UpdatedAt,
-	}
-	if v.Balances != nil {
-		res.Balances = make([]*BalanceResponseBody, len(v.Balances))
-		for i, val := range v.Balances {
-			res.Balances[i] = marshalGuildsserviceBalanceToBalanceResponseBody(val)
-		}
 	}
 
 	return res

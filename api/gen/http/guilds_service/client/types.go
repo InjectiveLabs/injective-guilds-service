@@ -515,21 +515,29 @@ type GetAccountPortfoliosInternalResponseBody struct {
 
 // GuildResponseBody is used to define fields on response body types.
 type GuildResponseBody struct {
-	ID                 *string                    `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
-	Name               *string                    `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-	Description        *string                    `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
-	MasterAddress      *string                    `form:"master_address,omitempty" json:"master_address,omitempty" xml:"master_address,omitempty"`
-	Requirements       []*RequirementResponseBody `form:"requirements,omitempty" json:"requirements,omitempty" xml:"requirements,omitempty"`
-	StakingRequirement *string                    `form:"staking_requirement,omitempty" json:"staking_requirement,omitempty" xml:"staking_requirement,omitempty"`
-	Capacity           *int                       `form:"capacity,omitempty" json:"capacity,omitempty" xml:"capacity,omitempty"`
-	MemberCount        *int                       `form:"member_count,omitempty" json:"member_count,omitempty" xml:"member_count,omitempty"`
-	CurrentPortfolio   []*BalanceResponseBody     `form:"current_portfolio,omitempty" json:"current_portfolio,omitempty" xml:"current_portfolio,omitempty"`
+	ID                 *string                           `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	Name               *string                           `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	Description        *string                           `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+	MasterAddress      *string                           `form:"master_address,omitempty" json:"master_address,omitempty" xml:"master_address,omitempty"`
+	Requirements       []*RequirementResponseBody        `form:"requirements,omitempty" json:"requirements,omitempty" xml:"requirements,omitempty"`
+	StakingRequirement *string                           `form:"staking_requirement,omitempty" json:"staking_requirement,omitempty" xml:"staking_requirement,omitempty"`
+	Capacity           *int                              `form:"capacity,omitempty" json:"capacity,omitempty" xml:"capacity,omitempty"`
+	MemberCount        *int                              `form:"member_count,omitempty" json:"member_count,omitempty" xml:"member_count,omitempty"`
+	CurrentPortfolio   *SingleGuildPortfolioResponseBody `form:"current_portfolio,omitempty" json:"current_portfolio,omitempty" xml:"current_portfolio,omitempty"`
 }
 
 // RequirementResponseBody is used to define fields on response body types.
 type RequirementResponseBody struct {
 	Denom        *string  `form:"denom,omitempty" json:"denom,omitempty" xml:"denom,omitempty"`
 	MinAmountUsd *float64 `form:"min_amount_usd,omitempty" json:"min_amount_usd,omitempty" xml:"min_amount_usd,omitempty"`
+}
+
+// SingleGuildPortfolioResponseBody is used to define fields on response body
+// types.
+type SingleGuildPortfolioResponseBody struct {
+	GuildID   *string                `form:"guild_id,omitempty" json:"guild_id,omitempty" xml:"guild_id,omitempty"`
+	Balances  []*BalanceResponseBody `form:"balances,omitempty" json:"balances,omitempty" xml:"balances,omitempty"`
+	UpdatedAt *int64                 `form:"updated_at,omitempty" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
 }
 
 // BalanceResponseBody is used to define fields on response body types.
@@ -553,14 +561,6 @@ type GuildMemberResponseBody struct {
 type MarketResponseBody struct {
 	MarketID    *string `form:"market_id,omitempty" json:"market_id,omitempty" xml:"market_id,omitempty"`
 	IsPerpetual *bool   `form:"is_perpetual,omitempty" json:"is_perpetual,omitempty" xml:"is_perpetual,omitempty"`
-}
-
-// SingleGuildPortfolioResponseBody is used to define fields on response body
-// types.
-type SingleGuildPortfolioResponseBody struct {
-	GuildID   *string                `form:"guild_id,omitempty" json:"guild_id,omitempty" xml:"guild_id,omitempty"`
-	Balances  []*BalanceResponseBody `form:"balances,omitempty" json:"balances,omitempty" xml:"balances,omitempty"`
-	UpdatedAt *int64                 `form:"updated_at,omitempty" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
 }
 
 // SingleAccountPortfolioResponseBody is used to define fields on response body
@@ -1715,11 +1715,9 @@ func ValidateGuildResponseBody(body *GuildResponseBody) (err error) {
 			}
 		}
 	}
-	for _, e := range body.CurrentPortfolio {
-		if e != nil {
-			if err2 := ValidateBalanceResponseBody(e); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
+	if body.CurrentPortfolio != nil {
+		if err2 := ValidateSingleGuildPortfolioResponseBody(body.CurrentPortfolio); err2 != nil {
+			err = goa.MergeErrors(err, err2)
 		}
 	}
 	return
@@ -1733,6 +1731,25 @@ func ValidateRequirementResponseBody(body *RequirementResponseBody) (err error) 
 	}
 	if body.MinAmountUsd == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("min_amount_usd", "body"))
+	}
+	return
+}
+
+// ValidateSingleGuildPortfolioResponseBody runs the validations defined on
+// SingleGuildPortfolioResponseBody
+func ValidateSingleGuildPortfolioResponseBody(body *SingleGuildPortfolioResponseBody) (err error) {
+	if body.Balances == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("balances", "body"))
+	}
+	if body.UpdatedAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("updated_at", "body"))
+	}
+	for _, e := range body.Balances {
+		if e != nil {
+			if err2 := ValidateBalanceResponseBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
 	}
 	return
 }
@@ -1783,25 +1800,6 @@ func ValidateMarketResponseBody(body *MarketResponseBody) (err error) {
 	}
 	if body.IsPerpetual == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("is_perpetual", "body"))
-	}
-	return
-}
-
-// ValidateSingleGuildPortfolioResponseBody runs the validations defined on
-// SingleGuildPortfolioResponseBody
-func ValidateSingleGuildPortfolioResponseBody(body *SingleGuildPortfolioResponseBody) (err error) {
-	if body.Balances == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("balances", "body"))
-	}
-	if body.UpdatedAt == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("updated_at", "body"))
-	}
-	for _, e := range body.Balances {
-		if e != nil {
-			if err2 := ValidateBalanceResponseBody(e); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
 	}
 	return
 }
