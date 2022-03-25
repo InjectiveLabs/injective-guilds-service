@@ -17,9 +17,11 @@ var Market = Type("Market", func() {
 var Requirement = Type("Requirement", func() {
 	Field(1, "denom", String)
 	Field(2, "min_amount_usd", Float64)
+	Field(3, "min_amount", Float64)
 
 	Required("denom")
 	Required("min_amount_usd")
+	Required("min_amount")
 })
 
 var Guild = Type("Guild", func() {
