@@ -208,8 +208,9 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 				UpdatedAt: now,
 				BankBalances: []*model.BankBalance{
 					{
-						Denom:   config.DEMOM_INJ,
-						Balance: sumInjBankBalance,
+						Denom:    config.DEMOM_INJ,
+						PriceUSD: priceMap[config.DEMOM_INJ],
+						Balance:  sumInjBankBalance,
 					},
 				},
 			}

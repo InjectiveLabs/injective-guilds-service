@@ -15,7 +15,6 @@ import (
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/shopspring/decimal"
 	log "github.com/xlab/suplog"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -540,7 +539,7 @@ func (s *service) GetGuildPortfolios(
 	// expected result to be sort by timestamp
 	for _, p := range portfolios {
 		if len(p.BankBalances) > 0 && p.BankBalances[0].Denom == config.DEMOM_INJ {
-			p.Balances = addINJToBalances(p.Balances, p.BankBalances[0].Balance)
+			p.Balances = addInjBankToBalance(p.Balances, p.BankBalances[0])
 		}
 
 		var balances []*svc.Balance
@@ -598,24 +597,6 @@ func (s *service) GetAccountInfo(ctx context.Context, payload *svc.GetAccountInf
 	}, nil
 }
 
-func addINJToBalances(balance []*model.Balance, injAmount primitive.Decimal128) []*model.Balance {
-	for _, b := range balance {
-		if b.Denom == config.DEMOM_INJ {
-			b.TotalBalance = sum(b.TotalBalance, injAmount)
-			b.AvailableBalance = sum(b.AvailableBalance, injAmount)
-			return balance
-		}
-	}
-
-	// if not found then append inj denom
-	balance = append(balance, &model.Balance{
-		Denom:            config.DEMOM_INJ,
-		TotalBalance:     injAmount,
-		AvailableBalance: injAmount,
-	})
-	return balance
-}
-
 func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccountPortfolioPayload) (res *svc.GetAccountPortfolioResult, err error) {
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
@@ -635,7 +616,7 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 	)
 
 	if len(portfolio.BankBalances) > 0 && portfolio.BankBalances[0].Denom == config.DEMOM_INJ {
-		portfolio.Balances = addINJToBalances(portfolio.Balances, portfolio.BankBalances[0].Balance)
+		portfolio.Balances = addInjBankToBalance(portfolio.Balances, portfolio.BankBalances[0])
 	}
 
 	for _, b := range portfolio.Balances {
@@ -689,7 +670,7 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 	// expected result to be sorted by timestamp
 	for _, p := range portfolios {
 		if len(p.BankBalances) > 0 && p.BankBalances[0].Denom == config.DEMOM_INJ {
-			p.Balances = addINJToBalances(p.Balances, p.BankBalances[0].Balance)
+			p.Balances = addInjBankToBalance(p.Balances, p.BankBalances[0])
 		}
 
 		var balances []*svc.Balance

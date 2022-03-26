@@ -22,6 +22,25 @@ type MemberMessage struct {
 	ExpiredAt int64  `json:"expired_at"` // unix timestamp, second
 }
 
+func addInjBankToBalance(balance []*model.Balance, inj *model.BankBalance) []*model.Balance {
+	for _, b := range balance {
+		if b.Denom == config.DEMOM_INJ {
+			b.TotalBalance = sum(b.TotalBalance, inj.Balance)
+			b.AvailableBalance = sum(b.AvailableBalance, inj.Balance)
+			return balance
+		}
+	}
+
+	// if not found then append inj denom
+	balance = append(balance, &model.Balance{
+		Denom:            config.DEMOM_INJ,
+		PriceUSD:         inj.PriceUSD,
+		TotalBalance:     inj.Balance,
+		AvailableBalance: inj.Balance,
+	})
+	return balance
+}
+
 func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio, defaultMember *model.GuildMember) *svc.Guild {
 	var (
 		requirements    []*svc.Requirement
@@ -30,7 +49,7 @@ func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio, defau
 	)
 
 	if len(portfolio.BankBalances) > 0 && portfolio.BankBalances[0].Denom == config.DEMOM_INJ {
-		portfolio.Balances = addINJToBalances(portfolio.Balances, portfolio.BankBalances[0].Balance)
+		portfolio.Balances = addInjBankToBalance(portfolio.Balances, portfolio.BankBalances[0])
 	}
 
 	for _, b := range portfolio.Balances {

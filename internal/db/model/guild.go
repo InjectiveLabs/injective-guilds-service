@@ -69,7 +69,9 @@ type Balance struct {
 }
 
 type BankBalance struct {
-	Denom   string               `bson:"denom" json:"denom"`
+	Denom    string  `bson:"denom" json:"denom"`
+	PriceUSD float64 `bson:"price_usd" json:"price_usd"`
+
 	Balance primitive.Decimal128 `bson:"balance" json:"balance"`
 }
 
