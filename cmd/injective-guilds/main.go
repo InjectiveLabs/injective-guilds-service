@@ -25,6 +25,7 @@ var (
 	dbURL         *string
 	exchangeURL   *string
 	assetPriceURL *string
+	lcdURL        *string
 )
 
 func setConfig() {

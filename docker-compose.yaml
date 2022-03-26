@@ -42,6 +42,7 @@ services:
       - GUILDS_PROCESS_DB_CONNECTION_URL=mongodb://mongo:27017
       - GUILDS_PROCESS_DB_NAME=guilds
       - GUILDS_PROCESS_EXCHANGE_GRPC_URL=sentry2.injective.network:9910
+      - GUILDS_PROCESS_LCD_URL=https://lcd.injective.network
       - GUILDS_PROCESS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
 
       - GUILDS_PROCESS_PORTFOLIO_UPDATE_INTERVAL=30m

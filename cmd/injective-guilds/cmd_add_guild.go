@@ -83,6 +83,12 @@ func parseAddGuildArgs(c *cli.Cmd) {
 		Value: "https://k8s.mainnet.asset.injective.network",
 	})
 
+	lcdURL = c.String(cli.StringOpt{
+		Name:  "lcd-url",
+		Desc:  "lcd url to get bank balance",
+		Value: "https://lcd.injective.network",
+	})
+
 	spotRequirements = c.Strings(cli.StringsOpt{
 		Name:  "spot-require",
 		Desc:  "minimum requirements to join this guild. BaseRequirement/QuoteRequirement",
@@ -137,7 +143,7 @@ func addGuildAction() {
 	panicIf(err)
 
 	log.Info("connecting exchange api at", *exchangeURL)
-	exchangeProvider, err := exchange.NewExchangeProvider(*exchangeURL, "", *assetPriceURL)
+	exchangeProvider, err := exchange.NewExchangeProvider(*exchangeURL, *lcdURL, *assetPriceURL)
 	panicIf(err)
 
 	log.Info("initializing portfolio helper")

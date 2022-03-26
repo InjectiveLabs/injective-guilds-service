@@ -136,6 +136,7 @@ type GuildProcessConfig struct {
 
 	ExchangeGRPCURL string
 	AssetPriceURL   string
+	LcdURL          string
 
 	StatsdConfig StatsdConfig
 }
@@ -163,6 +164,7 @@ func LoadGuildsProcessConfig() GuildProcessConfig {
 		StatsdConfig:            loadStatsdConfig(processEnvPrefix),
 
 		ExchangeGRPCURL: LoadEnvString(fmt.Sprintf("%s_EXCHANGE_GRPC_URL", processEnvPrefix), "http://localhost:9910"),
+		LcdURL:          LoadEnvString(fmt.Sprintf("%s_LCD_URL", processEnvPrefix), ""),
 		AssetPriceURL:   LoadEnvString(fmt.Sprintf("%s_ASSET_PRICE_URL", processEnvPrefix), "https://k8s.mainnet.asset.injective.network"),
 	}
 }

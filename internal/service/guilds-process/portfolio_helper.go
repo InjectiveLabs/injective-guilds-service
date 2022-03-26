@@ -79,7 +79,8 @@ func (p *PortfolioHelper) CaptureSingleMemberPortfolio(
 	// attach price
 	var prices map[string]float64
 	if addDenomPrices {
-		prices, err = p.GetDenomPrices(ctx, model.GetGuildDenoms(guild))
+		denoms := append(model.GetGuildDenoms(guild), "inj")
+		prices, err = p.GetDenomPrices(ctx, denoms)
 		if err != nil {
 			return nil, fmt.Errorf("get denom price err: %w", err)
 		}

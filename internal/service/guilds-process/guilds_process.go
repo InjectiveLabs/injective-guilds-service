@@ -51,7 +51,7 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 
 	logger.Infoln("connecting exchange grpc api")
 	// won't use lcd endpoint here
-	exchangeProvider, err := exchange.NewExchangeProvider(cfg.ExchangeGRPCURL, "", cfg.AssetPriceURL)
+	exchangeProvider, err := exchange.NewExchangeProvider(cfg.ExchangeGRPCURL, cfg.LcdURL, cfg.AssetPriceURL)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +127,9 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 
 		// for each guild, don't need price be 100% accurate, we get all denom prices once
 		// eliminate failure + save time
-		priceMap, err := p.portfolioHelper.GetDenomPrices(ctx, model.GetGuildDenoms(guild))
+		denoms := model.GetGuildDenoms(guild)
+		denoms = append(denoms, "inj")
+		priceMap, err := p.portfolioHelper.GetDenomPrices(ctx, denoms)
 		if err != nil {
 			err = fmt.Errorf("get denom price err: %w", err)
 			p.logger.

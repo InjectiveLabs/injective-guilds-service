@@ -117,6 +117,9 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 		result = append(result, modelGuildToResponse(g, &portfolio, defaultMember[0]))
 	}
 
+	for _, g := range result {
+		fmt.Printf("%#v\n", *g)
+	}
 	return &svc.GetAllGuildsResult{Guilds: result}, nil
 }
 

@@ -53,7 +53,6 @@ func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio, defau
 		}
 
 		roundedFloat := math.Ceil(req.MinAmountUSD*math.Pow10(displayDecimal)/priceUsd) / math.Pow10(displayDecimal)
-
 		// IMPORTANT: We want to return price, so that FE and BE will be sync-ed for result
 		requirements = append(requirements, &svc.Requirement{
 			Denom:        req.Denom,
