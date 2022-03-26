@@ -28,6 +28,7 @@ func signOf(direction string) decimal.Decimal {
 func buildPortfolio(
 	member *model.GuildMember,
 	balances []*exchange.Balance,
+	injBalance []*model.BankBalance,
 	pnl map[string]decimal.Decimal,
 	marginHolds map[string]decimal.Decimal,
 	usdPrices map[string]float64,
@@ -64,6 +65,10 @@ func buildPortfolio(
 
 		portfolio.Balances = append(portfolio.Balances, aBalance)
 	}
+
+	// currently only track INJ balance
+	// use bank balance model for future, if we want to track balance in other denoms
+	portfolio.BankBalances = injBalance
 
 	return portfolio
 }

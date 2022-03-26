@@ -11,6 +11,7 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	"github.com/shopspring/decimal"
 	log "github.com/xlab/suplog"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // PortfolioHelper supports capture account portfolio (default subaccount)
@@ -69,6 +70,13 @@ func (p *PortfolioHelper) CaptureSingleMemberPortfolio(
 		return nil, fmt.Errorf("get margin hold err: %w", err)
 	}
 
+	// bank balance
+	injBalance, err := p.getINJBankBalances(ctx, member)
+	if err != nil {
+		return nil, fmt.Errorf("get inj bank balance err: %w", err)
+	}
+
+	// attach price
 	var prices map[string]float64
 	if addDenomPrices {
 		prices, err = p.GetDenomPrices(ctx, model.GetGuildDenoms(guild))
@@ -77,7 +85,35 @@ func (p *PortfolioHelper) CaptureSingleMemberPortfolio(
 		}
 	}
 
-	return buildPortfolio(member, balances, pnl, marginHold, prices), nil
+	return buildPortfolio(member, balances, injBalance, pnl, marginHold, prices), nil
+}
+
+func (p *PortfolioHelper) getINJBankBalances(
+	ctx context.Context,
+	member *model.GuildMember,
+) ([]*model.BankBalance, error) {
+	balancesRes, err := p.exchangeProvider.GetBankBalance(ctx, member.InjectiveAddress.String())
+	if err != nil {
+		return nil, fmt.Errorf("get bank balance err: %w", err)
+	}
+
+	for _, b := range balancesRes.Balances {
+		if b.Denom == "inj" {
+			amount, err := primitive.ParseDecimal128(b.Amount)
+			if err != nil {
+				return nil, fmt.Errorf("parse decimal128 err: %w", err)
+			}
+
+			return []*model.BankBalance{
+				{
+					Denom:   b.Denom,
+					Balance: amount,
+				},
+			}, nil
+		}
+	}
+
+	return nil, nil
 }
 
 func (p *PortfolioHelper) getSubaccountBalances(ctx context.Context, denoms []string, defaultSubaccountID string) (result []*exchange.Balance, err error) {

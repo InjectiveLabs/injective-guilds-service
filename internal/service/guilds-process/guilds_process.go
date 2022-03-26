@@ -12,6 +12,7 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	log "github.com/xlab/suplog"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -137,6 +138,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 
 		portfolios := make([]*model.AccountPortfolio, 0)
 		denomToBalance := make(map[string]*model.Balance)
+		var sumInjBankBalance primitive.Decimal128
 		// TODO: Create queue to re-try when failure happens
 		// TODO: Create bulk accounts balances query on injective-exchange
 		for _, member := range members {
@@ -174,6 +176,10 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 					tmp.UnrealizedPNL = sum(tmp.UnrealizedPNL, b.UnrealizedPNL)
 					tmp.MarginHold = sum(tmp.MarginHold, b.MarginHold)
 				}
+
+				if len(portfolioSnapshot.BankBalances) > 0 && (portfolioSnapshot.BankBalances[0].Denom == config.DEMOM_INJ) {
+					sumInjBankBalance = sum(sumInjBankBalance, portfolioSnapshot.BankBalances[0].Balance)
+				}
 			}
 
 			portfolioSnapshot.UpdatedAt = now
@@ -198,6 +204,12 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 			guildPortfolio := &model.GuildPortfolio{
 				GuildID:   guild.ID,
 				UpdatedAt: now,
+				BankBalances: []*model.BankBalance{
+					{
+						Denom:   config.DEMOM_INJ,
+						Balance: sumInjBankBalance,
+					},
+				},
 			}
 			for _, v := range denomToBalance {
 				guildPortfolio.Balances = append(guildPortfolio.Balances, v)

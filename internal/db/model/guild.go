@@ -68,16 +68,22 @@ type Balance struct {
 	MarginHold       primitive.Decimal128 `bson:"margin_hold" json:"margin_hold"`
 }
 
+type BankBalance struct {
+	Denom   string               `bson:"denom" json:"denom"`
+	Balance primitive.Decimal128 `bson:"balance" json:"balance"`
+}
+
 type AccountPortfolio struct {
 	ID primitive.ObjectID `bson:"_id,omitempty"`
 
 	// GuildID stores guildID at the time this portfolio is captured
 	// Which supports the case that an address can leave a guild and join another guild
-	// For a case in the future when 1 user can enter multiple guilds
 	GuildID primitive.ObjectID `bson:"guild_id" json:"guild_id"`
 
 	InjectiveAddress Address    `bson:"injective_address" json:"injective_address"`
 	Balances         []*Balance `bson:"balances" json:"balances"`
+	// Store account's inj amount atm
+	BankBalances []*BankBalance `bson:"bank_balances" json:"bank_balances"`
 	// timestamp when this gets update
 	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
 }
@@ -85,6 +91,8 @@ type AccountPortfolio struct {
 type GuildPortfolio struct {
 	GuildID  primitive.ObjectID `bson:"guild_id" json:"guild_id"`
 	Balances []*Balance         `bson:"balances" json:"balances"`
+	// Store account's inj amount atm
+	BankBalances []*BankBalance `bson:"bank_balances" json:"bank_balances"`
 	// timestamp when this gets update
 	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
 }

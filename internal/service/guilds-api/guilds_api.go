@@ -15,6 +15,7 @@ import (
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/shopspring/decimal"
 	log "github.com/xlab/suplog"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -509,6 +510,10 @@ func (s *service) GetGuildPortfolios(
 	result := make([]*svc.SingleGuildPortfolio, 0)
 	// expected result to be sort by timestamp
 	for _, p := range portfolios {
+		if len(p.BankBalances) > 0 && p.BankBalances[0].Denom == config.DEMOM_INJ {
+			p.Balances = addINJToBalances(p.Balances, p.BankBalances[0].Balance)
+		}
+
 		var balances []*svc.Balance
 		for _, b := range p.Balances {
 			balances = append(balances, &svc.Balance{
@@ -564,6 +569,24 @@ func (s *service) GetAccountInfo(ctx context.Context, payload *svc.GetAccountInf
 	}, nil
 }
 
+func addINJToBalances(balance []*model.Balance, injAmount primitive.Decimal128) []*model.Balance {
+	for _, b := range balance {
+		if b.Denom == config.DEMOM_INJ {
+			b.TotalBalance = sum(b.TotalBalance, injAmount)
+			b.AvailableBalance = sum(b.TotalBalance, injAmount)
+			return balance
+		}
+	}
+
+	// if not found then append inj denom
+	balance = append(balance, &model.Balance{
+		Denom:            config.DEMOM_INJ,
+		TotalBalance:     injAmount,
+		AvailableBalance: injAmount,
+	})
+	return balance
+}
+
 func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccountPortfolioPayload) (res *svc.GetAccountPortfolioResult, err error) {
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
@@ -582,14 +605,19 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 		updatedAt time.Time
 	)
 
+	if len(portfolio.BankBalances) > 0 && portfolio.BankBalances[0].Denom == config.DEMOM_INJ {
+		portfolio.Balances = addINJToBalances(portfolio.Balances, portfolio.BankBalances[0].Balance)
+	}
+
 	for _, b := range portfolio.Balances {
-		balances = append(balances, &svc.Balance{
+		aBalance := &svc.Balance{
 			Denom:            b.Denom,
 			TotalBalance:     b.TotalBalance.String(),
 			AvailableBalance: b.AvailableBalance.String(),
 			UnrealizedPnl:    b.UnrealizedPNL.String(),
 			MarginHold:       b.MarginHold.String(),
-		})
+		}
+		balances = append(balances, aBalance)
 	}
 	updatedAt = portfolio.UpdatedAt
 
@@ -628,8 +656,12 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 	}
 
 	result := make([]*svc.SingleAccountPortfolio, 0)
-	// expected result to be sort by timestamp
+	// expected result to be sorted by timestamp
 	for _, p := range portfolios {
+		if len(p.BankBalances) > 0 && p.BankBalances[0].Denom == config.DEMOM_INJ {
+			p.Balances = addINJToBalances(p.Balances, p.BankBalances[0].Balance)
+		}
+
 		var balances []*svc.Balance
 		for _, b := range p.Balances {
 			balances = append(balances, &svc.Balance{

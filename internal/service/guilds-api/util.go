@@ -13,6 +13,8 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/sdk-go/chain/crypto/ethsecp256k1"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
+	"github.com/shopspring/decimal"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type MemberMessage struct {
@@ -125,4 +127,11 @@ func verifySigAndExtractInfo(
 
 	// derive address
 	return cosmtypes.AccAddress(pubKey.Address()), payload, nil
+}
+
+func sum(a primitive.Decimal128, b primitive.Decimal128) primitive.Decimal128 {
+	parsedA, _ := decimal.NewFromString(a.String())
+	parsedB, _ := decimal.NewFromString(b.String())
+	result, _ := primitive.ParseDecimal128(parsedA.Add(parsedB).String())
+	return result
 }
