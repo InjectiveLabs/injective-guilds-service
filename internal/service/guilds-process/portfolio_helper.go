@@ -99,7 +99,7 @@ func (p *PortfolioHelper) getINJBankBalances(
 	}
 
 	for _, b := range balancesRes.Balances {
-		if b.Denom == "inj" {
+		if b.Denom == config.DEMOM_INJ {
 			amount, err := primitive.ParseDecimal128(b.Amount)
 			if err != nil {
 				return nil, fmt.Errorf("parse decimal128 err: %w", err)
