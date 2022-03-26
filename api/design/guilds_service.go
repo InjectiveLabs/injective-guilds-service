@@ -133,20 +133,14 @@ var _ = Service("GuildsService", func() {
 	})
 
 	Method("EnterGuild", func() {
-		Description("Enter the guild: Should supply public_key, message, signature in base64")
+		Description("Enter the guild")
 
 		Payload(func() {
 			Field(0, "guildID", String)
-			Field(1, "public_key", String)
-			Field(2, "message", String, func() {
-				Description("Supply base64 json encoded string cointaining {\"action\": \"enter-guild\", \"expired_at\": unixTimestamp }")
-			})
-			Field(3, "signature", String)
+			Field(1, "injective_address", String)
 
 			Required("guildID")
-			Required("public_key")
-			Required("message")
-			Required("signature")
+			Required("injective_address")
 		})
 
 		Result(func() {
@@ -164,20 +158,14 @@ var _ = Service("GuildsService", func() {
 	})
 
 	Method("LeaveGuild", func() {
-		Description("Enter the guild: Should supply public_key, message, signature in base64")
+		Description("Leave the guild, guildID")
 
 		Payload(func() {
 			Field(0, "guildID", String)
-			Field(1, "public_key", String)
-			Field(2, "message", String, func() {
-				Description("Supply base64 json encoded string cointaining {\"action\": \"leave-guild\", \"expired_at\": unixTimestamp}")
-			})
-			Field(3, "signature", String)
+			Field(1, "injective_address", String)
 
 			Required("guildID")
-			Required("public_key")
-			Required("message")
-			Required("signature")
+			Required("injective_address")
 		})
 
 		Result(func() {
