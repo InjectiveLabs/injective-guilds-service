@@ -232,8 +232,6 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 }
 
 func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address string) (*qualificationResult, error) {
-	// Currently, we can handle it on UI (discussed) => skip for now
-	// check grants
 	grants, err := s.exchangeProvider.GetGrants(ctx, address, guild.MasterAddress.String())
 	if err != nil {
 		return nil, err
@@ -378,14 +376,36 @@ func (s *service) checkAddressQualification(
 	return s.checkGrants(ctx, guild, portfolio.InjectiveAddress.String())
 }
 
-func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
-	accAddress, msgInfo, err := verifySigAndExtractInfo(payload.PublicKey, payload.Signature, payload.Message)
+func (s *service) checkAddressLeaveCondition(
+	ctx context.Context,
+	guild *model.Guild,
+	address string,
+) (bool, error) {
+	grants, err := s.exchangeProvider.GetGrants(ctx, address, guild.MasterAddress.String())
 	if err != nil {
-		return nil, svc.MakeInvalidArg(err)
+		return false, err
 	}
 
-	if msgInfo.Action != ActionEnterGuild {
-		return nil, svc.MakeInvalidArg(fmt.Errorf("invalid action, should be %s", ActionEnterGuild))
+	grantsMap := make(map[string]bool)
+	for _, grant := range grants.Grants {
+		grantsMap[grant.Authorization.Msg] = true
+	}
+
+	// we only check for needed grant
+	existCount := 0
+	for _, grant := range s.grants {
+		if _, exist := grantsMap[grant]; exist {
+			existCount++
+		}
+	}
+
+	return existCount == 0, nil
+}
+
+func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
+	accAddress, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
+	if err != nil {
+		return nil, svc.MakeInvalidArg(err)
 	}
 
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
@@ -442,13 +462,23 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 }
 
 func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload) (res *svc.LeaveGuildResult, err error) {
-	accAddress, msgInfo, err := verifySigAndExtractInfo(payload.PublicKey, payload.Signature, payload.Message)
+	accAddress, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
 		return nil, svc.MakeInvalidArg(err)
 	}
 
-	if msgInfo.Action != ActionLeaveGuild {
-		return nil, svc.MakeInvalidArg(fmt.Errorf("invalid action, should be %s", ActionLeaveGuild))
+	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
+	if err != nil {
+		return nil, svc.MakeInternal(err)
+	}
+
+	shouldRemove, err := s.checkAddressLeaveCondition(ctx, guild, accAddress.String())
+	if err != nil {
+		return nil, svc.MakeInternal(fmt.Errorf("failed to check leave condition: %w", err))
+	}
+
+	if !shouldRemove {
+		return nil, svc.MakeInvalidArg(fmt.Errorf("address has not removed granted permissions"))
 	}
 
 	// remove member from database
@@ -463,7 +493,6 @@ func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload
 	}, nil
 }
 
-// GetGuildMarkets implements GetGuildMarkets.
 func (s *service) GetGuildMarkets(ctx context.Context, payload *svc.GetGuildMarketsPayload) (res *svc.GetGuildMarketsResult, err error) {
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
 	if err != nil {
