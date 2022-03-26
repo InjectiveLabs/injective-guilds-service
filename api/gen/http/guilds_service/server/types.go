@@ -15,21 +15,13 @@ import (
 // EnterGuildRequestBody is the type of the "GuildsService" service
 // "EnterGuild" endpoint HTTP request body.
 type EnterGuildRequestBody struct {
-	PublicKey *string `form:"public_key,omitempty" json:"public_key,omitempty" xml:"public_key,omitempty"`
-	// Supply base64 json encoded string cointaining {"action": "enter-guild",
-	// "expired_at": unixTimestamp }
-	Message   *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
-	Signature *string `form:"signature,omitempty" json:"signature,omitempty" xml:"signature,omitempty"`
+	InjectiveAddress *string `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
 }
 
 // LeaveGuildRequestBody is the type of the "GuildsService" service
 // "LeaveGuild" endpoint HTTP request body.
 type LeaveGuildRequestBody struct {
-	PublicKey *string `form:"public_key,omitempty" json:"public_key,omitempty" xml:"public_key,omitempty"`
-	// Supply base64 json encoded string cointaining {"action": "leave-guild",
-	// "expired_at": unixTimestamp}
-	Message   *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
-	Signature *string `form:"signature,omitempty" json:"signature,omitempty" xml:"signature,omitempty"`
+	InjectiveAddress *string `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
 }
 
 // GetAllGuildsResponseBody is the type of the "GuildsService" service
@@ -1140,9 +1132,7 @@ func NewGetGuildDefaultMemberPayload(guildID string) *guildsservice.GetGuildDefa
 // payload.
 func NewEnterGuildPayload(body *EnterGuildRequestBody, guildID string) *guildsservice.EnterGuildPayload {
 	v := &guildsservice.EnterGuildPayload{
-		PublicKey: *body.PublicKey,
-		Message:   *body.Message,
-		Signature: *body.Signature,
+		InjectiveAddress: *body.InjectiveAddress,
 	}
 	v.GuildID = guildID
 
@@ -1153,9 +1143,7 @@ func NewEnterGuildPayload(body *EnterGuildRequestBody, guildID string) *guildsse
 // payload.
 func NewLeaveGuildPayload(body *LeaveGuildRequestBody, guildID string) *guildsservice.LeaveGuildPayload {
 	v := &guildsservice.LeaveGuildPayload{
-		PublicKey: *body.PublicKey,
-		Message:   *body.Message,
-		Signature: *body.Signature,
+		InjectiveAddress: *body.InjectiveAddress,
 	}
 	v.GuildID = guildID
 
@@ -1214,14 +1202,8 @@ func NewGetAccountPortfoliosPayload(injectiveAddress string, startTime *int64, e
 // ValidateEnterGuildRequestBody runs the validations defined on
 // EnterGuildRequestBody
 func ValidateEnterGuildRequestBody(body *EnterGuildRequestBody) (err error) {
-	if body.PublicKey == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("public_key", "body"))
-	}
-	if body.Message == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
-	}
-	if body.Signature == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("signature", "body"))
+	if body.InjectiveAddress == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("injective_address", "body"))
 	}
 	return
 }
@@ -1229,14 +1211,8 @@ func ValidateEnterGuildRequestBody(body *EnterGuildRequestBody) (err error) {
 // ValidateLeaveGuildRequestBody runs the validations defined on
 // LeaveGuildRequestBody
 func ValidateLeaveGuildRequestBody(body *LeaveGuildRequestBody) (err error) {
-	if body.PublicKey == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("public_key", "body"))
-	}
-	if body.Message == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
-	}
-	if body.Signature == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("signature", "body"))
+	if body.InjectiveAddress == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("injective_address", "body"))
 	}
 	return
 }

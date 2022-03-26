@@ -22,202 +22,74 @@ paths:
                 $ref: '#/components/schemas/GetAllGuildsResponseBody'
               example:
                 guilds:
-                - capacity: 3352520483564344830
+                - capacity: 5964216642713450062
                   current_portfolio:
                     balances:
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    guild_id: Consequatur provident excepturi nam vel in repudiandae.
-                    updated_at: 3583934450217249860
-                  default_member_address: Expedita recusandae minima.
-                  description: Ut at ut suscipit iste.
-                  id: Aut consectetur iste.
-                  master_address: Saepe hic accusantium est nobis dolores.
-                  member_count: 5941283201341949913
-                  name: Fuga vel quos rerum culpa.
+                    - available_balance: Qui ea qui.
+                      denom: Est nobis dolores eveniet vel.
+                      margin_hold: Inventore ut.
+                      price_usd: 0.025452036676133237
+                      total_balance: Sunt fugiat.
+                      unrealized_pnl: Sit at et velit.
+                    - available_balance: Qui ea qui.
+                      denom: Est nobis dolores eveniet vel.
+                      margin_hold: Inventore ut.
+                      price_usd: 0.025452036676133237
+                      total_balance: Sunt fugiat.
+                      unrealized_pnl: Sit at et velit.
+                    guild_id: Ex saepe.
+                    updated_at: 3479703651976965601
+                  default_member_address: Nam vel in.
+                  description: Quasi quibusdam.
+                  id: Quaerat labore aut est.
+                  master_address: Numquam id et quaerat cum in.
+                  member_count: 3852276272004033949
+                  name: Illum aperiam voluptatem maiores nulla.
                   requirements:
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  staking_requirement: Qui ut sit at et velit.
-                - capacity: 3352520483564344830
+                  - denom: Aut consectetur iste.
+                    min_amount: 0.7297009691051966
+                    min_amount_usd: 0.758142157309922
+                  - denom: Aut consectetur iste.
+                    min_amount: 0.7297009691051966
+                    min_amount_usd: 0.758142157309922
+                  - denom: Aut consectetur iste.
+                    min_amount: 0.7297009691051966
+                    min_amount_usd: 0.758142157309922
+                  staking_requirement: Quos rerum culpa sit ut at.
+                - capacity: 5964216642713450062
                   current_portfolio:
                     balances:
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    guild_id: Consequatur provident excepturi nam vel in repudiandae.
-                    updated_at: 3583934450217249860
-                  default_member_address: Expedita recusandae minima.
-                  description: Ut at ut suscipit iste.
-                  id: Aut consectetur iste.
-                  master_address: Saepe hic accusantium est nobis dolores.
-                  member_count: 5941283201341949913
-                  name: Fuga vel quos rerum culpa.
+                    - available_balance: Qui ea qui.
+                      denom: Est nobis dolores eveniet vel.
+                      margin_hold: Inventore ut.
+                      price_usd: 0.025452036676133237
+                      total_balance: Sunt fugiat.
+                      unrealized_pnl: Sit at et velit.
+                    - available_balance: Qui ea qui.
+                      denom: Est nobis dolores eveniet vel.
+                      margin_hold: Inventore ut.
+                      price_usd: 0.025452036676133237
+                      total_balance: Sunt fugiat.
+                      unrealized_pnl: Sit at et velit.
+                    guild_id: Ex saepe.
+                    updated_at: 3479703651976965601
+                  default_member_address: Nam vel in.
+                  description: Quasi quibusdam.
+                  id: Quaerat labore aut est.
+                  master_address: Numquam id et quaerat cum in.
+                  member_count: 3852276272004033949
+                  name: Illum aperiam voluptatem maiores nulla.
                   requirements:
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  staking_requirement: Qui ut sit at et velit.
-                - capacity: 3352520483564344830
-                  current_portfolio:
-                    balances:
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    guild_id: Consequatur provident excepturi nam vel in repudiandae.
-                    updated_at: 3583934450217249860
-                  default_member_address: Expedita recusandae minima.
-                  description: Ut at ut suscipit iste.
-                  id: Aut consectetur iste.
-                  master_address: Saepe hic accusantium est nobis dolores.
-                  member_count: 5941283201341949913
-                  name: Fuga vel quos rerum culpa.
-                  requirements:
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  staking_requirement: Qui ut sit at et velit.
-                - capacity: 3352520483564344830
-                  current_portfolio:
-                    balances:
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    guild_id: Consequatur provident excepturi nam vel in repudiandae.
-                    updated_at: 3583934450217249860
-                  default_member_address: Expedita recusandae minima.
-                  description: Ut at ut suscipit iste.
-                  id: Aut consectetur iste.
-                  master_address: Saepe hic accusantium est nobis dolores.
-                  member_count: 5941283201341949913
-                  name: Fuga vel quos rerum culpa.
-                  requirements:
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  staking_requirement: Qui ut sit at et velit.
+                  - denom: Aut consectetur iste.
+                    min_amount: 0.7297009691051966
+                    min_amount_usd: 0.758142157309922
+                  - denom: Aut consectetur iste.
+                    min_amount: 0.7297009691051966
+                    min_amount_usd: 0.758142157309922
+                  - denom: Aut consectetur iste.
+                    min_amount: 0.7297009691051966
+                    min_amount_usd: 0.758142157309922
+                  staking_requirement: Quos rerum culpa sit ut at.
         "404":
           description: Not Found response.
           content:
@@ -251,8 +123,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Natus voluptatum dolor consequuntur laborum voluptatem et.
-        example: Dolores tempore est perspiciatis maiores consequatur et.
+          example: Deserunt quia possimus aspernatur beatae.
+        example: Nostrum rem.
       responses:
         "200":
           description: OK response.
@@ -262,55 +134,40 @@ paths:
                 $ref: '#/components/schemas/GetSingleGuildResponseBody'
               example:
                 guild:
-                  capacity: 3352520483564344830
+                  capacity: 5964216642713450062
                   current_portfolio:
                     balances:
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                      denom: Quaerat voluptatem ullam.
-                      margin_hold: Id quo dolorem.
-                      price_usd: 0.15991903349222503
-                      total_balance: Esse magni.
-                      unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                    guild_id: Consequatur provident excepturi nam vel in repudiandae.
-                    updated_at: 3583934450217249860
-                  default_member_address: Expedita recusandae minima.
-                  description: Ut at ut suscipit iste.
-                  id: Aut consectetur iste.
-                  master_address: Saepe hic accusantium est nobis dolores.
-                  member_count: 5941283201341949913
-                  name: Fuga vel quos rerum culpa.
+                    - available_balance: Qui ea qui.
+                      denom: Est nobis dolores eveniet vel.
+                      margin_hold: Inventore ut.
+                      price_usd: 0.025452036676133237
+                      total_balance: Sunt fugiat.
+                      unrealized_pnl: Sit at et velit.
+                    - available_balance: Qui ea qui.
+                      denom: Est nobis dolores eveniet vel.
+                      margin_hold: Inventore ut.
+                      price_usd: 0.025452036676133237
+                      total_balance: Sunt fugiat.
+                      unrealized_pnl: Sit at et velit.
+                    guild_id: Ex saepe.
+                    updated_at: 3479703651976965601
+                  default_member_address: Nam vel in.
+                  description: Quasi quibusdam.
+                  id: Quaerat labore aut est.
+                  master_address: Numquam id et quaerat cum in.
+                  member_count: 3852276272004033949
+                  name: Illum aperiam voluptatem maiores nulla.
                   requirements:
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  - denom: Commodi sunt fugiat.
-                    min_amount: 0.5481824157397183
-                    min_amount_usd: 0.5528210620958133
-                  staking_requirement: Qui ut sit at et velit.
+                  - denom: Aut consectetur iste.
+                    min_amount: 0.7297009691051966
+                    min_amount_usd: 0.758142157309922
+                  - denom: Aut consectetur iste.
+                    min_amount: 0.7297009691051966
+                    min_amount_usd: 0.758142157309922
+                  - denom: Aut consectetur iste.
+                    min_amount: 0.7297009691051966
+                    min_amount_usd: 0.758142157309922
+                  staking_requirement: Quos rerum culpa sit ut at.
         "404":
           description: Not Found response.
           content:
@@ -344,8 +201,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Aut non sit explicabo velit.
-        example: Officia velit.
+          example: Cumque eius.
+        example: Vel repellat fugiat.
       responses:
         "200":
           description: OK response.
@@ -355,10 +212,10 @@ paths:
                 $ref: '#/components/schemas/GetGuildDefaultMemberResponseBody'
               example:
                 default_member:
-                  guild_id: Libero a nam consectetur commodi dolor commodi.
-                  injective_address: Nihil quia quo eligendi omnis.
+                  guild_id: Qui culpa id.
+                  injective_address: Omnis expedita recusandae minima ipsam quis.
                   is_default_guild_member: true
-                  since: 1803131455148249831
+                  since: 4200925254206743201
         "404":
           description: Not Found response.
           content:
@@ -392,8 +249,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Libero aut repudiandae.
-        example: Officiis quia porro.
+          example: Harum quo tenetur numquam fugiat asperiores aut.
+        example: Inventore est quaerat tenetur.
       responses:
         "200":
           description: OK response.
@@ -402,7 +259,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetGuildMasterAddressResponseBody'
               example:
-                master_address: Dolores at.
+                master_address: Dolore atque aperiam officiis necessitatibus dicta
+                  est.
         "404":
           description: Not Found response.
           content:
@@ -436,8 +294,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Est consectetur itaque reprehenderit nemo sed atque.
-        example: Minus dicta.
+          example: Est voluptates.
+        example: Omnis cupiditate ea aperiam distinctio debitis voluptatem.
       responses:
         "200":
           description: OK response.
@@ -447,12 +305,10 @@ paths:
                 $ref: '#/components/schemas/GetGuildMarketsResponseBody'
               example:
                 markets:
-                - is_perpetual: true
-                  market_id: Velit sit rerum inventore ut.
-                - is_perpetual: true
-                  market_id: Velit sit rerum inventore ut.
-                - is_perpetual: true
-                  market_id: Velit sit rerum inventore ut.
+                - is_perpetual: false
+                  market_id: Molestiae cum.
+                - is_perpetual: false
+                  market_id: Molestiae cum.
         "404":
           description: Not Found response.
           content:
@@ -478,8 +334,7 @@ paths:
       tags:
       - GuildsService
       summary: LeaveGuild GuildsService
-      description: 'Enter the guild: Should supply public_key, message, signature
-        in base64'
+      description: Leave the guild, guildID
       operationId: GuildsService#LeaveGuild
       parameters:
       - name: guildID
@@ -487,8 +342,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Alias et et.
-        example: Placeat est aut praesentium aut corporis ab.
+          example: Recusandae non nobis officia veniam sit pariatur.
+        example: Qui ab quam rem blanditiis animi.
       requestBody:
         required: true
         content:
@@ -496,9 +351,7 @@ paths:
             schema:
               $ref: '#/components/schemas/EnterGuildRequestBody'
             example:
-              message: Nulla et ipsum autem inventore sed maxime.
-              public_key: Et eaque qui.
-              signature: Magnam dolorem nostrum velit non ipsa.
+              injective_address: Velit culpa in quae.
       responses:
         "200":
           description: OK response.
@@ -507,7 +360,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/LeaveGuildResponseBody'
               example:
-                leave_status: Aliquam aliquam cum cumque.
+                leave_status: Vel provident odio deserunt quas.
         "404":
           description: Not Found response.
           content:
@@ -532,8 +385,7 @@ paths:
       tags:
       - GuildsService
       summary: EnterGuild GuildsService
-      description: 'Enter the guild: Should supply public_key, message, signature
-        in base64'
+      description: Enter the guild
       operationId: GuildsService#EnterGuild
       parameters:
       - name: guildID
@@ -541,8 +393,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Ut ea eum et aperiam.
-        example: Non saepe ut fugit excepturi consequatur consequatur.
+          example: Nemo provident unde.
+        example: Quaerat officiis.
       requestBody:
         required: true
         content:
@@ -550,9 +402,7 @@ paths:
             schema:
               $ref: '#/components/schemas/EnterGuildRequestBody'
             example:
-              message: Provident odio deserunt.
-              public_key: Iste eaque nesciunt.
-              signature: Enim ab enim similique ipsa ut voluptatem.
+              injective_address: Voluptates est.
       responses:
         "200":
           description: OK response.
@@ -561,8 +411,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/EnterGuildResponseBody'
               example:
-                join_status: Animi corrupti cupiditate consectetur ut veniam tempora.
-                message: Harum illo accusantium nobis quia nihil.
+                join_status: Et placeat id.
+                message: At quasi necessitatibus maxime enim.
         "404":
           description: Not Found response.
           content:
@@ -596,8 +446,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Est sed quas minima earum.
-        example: Et id nulla temporibus rem ipsam.
+          example: Laboriosam culpa.
+        example: Accusantium et in velit atque beatae.
       responses:
         "200":
           description: OK response.
@@ -607,18 +457,22 @@ paths:
                 $ref: '#/components/schemas/GetGuildMembersResponseBody'
               example:
                 members:
-                - guild_id: Libero a nam consectetur commodi dolor commodi.
-                  injective_address: Nihil quia quo eligendi omnis.
+                - guild_id: Qui culpa id.
+                  injective_address: Omnis expedita recusandae minima ipsam quis.
                   is_default_guild_member: true
-                  since: 1803131455148249831
-                - guild_id: Libero a nam consectetur commodi dolor commodi.
-                  injective_address: Nihil quia quo eligendi omnis.
+                  since: 4200925254206743201
+                - guild_id: Qui culpa id.
+                  injective_address: Omnis expedita recusandae minima ipsam quis.
                   is_default_guild_member: true
-                  since: 1803131455148249831
-                - guild_id: Libero a nam consectetur commodi dolor commodi.
-                  injective_address: Nihil quia quo eligendi omnis.
+                  since: 4200925254206743201
+                - guild_id: Qui culpa id.
+                  injective_address: Omnis expedita recusandae minima ipsam quis.
                   is_default_guild_member: true
-                  since: 1803131455148249831
+                  since: 4200925254206743201
+                - guild_id: Qui culpa id.
+                  injective_address: Omnis expedita recusandae minima ipsam quis.
+                  is_default_guild_member: true
+                  since: 4200925254206743201
         "404":
           description: Not Found response.
           content:
@@ -652,24 +506,24 @@ paths:
         allowEmptyValue: true
         schema:
           type: integer
-          example: 8122329917876348943
+          example: 983592705057600986
           format: int64
-        example: 5124504855331050420
+        example: 7243995121600116513
       - name: end_time
         in: query
         allowEmptyValue: true
         schema:
           type: integer
-          example: 5016407904151708361
+          example: 4039661181662813812
           format: int64
-        example: 7233331260512619635
+        example: 4967634382333516487
       - name: guildID
         in: path
         required: true
         schema:
           type: string
-          example: Vel aut modi quod quia sunt.
-        example: Expedita velit.
+          example: Quis corrupti quae.
+        example: Ipsum doloremque.
       responses:
         "200":
           description: OK response.
@@ -680,113 +534,35 @@ paths:
               example:
                 portfolios:
                 - balances:
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  guild_id: Consequatur provident excepturi nam vel in repudiandae.
-                  updated_at: 3583934450217249860
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  guild_id: Ex saepe.
+                  updated_at: 3479703651976965601
                 - balances:
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  guild_id: Consequatur provident excepturi nam vel in repudiandae.
-                  updated_at: 3583934450217249860
-                - balances:
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  guild_id: Consequatur provident excepturi nam vel in repudiandae.
-                  updated_at: 3583934450217249860
-                - balances:
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  guild_id: Consequatur provident excepturi nam vel in repudiandae.
-                  updated_at: 3583934450217249860
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  guild_id: Ex saepe.
+                  updated_at: 3479703651976965601
         "404":
           description: Not Found response.
           content:
@@ -820,8 +596,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Est sed.
-        example: Quia omnis.
+          example: Recusandae ratione aliquam amet sunt ut earum.
+        example: Sed officia consequuntur quis et inventore numquam.
       responses:
         "200":
           description: OK response.
@@ -831,10 +607,10 @@ paths:
                 $ref: '#/components/schemas/GetAccountInfoResponseBody'
               example:
                 data:
-                  guild_id: Libero a nam consectetur commodi dolor commodi.
-                  injective_address: Nihil quia quo eligendi omnis.
+                  guild_id: Qui culpa id.
+                  injective_address: Omnis expedita recusandae minima ipsam quis.
                   is_default_guild_member: true
-                  since: 1803131455148249831
+                  since: 4200925254206743201
         "404":
           description: Not Found response.
           content:
@@ -868,8 +644,8 @@ paths:
         required: true
         schema:
           type: string
-          example: Laudantium sequi deserunt minima.
-        example: Fugit voluptates ullam.
+          example: Dolore ullam aut laboriosam provident fuga debitis.
+        example: A quia ut impedit id sunt.
       responses:
         "200":
           description: OK response.
@@ -880,32 +656,32 @@ paths:
               example:
                 data:
                   balances:
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  injective_address: Corporis omnis vitae maxime aperiam.
-                  updated_at: 7731842352685932931
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  injective_address: Aliquam aliquam cum cumque.
+                  updated_at: 5817986038243021313
         "404":
           description: Not Found response.
           content:
@@ -939,24 +715,24 @@ paths:
         allowEmptyValue: true
         schema:
           type: integer
-          example: 3975687138351545866
+          example: 2065051469965049405
           format: int64
-        example: 1972893544508084792
+        example: 977767867202172949
       - name: end_time
         in: query
         allowEmptyValue: true
         schema:
           type: integer
-          example: 3196051313241878897
+          example: 5673853287851961323
           format: int64
-        example: 2294321435720364341
+        example: 2752195622045529522
       - name: injective_address
         in: path
         required: true
         schema:
           type: string
-          example: Cum occaecati beatae deleniti nostrum maxime minus.
-        example: Aut rerum cumque et odit.
+          example: Aut accusamus autem voluptatem quia.
+        example: Ut dolorum aspernatur est minima ut error.
       responses:
         "200":
           description: OK response.
@@ -967,113 +743,86 @@ paths:
               example:
                 portfolios:
                 - balances:
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  injective_address: Corporis omnis vitae maxime aperiam.
-                  updated_at: 7731842352685932931
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  injective_address: Aliquam aliquam cum cumque.
+                  updated_at: 5817986038243021313
                 - balances:
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  injective_address: Corporis omnis vitae maxime aperiam.
-                  updated_at: 7731842352685932931
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  injective_address: Aliquam aliquam cum cumque.
+                  updated_at: 5817986038243021313
                 - balances:
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  injective_address: Corporis omnis vitae maxime aperiam.
-                  updated_at: 7731842352685932931
-                - balances:
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                    denom: Quaerat voluptatem ullam.
-                    margin_hold: Id quo dolorem.
-                    price_usd: 0.15991903349222503
-                    total_balance: Esse magni.
-                    unrealized_pnl: Labore consequatur commodi non alias voluptas.
-                  injective_address: Corporis omnis vitae maxime aperiam.
-                  updated_at: 7731842352685932931
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  - available_balance: Qui ea qui.
+                    denom: Est nobis dolores eveniet vel.
+                    margin_hold: Inventore ut.
+                    price_usd: 0.025452036676133237
+                    total_balance: Sunt fugiat.
+                    unrealized_pnl: Sit at et velit.
+                  injective_address: Aliquam aliquam cum cumque.
+                  updated_at: 5817986038243021313
         "404":
           description: Not Found response.
           content:
@@ -1101,30 +850,30 @@ components:
       properties:
         available_balance:
           type: string
-          example: Vitae doloremque.
+          example: Minima ducimus tenetur nihil architecto.
         denom:
           type: string
-          example: Tempore dolor eligendi molestiae ab quod.
+          example: Quae libero iste.
         margin_hold:
           type: string
-          example: Eveniet libero consectetur saepe recusandae est sequi.
+          example: Dolores officiis est illum dolorum.
         price_usd:
           type: number
-          example: 0.9931838118378864
+          example: 0.819667164923011
           format: double
         total_balance:
           type: string
-          example: Animi maxime.
+          example: Voluptatibus maiores ipsa nihil dolore corrupti in.
         unrealized_pnl:
           type: string
-          example: Voluptatem ut aut inventore non.
+          example: Saepe hic.
       example:
-        available_balance: Numquam non officiis dolorem nesciunt.
-        denom: Sit modi voluptate repellat itaque et.
-        margin_hold: Et omnis enim tempore natus et.
-        price_usd: 0.5755949308143982
-        total_balance: Nostrum ut cupiditate et.
-        unrealized_pnl: Consequatur temporibus minima laudantium.
+        available_balance: Rem blanditiis nostrum dolores aut quae recusandae.
+        denom: Aut numquam quia.
+        margin_hold: Ut quia earum et dolorem.
+        price_usd: 0.8734186312786887
+        total_balance: Reprehenderit eos.
+        unrealized_pnl: Et qui veniam asperiores omnis aut.
       required:
       - denom
       - total_balance
@@ -1135,37 +884,25 @@ components:
     EnterGuildRequestBody:
       type: object
       properties:
-        message:
+        injective_address:
           type: string
-          description: 'Supply base64 json encoded string cointaining {"action": "enter-guild",
-            "expired_at": unixTimestamp }'
-          example: Est voluptates.
-        public_key:
-          type: string
-          example: Qui ab quam rem blanditiis animi.
-        signature:
-          type: string
-          example: Omnis cupiditate ea aperiam distinctio debitis voluptatem.
+          example: Eveniet libero consectetur saepe recusandae est sequi.
       example:
-        message: Corrupti quae eius ipsum.
-        public_key: Unde alias et odio.
-        signature: Aut recusandae ratione aliquam amet sunt.
+        injective_address: Vel sit modi voluptate repellat.
       required:
-      - public_key
-      - message
-      - signature
+      - injective_address
     EnterGuildResponseBody:
       type: object
       properties:
         join_status:
           type: string
-          example: Earum voluptate sed officia consequuntur quis et.
+          example: Et maiores nostrum ut cupiditate et placeat.
         message:
           type: string
-          example: Numquam ea dolore ullam aut laboriosam provident.
+          example: Non officiis dolorem nesciunt.
       example:
-        join_status: Debitis et a quia ut impedit id.
-        message: Eos eum nostrum illum quia aut.
+        join_status: Consequatur temporibus minima laudantium.
+        message: Et omnis enim tempore natus et.
     Error:
       type: object
       properties:
@@ -1190,7 +927,7 @@ components:
         temporary:
           type: boolean
           description: Is the error temporary?
-          example: true
+          example: false
         timeout:
           type: boolean
           description: Is the error a timeout?
@@ -1214,10 +951,10 @@ components:
           $ref: '#/components/schemas/GuildMember'
       example:
         data:
-          guild_id: Libero a nam consectetur commodi dolor commodi.
-          injective_address: Nihil quia quo eligendi omnis.
+          guild_id: Qui culpa id.
+          injective_address: Omnis expedita recusandae minima ipsam quis.
           is_default_guild_member: true
-          since: 1803131455148249831
+          since: 4200925254206743201
     GetAccountPortfolioResponseBody:
       type: object
       properties:
@@ -1226,32 +963,32 @@ components:
       example:
         data:
           balances:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          injective_address: Corporis omnis vitae maxime aperiam.
-          updated_at: 7731842352685932931
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          injective_address: Aliquam aliquam cum cumque.
+          updated_at: 5817986038243021313
     GetAccountPortfoliosResponseBody:
       type: object
       properties:
@@ -1261,169 +998,196 @@ components:
             $ref: '#/components/schemas/SingleAccountPortfolio'
           example:
           - balances:
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            injective_address: Corporis omnis vitae maxime aperiam.
-            updated_at: 7731842352685932931
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            injective_address: Aliquam aliquam cum cumque.
+            updated_at: 5817986038243021313
           - balances:
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            injective_address: Corporis omnis vitae maxime aperiam.
-            updated_at: 7731842352685932931
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            injective_address: Aliquam aliquam cum cumque.
+            updated_at: 5817986038243021313
+          - balances:
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            injective_address: Aliquam aliquam cum cumque.
+            updated_at: 5817986038243021313
+          - balances:
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            injective_address: Aliquam aliquam cum cumque.
+            updated_at: 5817986038243021313
       example:
         portfolios:
         - balances:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          injective_address: Corporis omnis vitae maxime aperiam.
-          updated_at: 7731842352685932931
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          injective_address: Aliquam aliquam cum cumque.
+          updated_at: 5817986038243021313
         - balances:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          injective_address: Corporis omnis vitae maxime aperiam.
-          updated_at: 7731842352685932931
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          injective_address: Aliquam aliquam cum cumque.
+          updated_at: 5817986038243021313
         - balances:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          injective_address: Corporis omnis vitae maxime aperiam.
-          updated_at: 7731842352685932931
-        - balances:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          injective_address: Corporis omnis vitae maxime aperiam.
-          updated_at: 7731842352685932931
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          injective_address: Aliquam aliquam cum cumque.
+          updated_at: 5817986038243021313
     GetAllGuildsResponseBody:
       type: object
       properties:
@@ -1433,253 +1197,280 @@ components:
             $ref: '#/components/schemas/Guild'
           description: Existing guilds
           example:
-          - capacity: 3352520483564344830
+          - capacity: 5964216642713450062
             current_portfolio:
               balances:
-              - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                denom: Quaerat voluptatem ullam.
-                margin_hold: Id quo dolorem.
-                price_usd: 0.15991903349222503
-                total_balance: Esse magni.
-                unrealized_pnl: Labore consequatur commodi non alias voluptas.
-              - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                denom: Quaerat voluptatem ullam.
-                margin_hold: Id quo dolorem.
-                price_usd: 0.15991903349222503
-                total_balance: Esse magni.
-                unrealized_pnl: Labore consequatur commodi non alias voluptas.
-              - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                denom: Quaerat voluptatem ullam.
-                margin_hold: Id quo dolorem.
-                price_usd: 0.15991903349222503
-                total_balance: Esse magni.
-                unrealized_pnl: Labore consequatur commodi non alias voluptas.
-              - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                denom: Quaerat voluptatem ullam.
-                margin_hold: Id quo dolorem.
-                price_usd: 0.15991903349222503
-                total_balance: Esse magni.
-                unrealized_pnl: Labore consequatur commodi non alias voluptas.
-              guild_id: Consequatur provident excepturi nam vel in repudiandae.
-              updated_at: 3583934450217249860
-            default_member_address: Expedita recusandae minima.
-            description: Ut at ut suscipit iste.
-            id: Aut consectetur iste.
-            master_address: Saepe hic accusantium est nobis dolores.
-            member_count: 5941283201341949913
-            name: Fuga vel quos rerum culpa.
+              - available_balance: Qui ea qui.
+                denom: Est nobis dolores eveniet vel.
+                margin_hold: Inventore ut.
+                price_usd: 0.025452036676133237
+                total_balance: Sunt fugiat.
+                unrealized_pnl: Sit at et velit.
+              - available_balance: Qui ea qui.
+                denom: Est nobis dolores eveniet vel.
+                margin_hold: Inventore ut.
+                price_usd: 0.025452036676133237
+                total_balance: Sunt fugiat.
+                unrealized_pnl: Sit at et velit.
+              guild_id: Ex saepe.
+              updated_at: 3479703651976965601
+            default_member_address: Nam vel in.
+            description: Quasi quibusdam.
+            id: Quaerat labore aut est.
+            master_address: Numquam id et quaerat cum in.
+            member_count: 3852276272004033949
+            name: Illum aperiam voluptatem maiores nulla.
             requirements:
-            - denom: Commodi sunt fugiat.
-              min_amount: 0.5481824157397183
-              min_amount_usd: 0.5528210620958133
-            - denom: Commodi sunt fugiat.
-              min_amount: 0.5481824157397183
-              min_amount_usd: 0.5528210620958133
-            - denom: Commodi sunt fugiat.
-              min_amount: 0.5481824157397183
-              min_amount_usd: 0.5528210620958133
-            - denom: Commodi sunt fugiat.
-              min_amount: 0.5481824157397183
-              min_amount_usd: 0.5528210620958133
-            staking_requirement: Qui ut sit at et velit.
-          - capacity: 3352520483564344830
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            staking_requirement: Quos rerum culpa sit ut at.
+          - capacity: 5964216642713450062
             current_portfolio:
               balances:
-              - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                denom: Quaerat voluptatem ullam.
-                margin_hold: Id quo dolorem.
-                price_usd: 0.15991903349222503
-                total_balance: Esse magni.
-                unrealized_pnl: Labore consequatur commodi non alias voluptas.
-              - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                denom: Quaerat voluptatem ullam.
-                margin_hold: Id quo dolorem.
-                price_usd: 0.15991903349222503
-                total_balance: Esse magni.
-                unrealized_pnl: Labore consequatur commodi non alias voluptas.
-              - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                denom: Quaerat voluptatem ullam.
-                margin_hold: Id quo dolorem.
-                price_usd: 0.15991903349222503
-                total_balance: Esse magni.
-                unrealized_pnl: Labore consequatur commodi non alias voluptas.
-              - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-                denom: Quaerat voluptatem ullam.
-                margin_hold: Id quo dolorem.
-                price_usd: 0.15991903349222503
-                total_balance: Esse magni.
-                unrealized_pnl: Labore consequatur commodi non alias voluptas.
-              guild_id: Consequatur provident excepturi nam vel in repudiandae.
-              updated_at: 3583934450217249860
-            default_member_address: Expedita recusandae minima.
-            description: Ut at ut suscipit iste.
-            id: Aut consectetur iste.
-            master_address: Saepe hic accusantium est nobis dolores.
-            member_count: 5941283201341949913
-            name: Fuga vel quos rerum culpa.
+              - available_balance: Qui ea qui.
+                denom: Est nobis dolores eveniet vel.
+                margin_hold: Inventore ut.
+                price_usd: 0.025452036676133237
+                total_balance: Sunt fugiat.
+                unrealized_pnl: Sit at et velit.
+              - available_balance: Qui ea qui.
+                denom: Est nobis dolores eveniet vel.
+                margin_hold: Inventore ut.
+                price_usd: 0.025452036676133237
+                total_balance: Sunt fugiat.
+                unrealized_pnl: Sit at et velit.
+              guild_id: Ex saepe.
+              updated_at: 3479703651976965601
+            default_member_address: Nam vel in.
+            description: Quasi quibusdam.
+            id: Quaerat labore aut est.
+            master_address: Numquam id et quaerat cum in.
+            member_count: 3852276272004033949
+            name: Illum aperiam voluptatem maiores nulla.
             requirements:
-            - denom: Commodi sunt fugiat.
-              min_amount: 0.5481824157397183
-              min_amount_usd: 0.5528210620958133
-            - denom: Commodi sunt fugiat.
-              min_amount: 0.5481824157397183
-              min_amount_usd: 0.5528210620958133
-            - denom: Commodi sunt fugiat.
-              min_amount: 0.5481824157397183
-              min_amount_usd: 0.5528210620958133
-            - denom: Commodi sunt fugiat.
-              min_amount: 0.5481824157397183
-              min_amount_usd: 0.5528210620958133
-            staking_requirement: Qui ut sit at et velit.
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            staking_requirement: Quos rerum culpa sit ut at.
+          - capacity: 5964216642713450062
+            current_portfolio:
+              balances:
+              - available_balance: Qui ea qui.
+                denom: Est nobis dolores eveniet vel.
+                margin_hold: Inventore ut.
+                price_usd: 0.025452036676133237
+                total_balance: Sunt fugiat.
+                unrealized_pnl: Sit at et velit.
+              - available_balance: Qui ea qui.
+                denom: Est nobis dolores eveniet vel.
+                margin_hold: Inventore ut.
+                price_usd: 0.025452036676133237
+                total_balance: Sunt fugiat.
+                unrealized_pnl: Sit at et velit.
+              guild_id: Ex saepe.
+              updated_at: 3479703651976965601
+            default_member_address: Nam vel in.
+            description: Quasi quibusdam.
+            id: Quaerat labore aut est.
+            master_address: Numquam id et quaerat cum in.
+            member_count: 3852276272004033949
+            name: Illum aperiam voluptatem maiores nulla.
+            requirements:
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            staking_requirement: Quos rerum culpa sit ut at.
+          - capacity: 5964216642713450062
+            current_portfolio:
+              balances:
+              - available_balance: Qui ea qui.
+                denom: Est nobis dolores eveniet vel.
+                margin_hold: Inventore ut.
+                price_usd: 0.025452036676133237
+                total_balance: Sunt fugiat.
+                unrealized_pnl: Sit at et velit.
+              - available_balance: Qui ea qui.
+                denom: Est nobis dolores eveniet vel.
+                margin_hold: Inventore ut.
+                price_usd: 0.025452036676133237
+                total_balance: Sunt fugiat.
+                unrealized_pnl: Sit at et velit.
+              guild_id: Ex saepe.
+              updated_at: 3479703651976965601
+            default_member_address: Nam vel in.
+            description: Quasi quibusdam.
+            id: Quaerat labore aut est.
+            master_address: Numquam id et quaerat cum in.
+            member_count: 3852276272004033949
+            name: Illum aperiam voluptatem maiores nulla.
+            requirements:
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            - denom: Aut consectetur iste.
+              min_amount: 0.7297009691051966
+              min_amount_usd: 0.758142157309922
+            staking_requirement: Quos rerum culpa sit ut at.
       example:
         guilds:
-        - capacity: 3352520483564344830
+        - capacity: 5964216642713450062
           current_portfolio:
             balances:
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            guild_id: Consequatur provident excepturi nam vel in repudiandae.
-            updated_at: 3583934450217249860
-          default_member_address: Expedita recusandae minima.
-          description: Ut at ut suscipit iste.
-          id: Aut consectetur iste.
-          master_address: Saepe hic accusantium est nobis dolores.
-          member_count: 5941283201341949913
-          name: Fuga vel quos rerum culpa.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            guild_id: Ex saepe.
+            updated_at: 3479703651976965601
+          default_member_address: Nam vel in.
+          description: Quasi quibusdam.
+          id: Quaerat labore aut est.
+          master_address: Numquam id et quaerat cum in.
+          member_count: 3852276272004033949
+          name: Illum aperiam voluptatem maiores nulla.
           requirements:
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          staking_requirement: Qui ut sit at et velit.
-        - capacity: 3352520483564344830
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          staking_requirement: Quos rerum culpa sit ut at.
+        - capacity: 5964216642713450062
           current_portfolio:
             balances:
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            guild_id: Consequatur provident excepturi nam vel in repudiandae.
-            updated_at: 3583934450217249860
-          default_member_address: Expedita recusandae minima.
-          description: Ut at ut suscipit iste.
-          id: Aut consectetur iste.
-          master_address: Saepe hic accusantium est nobis dolores.
-          member_count: 5941283201341949913
-          name: Fuga vel quos rerum culpa.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            guild_id: Ex saepe.
+            updated_at: 3479703651976965601
+          default_member_address: Nam vel in.
+          description: Quasi quibusdam.
+          id: Quaerat labore aut est.
+          master_address: Numquam id et quaerat cum in.
+          member_count: 3852276272004033949
+          name: Illum aperiam voluptatem maiores nulla.
           requirements:
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          staking_requirement: Qui ut sit at et velit.
-        - capacity: 3352520483564344830
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          staking_requirement: Quos rerum culpa sit ut at.
+        - capacity: 5964216642713450062
           current_portfolio:
             balances:
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            guild_id: Consequatur provident excepturi nam vel in repudiandae.
-            updated_at: 3583934450217249860
-          default_member_address: Expedita recusandae minima.
-          description: Ut at ut suscipit iste.
-          id: Aut consectetur iste.
-          master_address: Saepe hic accusantium est nobis dolores.
-          member_count: 5941283201341949913
-          name: Fuga vel quos rerum culpa.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            guild_id: Ex saepe.
+            updated_at: 3479703651976965601
+          default_member_address: Nam vel in.
+          description: Quasi quibusdam.
+          id: Quaerat labore aut est.
+          master_address: Numquam id et quaerat cum in.
+          member_count: 3852276272004033949
+          name: Illum aperiam voluptatem maiores nulla.
           requirements:
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          staking_requirement: Qui ut sit at et velit.
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          staking_requirement: Quos rerum culpa sit ut at.
+        - capacity: 5964216642713450062
+          current_portfolio:
+            balances:
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            guild_id: Ex saepe.
+            updated_at: 3479703651976965601
+          default_member_address: Nam vel in.
+          description: Quasi quibusdam.
+          id: Quaerat labore aut est.
+          master_address: Numquam id et quaerat cum in.
+          member_count: 3852276272004033949
+          name: Illum aperiam voluptatem maiores nulla.
+          requirements:
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          staking_requirement: Quos rerum culpa sit ut at.
     GetGuildDefaultMemberResponseBody:
       type: object
       properties:
@@ -1687,10 +1478,10 @@ components:
           $ref: '#/components/schemas/GuildMember'
       example:
         default_member:
-          guild_id: Libero a nam consectetur commodi dolor commodi.
-          injective_address: Nihil quia quo eligendi omnis.
+          guild_id: Qui culpa id.
+          injective_address: Omnis expedita recusandae minima ipsam quis.
           is_default_guild_member: true
-          since: 1803131455148249831
+          since: 4200925254206743201
     GetGuildMarketsResponseBody:
       type: object
       properties:
@@ -1699,24 +1490,26 @@ components:
           items:
             $ref: '#/components/schemas/Market'
           example:
-          - is_perpetual: true
-            market_id: Velit sit rerum inventore ut.
-          - is_perpetual: true
-            market_id: Velit sit rerum inventore ut.
+          - is_perpetual: false
+            market_id: Molestiae cum.
+          - is_perpetual: false
+            market_id: Molestiae cum.
       example:
         markets:
-        - is_perpetual: true
-          market_id: Velit sit rerum inventore ut.
-        - is_perpetual: true
-          market_id: Velit sit rerum inventore ut.
+        - is_perpetual: false
+          market_id: Molestiae cum.
+        - is_perpetual: false
+          market_id: Molestiae cum.
+        - is_perpetual: false
+          market_id: Molestiae cum.
     GetGuildMasterAddressResponseBody:
       type: object
       properties:
         master_address:
           type: string
-          example: Aut quaerat officiis.
+          example: Corporis voluptatem ut.
       example:
-        master_address: Recusandae non nobis officia veniam sit pariatur.
+        master_address: Inventore non.
     GetGuildMembersResponseBody:
       type: object
       properties:
@@ -1726,28 +1519,36 @@ components:
             $ref: '#/components/schemas/GuildMember'
           description: Member of given guild
           example:
-          - guild_id: Libero a nam consectetur commodi dolor commodi.
-            injective_address: Nihil quia quo eligendi omnis.
+          - guild_id: Qui culpa id.
+            injective_address: Omnis expedita recusandae minima ipsam quis.
             is_default_guild_member: true
-            since: 1803131455148249831
-          - guild_id: Libero a nam consectetur commodi dolor commodi.
-            injective_address: Nihil quia quo eligendi omnis.
+            since: 4200925254206743201
+          - guild_id: Qui culpa id.
+            injective_address: Omnis expedita recusandae minima ipsam quis.
             is_default_guild_member: true
-            since: 1803131455148249831
-          - guild_id: Libero a nam consectetur commodi dolor commodi.
-            injective_address: Nihil quia quo eligendi omnis.
+            since: 4200925254206743201
+          - guild_id: Qui culpa id.
+            injective_address: Omnis expedita recusandae minima ipsam quis.
             is_default_guild_member: true
-            since: 1803131455148249831
+            since: 4200925254206743201
+          - guild_id: Qui culpa id.
+            injective_address: Omnis expedita recusandae minima ipsam quis.
+            is_default_guild_member: true
+            since: 4200925254206743201
       example:
         members:
-        - guild_id: Libero a nam consectetur commodi dolor commodi.
-          injective_address: Nihil quia quo eligendi omnis.
+        - guild_id: Qui culpa id.
+          injective_address: Omnis expedita recusandae minima ipsam quis.
           is_default_guild_member: true
-          since: 1803131455148249831
-        - guild_id: Libero a nam consectetur commodi dolor commodi.
-          injective_address: Nihil quia quo eligendi omnis.
+          since: 4200925254206743201
+        - guild_id: Qui culpa id.
+          injective_address: Omnis expedita recusandae minima ipsam quis.
           is_default_guild_member: true
-          since: 1803131455148249831
+          since: 4200925254206743201
+        - guild_id: Qui culpa id.
+          injective_address: Omnis expedita recusandae minima ipsam quis.
+          is_default_guild_member: true
+          since: 4200925254206743201
     GetGuildPortfoliosResponseBody:
       type: object
       properties:
@@ -1757,223 +1558,97 @@ components:
             $ref: '#/components/schemas/SingleGuildPortfolio'
           example:
           - balances:
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            guild_id: Consequatur provident excepturi nam vel in repudiandae.
-            updated_at: 3583934450217249860
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            guild_id: Ex saepe.
+            updated_at: 3479703651976965601
           - balances:
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            guild_id: Consequatur provident excepturi nam vel in repudiandae.
-            updated_at: 3583934450217249860
-          - balances:
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            guild_id: Consequatur provident excepturi nam vel in repudiandae.
-            updated_at: 3583934450217249860
-          - balances:
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            guild_id: Consequatur provident excepturi nam vel in repudiandae.
-            updated_at: 3583934450217249860
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            guild_id: Ex saepe.
+            updated_at: 3479703651976965601
       example:
         portfolios:
         - balances:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          guild_id: Consequatur provident excepturi nam vel in repudiandae.
-          updated_at: 3583934450217249860
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          guild_id: Ex saepe.
+          updated_at: 3479703651976965601
         - balances:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          guild_id: Consequatur provident excepturi nam vel in repudiandae.
-          updated_at: 3583934450217249860
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          guild_id: Ex saepe.
+          updated_at: 3479703651976965601
         - balances:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          guild_id: Consequatur provident excepturi nam vel in repudiandae.
-          updated_at: 3583934450217249860
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          guild_id: Ex saepe.
+          updated_at: 3479703651976965601
         - balances:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          guild_id: Consequatur provident excepturi nam vel in repudiandae.
-          updated_at: 3583934450217249860
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          guild_id: Ex saepe.
+          updated_at: 3479703651976965601
     GetSingleGuildResponseBody:
       type: object
       properties:
@@ -1981,142 +1656,118 @@ components:
           $ref: '#/components/schemas/Guild'
       example:
         guild:
-          capacity: 3352520483564344830
+          capacity: 5964216642713450062
           current_portfolio:
             balances:
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-              denom: Quaerat voluptatem ullam.
-              margin_hold: Id quo dolorem.
-              price_usd: 0.15991903349222503
-              total_balance: Esse magni.
-              unrealized_pnl: Labore consequatur commodi non alias voluptas.
-            guild_id: Consequatur provident excepturi nam vel in repudiandae.
-            updated_at: 3583934450217249860
-          default_member_address: Expedita recusandae minima.
-          description: Ut at ut suscipit iste.
-          id: Aut consectetur iste.
-          master_address: Saepe hic accusantium est nobis dolores.
-          member_count: 5941283201341949913
-          name: Fuga vel quos rerum culpa.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            - available_balance: Qui ea qui.
+              denom: Est nobis dolores eveniet vel.
+              margin_hold: Inventore ut.
+              price_usd: 0.025452036676133237
+              total_balance: Sunt fugiat.
+              unrealized_pnl: Sit at et velit.
+            guild_id: Ex saepe.
+            updated_at: 3479703651976965601
+          default_member_address: Nam vel in.
+          description: Quasi quibusdam.
+          id: Quaerat labore aut est.
+          master_address: Numquam id et quaerat cum in.
+          member_count: 3852276272004033949
+          name: Illum aperiam voluptatem maiores nulla.
           requirements:
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          staking_requirement: Qui ut sit at et velit.
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          staking_requirement: Quos rerum culpa sit ut at.
     Guild:
       type: object
       properties:
         capacity:
           type: integer
-          example: 5443603296836562487
+          example: 7733442521196061445
           format: int64
         current_portfolio:
           $ref: '#/components/schemas/SingleGuildPortfolio'
         default_member_address:
           type: string
-          example: Saepe molestiae incidunt sed quo adipisci quia.
+          example: Suscipit recusandae ipsum similique facere.
         description:
           type: string
-          example: Qui assumenda ad sunt odit voluptatum illum.
+          example: Cupiditate delectus.
         id:
           type: string
-          example: Perspiciatis enim velit aliquam nisi.
+          example: Commodi tempora et dicta omnis.
         master_address:
           type: string
-          example: Occaecati nobis et.
+          example: Minima quos est.
         member_count:
           type: integer
-          example: 8360277226536744280
+          example: 7633527482164728805
           format: int64
         name:
           type: string
-          example: Incidunt dicta laboriosam.
+          example: Ratione dolores sit ut nobis.
         requirements:
           type: array
           items:
             $ref: '#/components/schemas/Requirement'
           example:
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
-          - denom: Commodi sunt fugiat.
-            min_amount: 0.5481824157397183
-            min_amount_usd: 0.5528210620958133
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
+          - denom: Aut consectetur iste.
+            min_amount: 0.7297009691051966
+            min_amount_usd: 0.758142157309922
         staking_requirement:
           type: string
-          example: Qui dolorem in.
+          example: Optio ut unde sit molestias nam.
       description: Guild info
       example:
-        capacity: 5617518068451676310
+        capacity: 5189960660683757
         current_portfolio:
           balances:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          guild_id: Consequatur provident excepturi nam vel in repudiandae.
-          updated_at: 3583934450217249860
-        default_member_address: Deserunt quia possimus aspernatur beatae.
-        description: Animi quos aliquam sed temporibus error non.
-        id: Quod sed expedita quaerat.
-        master_address: Est illum quae numquam blanditiis sit laboriosam.
-        member_count: 42506140915129594
-        name: Hic ipsam rerum at consequuntur.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          guild_id: Ex saepe.
+          updated_at: 3479703651976965601
+        default_member_address: Voluptate perferendis pariatur omnis molestias voluptate.
+        description: Incidunt dicta laboriosam.
+        id: Saepe est.
+        master_address: Qui assumenda ad sunt odit voluptatum illum.
+        member_count: 9088918460617873184
+        name: Perspiciatis enim velit aliquam nisi.
         requirements:
-        - denom: Commodi sunt fugiat.
-          min_amount: 0.5481824157397183
-          min_amount_usd: 0.5528210620958133
-        - denom: Commodi sunt fugiat.
-          min_amount: 0.5481824157397183
-          min_amount_usd: 0.5528210620958133
-        staking_requirement: Non sit et.
+        - denom: Aut consectetur iste.
+          min_amount: 0.7297009691051966
+          min_amount_usd: 0.758142157309922
+        - denom: Aut consectetur iste.
+          min_amount: 0.7297009691051966
+          min_amount_usd: 0.758142157309922
+        - denom: Aut consectetur iste.
+          min_amount: 0.7297009691051966
+          min_amount_usd: 0.758142157309922
+        staking_requirement: Nobis et consequatur eligendi molestiae.
       required:
       - id
       - name
@@ -2132,23 +1783,23 @@ components:
       properties:
         guild_id:
           type: string
-          example: Harum quo tenetur numquam fugiat asperiores aut.
+          example: Eos in quibusdam ut.
         injective_address:
           type: string
-          example: Et accusantium et in velit.
+          example: Eaque iusto et qui dolorem in vitae.
         is_default_guild_member:
           type: boolean
           example: true
         since:
           type: integer
-          example: 8061110835610680000
+          example: 2040546265728304545
           format: int64
       description: Guild member metadata
       example:
-        guild_id: Asperiores vel repellat fugiat ut.
-        injective_address: Inventore est quaerat tenetur.
-        is_default_guild_member: false
-        since: 5965414887260954938
+        guild_id: Animi maxime.
+        injective_address: Consequatur tempore dolor eligendi molestiae.
+        is_default_guild_member: true
+        since: 5522302458247628303
       required:
       - injective_address
       - is_default_guild_member
@@ -2158,22 +1809,22 @@ components:
       properties:
         leave_status:
           type: string
-          example: Autem voluptatem.
+          example: Reprehenderit laborum aspernatur.
       example:
-        leave_status: Dolor ut.
+        leave_status: Quod rerum consequatur aut saepe molestiae incidunt.
     Market:
       type: object
       properties:
         is_perpetual:
           type: boolean
-          example: false
+          example: true
         market_id:
           type: string
-          example: Aspernatur est minima.
+          example: Quo adipisci quia dolorem.
       description: Market supported by guild
       example:
-        is_perpetual: true
-        market_id: Voluptatum laborum sapiente at sit ut omnis.
+        is_perpetual: false
+        market_id: Expedita quaerat quia hic.
       required:
       - market_id
       - is_perpetual
@@ -2182,19 +1833,19 @@ components:
       properties:
         denom:
           type: string
-          example: Eligendi molestiae itaque dolor rerum voluptate.
+          example: Omnis beatae dignissimos.
         min_amount:
           type: number
-          example: 0.2723201667953783
+          example: 0.4629076013106706
           format: double
         min_amount_usd:
           type: number
-          example: 0.27073283538678455
+          example: 0.5519477687284126
           format: double
       example:
-        denom: Molestias voluptate in reprehenderit ea at dolore.
-        min_amount: 0.044394462549936224
-        min_amount_usd: 0.7214862822151082
+        denom: Ut error ipsum.
+        min_amount: 0.6199889815128852
+        min_amount_usd: 0.7675518610937316
       required:
       - denom
       - min_amount_usd
@@ -2207,60 +1858,43 @@ components:
           items:
             $ref: '#/components/schemas/Balance'
           example:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
         injective_address:
           type: string
-          example: Eos quae nemo fugiat autem.
+          example: Quos aliquam sed temporibus error non molestiae.
         updated_at:
           type: integer
-          example: 4191665701240771643
+          example: 1012382048127810203
           format: int64
       description: Single account portfio snapshot
       example:
         balances:
-        - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-          denom: Quaerat voluptatem ullam.
-          margin_hold: Id quo dolorem.
-          price_usd: 0.15991903349222503
-          total_balance: Esse magni.
-          unrealized_pnl: Labore consequatur commodi non alias voluptas.
-        - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-          denom: Quaerat voluptatem ullam.
-          margin_hold: Id quo dolorem.
-          price_usd: 0.15991903349222503
-          total_balance: Esse magni.
-          unrealized_pnl: Labore consequatur commodi non alias voluptas.
-        - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-          denom: Quaerat voluptatem ullam.
-          margin_hold: Id quo dolorem.
-          price_usd: 0.15991903349222503
-          total_balance: Esse magni.
-          unrealized_pnl: Labore consequatur commodi non alias voluptas.
-        - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-          denom: Quaerat voluptatem ullam.
-          margin_hold: Id quo dolorem.
-          price_usd: 0.15991903349222503
-          total_balance: Esse magni.
-          unrealized_pnl: Labore consequatur commodi non alias voluptas.
-        injective_address: Velit sit mollitia nostrum dolorum.
-        updated_at: 1117262649606603818
+        - available_balance: Qui ea qui.
+          denom: Est nobis dolores eveniet vel.
+          margin_hold: Inventore ut.
+          price_usd: 0.025452036676133237
+          total_balance: Sunt fugiat.
+          unrealized_pnl: Sit at et velit.
+        - available_balance: Qui ea qui.
+          denom: Est nobis dolores eveniet vel.
+          margin_hold: Inventore ut.
+          price_usd: 0.025452036676133237
+          total_balance: Sunt fugiat.
+          unrealized_pnl: Sit at et velit.
+        injective_address: Numquam blanditiis sit laboriosam necessitatibus eligendi
+          non.
+        updated_at: 1245028035225943611
       required:
       - injective_address
       - balances
@@ -2273,54 +1907,66 @@ components:
           items:
             $ref: '#/components/schemas/Balance'
           example:
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
-          - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-            denom: Quaerat voluptatem ullam.
-            margin_hold: Id quo dolorem.
-            price_usd: 0.15991903349222503
-            total_balance: Esse magni.
-            unrealized_pnl: Labore consequatur commodi non alias voluptas.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
+          - available_balance: Qui ea qui.
+            denom: Est nobis dolores eveniet vel.
+            margin_hold: Inventore ut.
+            price_usd: 0.025452036676133237
+            total_balance: Sunt fugiat.
+            unrealized_pnl: Sit at et velit.
         guild_id:
           type: string
-          example: Sapiente eos in quibusdam ut repellendus.
+          example: Praesentium voluptatum.
         updated_at:
           type: integer
-          example: 570844649947894538
+          example: 4835302012331979893
           format: int64
       description: Single guild portfolio snapshot
       example:
         balances:
-        - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-          denom: Quaerat voluptatem ullam.
-          margin_hold: Id quo dolorem.
-          price_usd: 0.15991903349222503
-          total_balance: Esse magni.
-          unrealized_pnl: Labore consequatur commodi non alias voluptas.
-        - available_balance: Voluptatem voluptatibus nostrum magnam hic.
-          denom: Quaerat voluptatem ullam.
-          margin_hold: Id quo dolorem.
-          price_usd: 0.15991903349222503
-          total_balance: Esse magni.
-          unrealized_pnl: Labore consequatur commodi non alias voluptas.
-        guild_id: Inventore quod.
-        updated_at: 8900958454802701204
+        - available_balance: Qui ea qui.
+          denom: Est nobis dolores eveniet vel.
+          margin_hold: Inventore ut.
+          price_usd: 0.025452036676133237
+          total_balance: Sunt fugiat.
+          unrealized_pnl: Sit at et velit.
+        - available_balance: Qui ea qui.
+          denom: Est nobis dolores eveniet vel.
+          margin_hold: Inventore ut.
+          price_usd: 0.025452036676133237
+          total_balance: Sunt fugiat.
+          unrealized_pnl: Sit at et velit.
+        - available_balance: Qui ea qui.
+          denom: Est nobis dolores eveniet vel.
+          margin_hold: Inventore ut.
+          price_usd: 0.025452036676133237
+          total_balance: Sunt fugiat.
+          unrealized_pnl: Sit at et velit.
+        - available_balance: Qui ea qui.
+          denom: Est nobis dolores eveniet vel.
+          margin_hold: Inventore ut.
+          price_usd: 0.025452036676133237
+          total_balance: Sunt fugiat.
+          unrealized_pnl: Sit at et velit.
+        guild_id: Magnam est eum aspernatur.
+        updated_at: 4584461060632402712
       required:
       - balances
       - updated_at

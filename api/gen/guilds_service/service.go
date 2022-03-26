@@ -25,9 +25,9 @@ type Service interface {
 	GetGuildMasterAddress(context.Context, *GetGuildMasterAddressPayload) (res *GetGuildMasterAddressResult, err error)
 	// Get default guild member
 	GetGuildDefaultMember(context.Context, *GetGuildDefaultMemberPayload) (res *GetGuildDefaultMemberResult, err error)
-	// Enter the guild: Should supply public_key, message, signature in base64
+	// Enter the guild
 	EnterGuild(context.Context, *EnterGuildPayload) (res *EnterGuildResult, err error)
-	// Enter the guild: Should supply public_key, message, signature in base64
+	// Leave the guild, guildID
 	LeaveGuild(context.Context, *LeaveGuildPayload) (res *LeaveGuildResult, err error)
 	// Get the guild markets
 	GetGuildMarkets(context.Context, *GetGuildMarketsPayload) (res *GetGuildMarketsResult, err error)
@@ -63,12 +63,8 @@ type Balance struct {
 // EnterGuildPayload is the payload type of the GuildsService service
 // EnterGuild method.
 type EnterGuildPayload struct {
-	GuildID   string
-	PublicKey string
-	// Supply base64 json encoded string cointaining {"action": "enter-guild",
-	// "expired_at": unixTimestamp }
-	Message   string
-	Signature string
+	GuildID          string
+	InjectiveAddress string
 }
 
 // EnterGuildResult is the result type of the GuildsService service EnterGuild
@@ -224,12 +220,8 @@ type GuildMember struct {
 // LeaveGuildPayload is the payload type of the GuildsService service
 // LeaveGuild method.
 type LeaveGuildPayload struct {
-	GuildID   string
-	PublicKey string
-	// Supply base64 json encoded string cointaining {"action": "leave-guild",
-	// "expired_at": unixTimestamp}
-	Message   string
-	Signature string
+	GuildID          string
+	InjectiveAddress string
 }
 
 // LeaveGuildResult is the result type of the GuildsService service LeaveGuild

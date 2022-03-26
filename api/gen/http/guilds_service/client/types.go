@@ -15,21 +15,13 @@ import (
 // EnterGuildRequestBody is the type of the "GuildsService" service
 // "EnterGuild" endpoint HTTP request body.
 type EnterGuildRequestBody struct {
-	PublicKey string `form:"public_key" json:"public_key" xml:"public_key"`
-	// Supply base64 json encoded string cointaining {"action": "enter-guild",
-	// "expired_at": unixTimestamp }
-	Message   string `form:"message" json:"message" xml:"message"`
-	Signature string `form:"signature" json:"signature" xml:"signature"`
+	InjectiveAddress string `form:"injective_address" json:"injective_address" xml:"injective_address"`
 }
 
 // LeaveGuildRequestBody is the type of the "GuildsService" service
 // "LeaveGuild" endpoint HTTP request body.
 type LeaveGuildRequestBody struct {
-	PublicKey string `form:"public_key" json:"public_key" xml:"public_key"`
-	// Supply base64 json encoded string cointaining {"action": "leave-guild",
-	// "expired_at": unixTimestamp}
-	Message   string `form:"message" json:"message" xml:"message"`
-	Signature string `form:"signature" json:"signature" xml:"signature"`
+	InjectiveAddress string `form:"injective_address" json:"injective_address" xml:"injective_address"`
 }
 
 // GetAllGuildsResponseBody is the type of the "GuildsService" service
@@ -623,9 +615,7 @@ type SingleAccountPortfolioResponseBody struct {
 // the "EnterGuild" endpoint of the "GuildsService" service.
 func NewEnterGuildRequestBody(p *guildsservice.EnterGuildPayload) *EnterGuildRequestBody {
 	body := &EnterGuildRequestBody{
-		PublicKey: p.PublicKey,
-		Message:   p.Message,
-		Signature: p.Signature,
+		InjectiveAddress: p.InjectiveAddress,
 	}
 	return body
 }
@@ -634,9 +624,7 @@ func NewEnterGuildRequestBody(p *guildsservice.EnterGuildPayload) *EnterGuildReq
 // the "LeaveGuild" endpoint of the "GuildsService" service.
 func NewLeaveGuildRequestBody(p *guildsservice.LeaveGuildPayload) *LeaveGuildRequestBody {
 	body := &LeaveGuildRequestBody{
-		PublicKey: p.PublicKey,
-		Message:   p.Message,
-		Signature: p.Signature,
+		InjectiveAddress: p.InjectiveAddress,
 	}
 	return body
 }

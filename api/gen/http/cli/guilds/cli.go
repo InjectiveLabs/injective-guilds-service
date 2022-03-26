@@ -254,8 +254,8 @@ COMMAND:
     get-guild-members: Get all members a given guild (include default member)
     get-guild-master-address: Get master address of given guild
     get-guild-default-member: Get default guild member
-    enter-guild: Enter the guild: Should supply public_key, message, signature in base64
-    leave-guild: Enter the guild: Should supply public_key, message, signature in base64
+    enter-guild: Enter the guild
+    leave-guild: Leave the guild, guildID
     get-guild-markets: Get the guild markets
     get-guild-portfolios: Get the guild markets
     get-account-info: Get current account member status
@@ -283,7 +283,7 @@ Get a single guild base on ID
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-single-guild --guild-id "Ipsa omnis."
+    %[1]s guilds-service get-single-guild --guild-id "Magni nihil voluptatem voluptatibus nostrum magnam."
 `, os.Args[0])
 }
 
@@ -294,7 +294,7 @@ Get all members a given guild (include default member)
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-members --guild-id "Dolore atque aperiam officiis necessitatibus dicta est."
+    %[1]s guilds-service get-guild-members --guild-id "Alias voluptas soluta id quo dolorem aut."
 `, os.Args[0])
 }
 
@@ -305,7 +305,7 @@ Get master address of given guild
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-master-address --guild-id "Eum vel quia nemo et placeat."
+    %[1]s guilds-service get-guild-master-address --guild-id "Adipisci reiciendis minima id."
 `, os.Args[0])
 }
 
@@ -316,39 +316,35 @@ Get default guild member
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-default-member --guild-id "Alias at magnam ut magnam."
+    %[1]s guilds-service get-guild-default-member --guild-id "Adipisci sed libero a nam consectetur."
 `, os.Args[0])
 }
 
 func guildsServiceEnterGuildUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service enter-guild -body JSON -guild-id STRING
 
-Enter the guild: Should supply public_key, message, signature in base64
+Enter the guild
     -body JSON: 
     -guild-id STRING: 
 
 Example:
     %[1]s guilds-service enter-guild --body '{
-      "message": "Provident odio deserunt.",
-      "public_key": "Iste eaque nesciunt.",
-      "signature": "Enim ab enim similique ipsa ut voluptatem."
-   }' --guild-id "Labore incidunt molestiae cum error voluptatem."
+      "injective_address": "Voluptates est."
+   }' --guild-id "Harum eum vel quia."
 `, os.Args[0])
 }
 
 func guildsServiceLeaveGuildUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service leave-guild -body JSON -guild-id STRING
 
-Enter the guild: Should supply public_key, message, signature in base64
+Leave the guild, guildID
     -body JSON: 
     -guild-id STRING: 
 
 Example:
     %[1]s guilds-service leave-guild --body '{
-      "message": "Nulla et ipsum autem inventore sed maxime.",
-      "public_key": "Et eaque qui.",
-      "signature": "Magnam dolorem nostrum velit non ipsa."
-   }' --guild-id "Autem est sit nesciunt ea et velit."
+      "injective_address": "Velit culpa in quae."
+   }' --guild-id "Quia natus iste eaque."
 `, os.Args[0])
 }
 
@@ -359,7 +355,7 @@ Get the guild markets
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-markets --guild-id "Cum vel voluptas voluptatibus molestiae possimus."
+    %[1]s guilds-service get-guild-markets --guild-id "Voluptatem ut labore."
 `, os.Args[0])
 }
 
@@ -372,7 +368,7 @@ Get the guild markets
     -end-time INT64: 
 
 Example:
-    %[1]s guilds-service get-guild-portfolios --guild-id "Accusantium modi." --start-time 5028863164679081464 --end-time 4392618078200310795
+    %[1]s guilds-service get-guild-portfolios --guild-id "Harum illo accusantium nobis quia nihil." --start-time 6787478751059554332 --end-time 6005939230312085927
 `, os.Args[0])
 }
 
@@ -383,7 +379,7 @@ Get current account member status
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-info --injective-address "Ab sequi quasi dolores et repellat odio."
+    %[1]s guilds-service get-account-info --injective-address "Nulla et ipsum autem inventore sed maxime."
 `, os.Args[0])
 }
 
@@ -394,7 +390,7 @@ Get current account portfolio snapshot
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-portfolio --injective-address "Et commodi necessitatibus at magni doloribus consequuntur."
+    %[1]s guilds-service get-account-portfolio --injective-address "Autem est sit nesciunt ea et velit."
 `, os.Args[0])
 }
 
@@ -407,6 +403,6 @@ Get current account portfolios snapshots all the time
     -end-time INT64: 
 
 Example:
-    %[1]s guilds-service get-account-portfolios --injective-address "Assumenda recusandae in odio est." --start-time 4825428882259966840 --end-time 8962513835541784180
+    %[1]s guilds-service get-account-portfolios --injective-address "Voluptatem cum vel." --start-time 5108990148465824867 --end-time 6179154836790129392
 `, os.Args[0])
 }
