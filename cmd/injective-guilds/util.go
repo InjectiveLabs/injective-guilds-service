@@ -17,7 +17,10 @@ func panicIf(err error) {
 
 func errorHandler(logger log.Logger) func(context.Context, http.ResponseWriter, error) {
 	return func(ctx context.Context, w http.ResponseWriter, err error) {
-		id := ctx.Value(middleware.RequestIDKey).(string)
+		id, ok := ctx.Value(middleware.RequestIDKey).(string)
+		if !ok {
+			id = "nil"
+		}
 		_, _ = w.Write([]byte("[" + id + "] encoding: " + err.Error()))
 		logger.Errorf("[%s] ERROR: %s", id, err.Error())
 	}
