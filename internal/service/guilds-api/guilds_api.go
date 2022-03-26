@@ -117,9 +117,6 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 		result = append(result, modelGuildToResponse(g, &portfolio, defaultMember[0]))
 	}
 
-	for _, g := range result {
-		fmt.Printf("%#v\n", *g)
-	}
 	return &svc.GetAllGuildsResult{Guilds: result}, nil
 }
 
@@ -576,7 +573,7 @@ func addINJToBalances(balance []*model.Balance, injAmount primitive.Decimal128) 
 	for _, b := range balance {
 		if b.Denom == config.DEMOM_INJ {
 			b.TotalBalance = sum(b.TotalBalance, injAmount)
-			b.AvailableBalance = sum(b.TotalBalance, injAmount)
+			b.AvailableBalance = sum(b.AvailableBalance, injAmount)
 			return balance
 		}
 	}

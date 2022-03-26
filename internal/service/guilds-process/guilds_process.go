@@ -140,7 +140,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 
 		portfolios := make([]*model.AccountPortfolio, 0)
 		denomToBalance := make(map[string]*model.Balance)
-		var sumInjBankBalance primitive.Decimal128
+		var sumInjBankBalance = primitive.NewDecimal128(0, 0)
 		// TODO: Create queue to re-try when failure happens
 		// TODO: Create bulk accounts balances query on injective-exchange
 		for _, member := range members {
@@ -178,10 +178,10 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 					tmp.UnrealizedPNL = sum(tmp.UnrealizedPNL, b.UnrealizedPNL)
 					tmp.MarginHold = sum(tmp.MarginHold, b.MarginHold)
 				}
+			}
 
-				if len(portfolioSnapshot.BankBalances) > 0 && (portfolioSnapshot.BankBalances[0].Denom == config.DEMOM_INJ) {
-					sumInjBankBalance = sum(sumInjBankBalance, portfolioSnapshot.BankBalances[0].Balance)
-				}
+			if len(portfolioSnapshot.BankBalances) > 0 && (portfolioSnapshot.BankBalances[0].Denom == config.DEMOM_INJ) {
+				sumInjBankBalance = sum(sumInjBankBalance, portfolioSnapshot.BankBalances[0].Balance)
 			}
 
 			portfolioSnapshot.UpdatedAt = now

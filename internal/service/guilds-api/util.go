@@ -29,6 +29,10 @@ func modelGuildToResponse(m *model.Guild, portfolio *model.GuildPortfolio, defau
 		denomToUsdPrice = make(map[string]float64)
 	)
 
+	if len(portfolio.BankBalances) > 0 && portfolio.BankBalances[0].Denom == config.DEMOM_INJ {
+		portfolio.Balances = addINJToBalances(portfolio.Balances, portfolio.BankBalances[0].Balance)
+	}
+
 	for _, b := range portfolio.Balances {
 		balances = append(balances, &svc.Balance{
 			Denom:            b.Denom,
