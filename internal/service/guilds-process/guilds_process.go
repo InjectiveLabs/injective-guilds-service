@@ -266,14 +266,14 @@ func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
 
 		countDisqualifed := 0
 		for _, member := range members {
-			disqualify, err := p.shouldDisqualify(ctx, g, member.InjectiveAddress)
+			needDisqualified, err := p.shouldDisqualify(ctx, g, member.InjectiveAddress)
 			if err != nil {
 				continue
 			}
 
 			// we don't expect this to regularly happen,
 			// so decided to delete each document this way
-			if disqualify {
+			if needDisqualified {
 				err = p.dbSvc.RemoveMember(ctx, g.ID.Hex(), member.InjectiveAddress)
 				if err != nil {
 					log.WithField("memberAddress", member.InjectiveAddress.String()).
@@ -330,6 +330,53 @@ func (p *GuildsProcess) meetGrantRequirements(
 	return true, nil
 }
 
+func (p *GuildsProcess) spotOrdersHaveInvalidFeeRecipient(
+	ctx context.Context,
+	guild *model.Guild,
+	defaultSubaccountID string,
+	masterAddress string,
+) (bool, error) {
+	// open orders
+	spotOrders, err := p.exchange.GetSpotOrders(
+		ctx, marketsFromGuild(guild, false),
+		defaultSubaccountID,
+	)
+	if err != nil {
+		return false, fmt.Errorf("get spot orders err: %w", err)
+	}
+
+	for _, o := range spotOrders {
+		if strings.ToLower(o.FeeRecipient) != masterAddress {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
+func (p *GuildsProcess) derivativeOrdersHaveInvalidFeeRecipient(
+	ctx context.Context,
+	guild *model.Guild,
+	defaultSubaccountID string,
+	masterAddress string,
+) (bool, error) {
+	derivativeOrders, err := p.exchange.GetDerivativeOrders(
+		ctx, marketsFromGuild(guild, true),
+		defaultSubaccountID,
+	)
+	if err != nil {
+		return false, fmt.Errorf("get derivative orders err: %w", err)
+	}
+
+	for _, o := range derivativeOrders {
+		if strings.ToLower(o.FeeRecipient) != masterAddress {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
 // shouldDisqualify disqualifies a person if:
 // - not enough grant requirement (user revoked at least one of them)
 // - deriv/spot orders has fee recipient != master address
@@ -347,40 +394,28 @@ func (p *GuildsProcess) shouldDisqualify(
 			WithError(err).Warningln("check grants error")
 	}
 
-	if !meetRequirement {
+	if err == nil && !meetRequirement {
+		// TODO: Add disqualification reason
 		return true, nil
 	}
 
-	// open orders
-	spotOrders, err := p.exchange.GetSpotOrders(
-		ctx, marketsFromGuild(guild, false),
-		defaultSubaccountID,
-	)
+	isInvalid, err := p.spotOrdersHaveInvalidFeeRecipient(ctx, guild, defaultSubaccountID, masterAddress)
 	if err != nil {
-		p.logger.WithField("subaccountID", defaultSubaccountID).
-			WithError(err).Warningln("get spot orders error")
+		p.logger.WithField("address", address.String()).
+			WithError(err).Warningln("check orders error")
 	}
 
-	for _, o := range spotOrders {
-		if strings.ToLower(o.FeeRecipient) != masterAddress {
-			return true, nil
-		}
+	if err == nil && isInvalid {
+		return true, nil
 	}
 
-	derivativeOrders, err := p.exchange.GetDerivativeOrders(
-		ctx, marketsFromGuild(guild, true),
-		defaultSubaccountID,
-	)
+	isInvalid, err = p.derivativeOrdersHaveInvalidFeeRecipient(ctx, guild, defaultSubaccountID, masterAddress)
 	if err != nil {
-		p.logger.WithField("subaccountID", defaultSubaccountID).
-			WithError(err).Warningln("get derivative orders error")
 		return false, err
 	}
 
-	for _, o := range derivativeOrders {
-		if strings.ToLower(o.FeeRecipient) != masterAddress {
-			return true, nil
-		}
+	if err == nil && isInvalid {
+		return true, nil
 	}
 
 	return false, nil

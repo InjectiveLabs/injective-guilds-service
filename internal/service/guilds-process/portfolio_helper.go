@@ -16,7 +16,6 @@ import (
 
 // PortfolioHelper supports capture account portfolio (default subaccount)
 type PortfolioHelper struct {
-	denomToCoinID    map[string]string
 	dbSvc            db.DBService
 	exchangeProvider exchange.DataProvider
 	logger           log.Logger
@@ -30,10 +29,6 @@ func NewPortfolioHelper(
 	helper := &PortfolioHelper{
 		dbSvc:            dbSvc,
 		exchangeProvider: provider,
-	}
-
-	if err := helper.UpdateDenomToCoinIDMap(ctx); err != nil {
-		return nil, err
 	}
 
 	return helper, nil
@@ -247,12 +242,12 @@ func (p *PortfolioHelper) GetDenomPrices(ctx context.Context, denoms []string) (
 	coinIDs := make([]string, 0)
 
 	for _, d := range denoms {
-		id, exist := p.denomToCoinID[d]
+		denomCfg, exist := config.DenomConfigs[d]
 		if !exist {
 			return nil, errors.New("not all denoms have coinIDs")
 		}
 
-		coinIDs = append(coinIDs, id)
+		coinIDs = append(coinIDs, denomCfg.CoinID)
 	}
 
 	prices, err := p.exchangeProvider.GetPriceUSD(ctx, coinIDs)
@@ -261,10 +256,10 @@ func (p *PortfolioHelper) GetDenomPrices(ctx context.Context, denoms []string) (
 	}
 
 	for _, d := range denoms {
-		id := p.denomToCoinID[d]
+		denomCfg := config.DenomConfigs[d]
 		found := false
 		for _, price := range prices {
-			if price.ID == id {
+			if price.ID == denomCfg.CoinID {
 				result[d] = price.CurrentPrice
 				found = true
 				break
@@ -272,19 +267,9 @@ func (p *PortfolioHelper) GetDenomPrices(ctx context.Context, denoms []string) (
 		}
 
 		if !found {
-			return nil, fmt.Errorf("coin id have no price: %s", id)
+			return nil, fmt.Errorf("coin id have no price: %s", denomCfg.CoinID)
 		}
 	}
 
 	return result, nil
-}
-
-// basically, we need Denom -> CoinID to get coin price
-// decide to store usd price in db at the moment, will use historical price later
-func (p *PortfolioHelper) UpdateDenomToCoinIDMap(ctx context.Context) error {
-	p.denomToCoinID = make(map[string]string)
-	for k, v := range config.DenomConfigs {
-		p.denomToCoinID[k] = v.CoinID
-	}
-	return nil
 }
