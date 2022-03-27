@@ -25,7 +25,7 @@ import (
 // NOW:
 // - Decided to use a stable release now, v1.31.0
 // - Atm, we can clone functions into this repo first
-// - We use this for data from our internal services
+// - We use response from our internal services
 type exchangeProvider struct {
 	DataProvider
 
@@ -58,10 +58,10 @@ func OptionTLSCert(tlsCert credentials.TransportCredentials) ClientOption {
 	}
 }
 
-// derives from current `master` of sdk-go
-// vvvvv
+// NewExchangeProvider returns DataProvider which fetches from many internal services
+// (derives from current `master` of sdk-go)
 func NewExchangeProvider(
-	protoAddr string,
+	exchangeAddr string,
 	lcdAddr string,
 	assetPriceAddr string,
 	options ...ClientOption,
@@ -78,13 +78,13 @@ func NewExchangeProvider(
 	var conn *grpc.ClientConn
 	var err error
 	if opts.TLSCert != nil {
-		conn, err = grpc.Dial(protoAddr, grpc.WithTransportCredentials(opts.TLSCert), grpc.WithContextDialer(DialerFunc))
+		conn, err = grpc.Dial(exchangeAddr, grpc.WithTransportCredentials(opts.TLSCert), grpc.WithContextDialer(DialerFunc))
 	} else {
-		conn, err = grpc.Dial(protoAddr, grpc.WithInsecure(), grpc.WithContextDialer(DialerFunc))
+		conn, err = grpc.Dial(exchangeAddr, grpc.WithInsecure(), grpc.WithContextDialer(DialerFunc))
 	}
 
 	if err != nil {
-		err := errors.Wrapf(err, "failed to connect to the gRPC: %s", protoAddr)
+		err := errors.Wrapf(err, "failed to connect to the gRPC: %s", exchangeAddr)
 		return nil, err
 	}
 
@@ -160,14 +160,6 @@ func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketIDs []string
 			continue
 		}
 
-		// MarketID string
-
-		// OrderHash    string
-		// FeeRecipient string
-		// OrderSide    string
-
-		// Price            decimal.Decimal
-		// UnfilledQuantity decimal.Decimal
 		price, err := decimal.NewFromString(o.GetPrice())
 		if err != nil {
 			return nil, fmt.Errorf("parse price err: %w", err)

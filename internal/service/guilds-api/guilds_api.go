@@ -107,6 +107,7 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuildPayload) (res *svc.GetSingleGuildResult, err error) {
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
 	if err != nil {
+		s.logger.WithError(err).Error("list single guild error")
 		return nil, svc.MakeInternal(err)
 	}
 
@@ -121,6 +122,7 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 		Limit:   &limit,
 	})
 	if err != nil {
+		s.logger.WithError(err).Error("list guild portfolio errors")
 		return nil, svc.MakeInternal(err)
 	}
 
@@ -136,6 +138,7 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 		IsDefaultMember: &isDefaultMember,
 	})
 	if err != nil {
+		s.logger.WithError(err).Error("list guild member error")
 		return nil, svc.MakeInternal(err)
 	}
 
@@ -179,6 +182,7 @@ func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMemb
 func (s *service) GetGuildMasterAddress(ctx context.Context, payload *svc.GetGuildMasterAddressPayload) (res *svc.GetGuildMasterAddressResult, err error) {
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
 	if err != nil {
+		s.logger.WithError(err).Error("get single guild error")
 		return nil, svc.MakeInternal(err)
 	}
 	address := guild.MasterAddress.String()
@@ -394,6 +398,7 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
 	if err != nil {
+		s.logger.WithError(err).Error("get single guild error")
 		return nil, svc.MakeInternal(fmt.Errorf("guild error: %w", err))
 	}
 
@@ -408,12 +413,15 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 		true,
 	)
 	if err != nil {
+		s.logger.WithError(err).
+			WithField("address", payload.InjectiveAddress).Error("capture portfolio error")
 		return nil, svc.MakeInternal(fmt.Errorf("capture portfolio error: %w", err))
 	}
 
 	// check qualification
 	qualificationResult, err := s.checkAddressQualification(ctx, guild, portfolio)
 	if err != nil {
+		s.logger.WithError(err).Error("check qualifcation error")
 		return nil, svc.MakeInternal(fmt.Errorf("check qualification error: %w", err))
 	}
 
@@ -592,6 +600,7 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 		AccAddress: address,
 	})
 	if err != nil {
+		s.logger.WithError(err).Error("get account portfolio error")
 		return nil, svc.MakeInternal(err)
 	}
 
@@ -600,6 +609,7 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 		updatedAt time.Time
 	)
 
+	// get inj from bank balance and add it to inj balance in trading account
 	if len(portfolio.BankBalances) > 0 && portfolio.BankBalances[0].Denom == config.DEMOM_INJ {
 		portfolio.Balances = addInjBankToBalance(portfolio.Balances, portfolio.BankBalances[0])
 	}
