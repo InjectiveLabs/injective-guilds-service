@@ -16,6 +16,8 @@ import (
 )
 
 const (
+	expirationTimeLayout = "2006-01-02T15:04:05Z"
+
 	DirectionLong  = "long"
 	DirectionShort = "short"
 
@@ -31,6 +33,8 @@ type GuildsProcess struct {
 
 	portfolioUpdateInterval time.Duration
 	disqualifyInterval      time.Duration
+
+	grants []string
 }
 
 func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
@@ -68,6 +72,7 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 		portfolioUpdateInterval: cfg.PortfolioUpdateInterval,
 		disqualifyInterval:      cfg.DisqualifyInterval,
 		portfolioHelper:         portfolioHelper,
+		grants:                  config.GrantRequirements,
 	}, nil
 }
 
@@ -288,7 +293,46 @@ func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
 	return nil
 }
 
-// shouldDisqualify tries to disqualify a person if deriv/spot orders has fee recipient != master address
+func (p *GuildsProcess) meetGrantRequirements(
+	ctx context.Context,
+	guild *model.Guild,
+	address string,
+) (bool, error) {
+	grants, err := p.exchange.GetGrants(ctx, address, guild.MasterAddress.String())
+	if err != nil {
+		return false, err
+	}
+
+	msgToExpiration := make(map[string]time.Time)
+
+	for _, g := range grants.Grants {
+		t, err := time.Parse(expirationTimeLayout, g.Expiration)
+		if err != nil {
+			return false, fmt.Errorf("time parse err: %w", err)
+		}
+
+		msgToExpiration[g.Authorization.Msg] = t
+	}
+
+	// all expected grants must be provided
+	now := time.Now()
+	for _, expectedMsg := range p.grants {
+		expiration, ok := msgToExpiration[expectedMsg]
+		if !ok {
+			return false, nil
+		}
+
+		if expiration.Before(now) {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
+// shouldDisqualify disqualifies a person if:
+// - not enough grant requirement (user revoked at least one of them)
+// - deriv/spot orders has fee recipient != master address
 func (p *GuildsProcess) shouldDisqualify(
 	ctx context.Context,
 	guild *model.Guild,
@@ -296,7 +340,18 @@ func (p *GuildsProcess) shouldDisqualify(
 ) (bool, error) {
 	defaultSubaccountID := defaultSubaccountIDFromInjAddress(address)
 	masterAddress := strings.ToLower(guild.MasterAddress.String())
+	// check grants
+	meetRequirement, err := p.meetGrantRequirements(ctx, guild, address.String())
+	if err != nil {
+		p.logger.WithField("address", address.String()).
+			WithError(err).Warningln("check grants error")
+	}
 
+	if !meetRequirement {
+		return true, nil
+	}
+
+	// open orders
 	spotOrders, err := p.exchange.GetSpotOrders(
 		ctx, marketsFromGuild(guild, false),
 		defaultSubaccountID,
