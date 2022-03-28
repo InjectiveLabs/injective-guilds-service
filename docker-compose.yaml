@@ -1,0 +1,77 @@
+version: "3.9"
+services:
+  injective-guilds-api:
+    container_name: injective-guilds-api
+    image: injective-guilds:${APP_ENV}
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - GUILDS_ENV=${APP_ENV}
+      - GUILDS_LOG_LEVEL=DEBUG
+      - GUILDS_LISTEN_ADDRESS=http://0.0.0.0:9930
+      # config main-net
+      - GUILDS_DB_CONNECTION_URL=mongodb://mongo:27017
+      - GUILDS_DB_NAME=guilds
+      - GUILDS_EXCHANGE_GRPC_URL=sentry2.injective.network:9910
+      - GUILDS_LCD_URL=https://lcd.injective.network
+      - GUILDS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
+      # stat
+      - GUILDS_STATSD_PREFIX=guilds-api
+      - GUILDS_STATSD_ADDR=host.docker.internal:8125
+      - GUILDS_STATSD_STUCK_DUR=5m
+      - GUILDS_STATSD_MOCKING=false
+      - GUILDS_STATSD_DISABLED=false
+    ports:
+      - "9930:9930"
+    command: injective-guilds api
+    restart: always
+  injective-guilds-process:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: injective-guilds-process
+    image: injective-guilds:${APP_ENV}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - GUILDS_PROCESS_ENV=${APP_ENV}
+      - GUILDS_PROCESS_LOG_LEVEL=DEBUG
+      - GUILDS_PROCESS_DB_CONNECTION_URL=mongodb://mongo:27017
+      - GUILDS_PROCESS_DB_NAME=guilds
+      - GUILDS_PROCESS_EXCHANGE_GRPC_URL=sentry2.injective.network:9910
+      - GUILDS_PROCESS_LCD_URL=https://lcd.injective.network
+      - GUILDS_PROCESS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
+
+      - GUILDS_PROCESS_PORTFOLIO_UPDATE_INTERVAL=30m
+      - GUILDS_PROCESS_DISQUALIFY_INTERVAL=10m
+
+      - GUILDS_PROCESS_STATSD_PREFIX=guilds-process
+      - GUILDS_PROCESS_STATSD_ADDR=host.docker.internal:8125
+      - GUILDS_PROCESS_STATSD_STUCK_DUR=5m
+      - GUILDS_PROCESS_STATSD_MOCKING=false
+      - GUILDS_PROCESS_STATSD_DISABLED=false
+    command: injective-guilds process
+    restart: always
+  # below mongo config is for dev/test env, not for production
+  # we already have a mongo setup on production
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - ./var/mongo/db:/data/db
+    command: mongod --replSet rs0 --port 27017 --bind_ip 0.0.0.0
+    restart: always
+  # # a trick to setup mongo replset
+  mongo-setup:
+    container_name: mongo-setup
+    depends_on:
+      - mongo
+    image: mongo
+    entrypoint: |
+      bash -c "sleep 10 && mongo --host mongo:27017 --eval 'rs.initiate()'"
+
+
+  
