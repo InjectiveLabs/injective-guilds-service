@@ -57,8 +57,8 @@ func buildPortfolio(
 
 		aBalance.TotalBalance, _ = primitive.ParseDecimal128(b.TotalBalance.String())
 		aBalance.AvailableBalance, _ = primitive.ParseDecimal128(b.AvailableBalance.String())
-		aBalance.UnrealizedPNL, _ = primitive.ParseDecimal128(pnlValue.String())
-		aBalance.MarginHold, _ = primitive.ParseDecimal128(marginHoldValue.String())
+		aBalance.UnrealizedPNL, _ = primitive.ParseDecimal128(pnlValue.StringFixed(18))
+		aBalance.MarginHold, _ = primitive.ParseDecimal128(marginHoldValue.StringFixed(18))
 		if usdPrices != nil {
 			// TODO: Impl historical price on asset-price service to recompute it on UI
 			aBalance.PriceUSD = usdPrices[b.Denom]
