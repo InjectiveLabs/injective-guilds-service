@@ -60,7 +60,7 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 		return nil, err
 	}
 
-	portfolioHelper, err := NewPortfolioHelper(ctx, dbService, exchangeProvider)
+	portfolioHelper, err := NewPortfolioHelper(ctx, exchangeProvider, logger)
 	if err != nil {
 		return nil, err
 	}

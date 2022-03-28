@@ -147,7 +147,7 @@ func addGuildAction() {
 	panicIf(err)
 
 	log.Info("initializing portfolio helper")
-	helper, err := guildsprocess.NewPortfolioHelper(ctx, dbSvc, exchangeProvider)
+	helper, err := guildsprocess.NewPortfolioHelper(ctx, exchangeProvider, log.WithField("svc", "add_guild"))
 	panicIf(err)
 
 	spotClient := spotExchangePB.NewInjectiveSpotExchangeRPCClient(exchangeProvider.GetExchangeConn())

@@ -43,7 +43,9 @@ type service struct {
 }
 
 func NewService(ctx context.Context, dbSvc db.DBService, exchangeProvider exchange.DataProvider) (GuildsAPI, error) {
-	helper, err := guildsprocess.NewPortfolioHelper(ctx, dbSvc, exchangeProvider)
+	logger := log.WithField("svc", "guilds_api")
+
+	helper, err := guildsprocess.NewPortfolioHelper(ctx, exchangeProvider, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +54,7 @@ func NewService(ctx context.Context, dbSvc db.DBService, exchangeProvider exchan
 		dbSvc:            dbSvc,
 		exchangeProvider: exchangeProvider,
 		portfolioHelper:  helper,
-		logger:           log.WithField("svc", "guilds_api"),
+		logger:           logger,
 		grants:           config.GrantRequirements,
 	}, nil
 }
@@ -338,7 +340,7 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 		if !availBalanceFloat.GreaterThanOrEqual(decimal.NewFromFloat(min)) {
 			return &qualificationResult{
 				status: StatusUnqualified,
-				detail: fmt.Sprintf("%s has balance %s <= min %.2f", b.Denom, availBalanceFloat.String(), min),
+				detail: fmt.Sprintf("%s has balance %s < min %.2f", b.Denom, availBalanceFloat.String(), min),
 			}, nil
 		}
 	}

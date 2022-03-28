@@ -2,7 +2,10 @@ gen-goa: export GOPROXY=direct
 gen-goa:
 	rm -rf ./api/gen
 	go generate ./api/...
-gen: gen-goa
+gen: 
+	gen-goa
+	mockgen -source=internal/exchange/types.go -destination=internal/exchange/types_mock.go -package=exchange
+
 install:
 	go install github.com/InjectiveLabs/injective-guilds-service/cmd/injective-guilds/...
 dev:

@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
-	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	"github.com/shopspring/decimal"
@@ -16,19 +15,18 @@ import (
 
 // PortfolioHelper supports capture account portfolio (default subaccount)
 type PortfolioHelper struct {
-	dbSvc            db.DBService
 	exchangeProvider exchange.DataProvider
 	logger           log.Logger
 }
 
 func NewPortfolioHelper(
 	ctx context.Context,
-	dbSvc db.DBService,
 	provider exchange.DataProvider,
+	logger log.Logger,
 ) (*PortfolioHelper, error) {
 	helper := &PortfolioHelper{
-		dbSvc:            dbSvc,
 		exchangeProvider: provider,
+		logger:           logger,
 	}
 
 	return helper, nil
@@ -66,7 +64,7 @@ func (p *PortfolioHelper) CaptureSingleMemberPortfolio(
 	}
 
 	// bank balance
-	injBalance, err := p.getINJBankBalances(ctx, member)
+	injBalance, err := p.getInjBankBalances(ctx, member)
 	if err != nil {
 		return nil, fmt.Errorf("get inj bank balance err: %w", err)
 	}
@@ -84,7 +82,7 @@ func (p *PortfolioHelper) CaptureSingleMemberPortfolio(
 	return buildPortfolio(member, balances, injBalance, pnl, marginHold, prices), nil
 }
 
-func (p *PortfolioHelper) getINJBankBalances(
+func (p *PortfolioHelper) getInjBankBalances(
 	ctx context.Context,
 	member *model.GuildMember,
 ) ([]*model.BankBalance, error) {
@@ -155,7 +153,8 @@ func (p *PortfolioHelper) getUnrealizedPNL(
 		}
 		quoteDenom := market.QuoteDenom
 		// pnl[quoteDenom] += (markPrice - entryPrice) * quantity * signOf(direction)
-		pnl[quoteDenom] = pnl[quoteDenom].Add(pos.MarkPrice.Sub(pos.EntryPrice).Mul(pos.Quantity).Mul(signOf(pos.Direction)))
+		a := pos.MarkPrice.Sub(pos.EntryPrice).Mul(pos.Quantity).Mul(signOf(pos.Direction))
+		pnl[quoteDenom] = pnl[quoteDenom].Add(a)
 	}
 
 	return pnl
@@ -213,13 +212,7 @@ func (p *PortfolioHelper) getMarginHold(
 	// for a limit buy in the ETH/USDT market, denom is USDT and balanceHold is (1 + takerFee)*(price * quantity)
 	// for a limit sell in the ETH/USDT market, denom is ETH and balanceHold is just quantity
 	for _, o := range spotOrders {
-		market, exist := idToMarket[o.MarketID]
-		if !exist {
-			// TODO: Optimization: Put into queue to remove this person
-			// Reason: we don't support market which is not in guild
-			continue
-		}
-
+		market := idToMarket[o.MarketID]
 		if o.OrderSide == OrderSideBuy {
 			// expected to parse successfully -> skip error
 			takerFee, _ := decimal.NewFromString(market.TakerFeeRate.String())

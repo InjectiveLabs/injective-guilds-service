@@ -3,6 +3,7 @@ package guildsprocess
 import (
 	"time"
 
+	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	"github.com/ethereum/go-ethereum/common"
@@ -68,6 +69,14 @@ func buildPortfolio(
 
 	// currently only track INJ balance
 	// use bank balance model for future, if we want to track balance in other denoms
+	// TODO: Impl historical price on asset-price service to recompute it on UI
+	if usdPrices != nil {
+		for _, b := range injBalance {
+			if b.Denom == config.DEMOM_INJ {
+				b.PriceUSD = usdPrices[config.DEMOM_INJ]
+			}
+		}
+	}
 	portfolio.BankBalances = injBalance
 
 	return portfolio
