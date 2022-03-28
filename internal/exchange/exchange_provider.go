@@ -270,7 +270,7 @@ func (p *exchangeProvider) GetPositions(ctx context.Context, subaccount string) 
 // GetGrants fetch first 100 grants atm, it should be engouh to check grants that bot needs
 func (p *exchangeProvider) GetGrants(ctx context.Context, granter, grantee string) (*Grants, error) {
 	url := fmt.Sprintf(
-		"%s/cosmos/authz/v1beta1/grants?granter=%s&grantee=%s&limit=100",
+		"%s/cosmos/authz/v1beta1/grants?granter=%s&grantee=%s&pagination.limit=100",
 		p.lcdAddr, granter, grantee,
 	)
 	resp, err := p.httpClient.Get(url)

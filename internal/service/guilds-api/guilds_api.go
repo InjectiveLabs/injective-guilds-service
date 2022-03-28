@@ -224,7 +224,7 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address string) (*qualificationResult, error) {
 	grants, err := s.exchangeProvider.GetGrants(ctx, address, guild.MasterAddress.String())
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get grants err: %w", err)
 	}
 
 	msgToExpiration := make(map[string]time.Time)
