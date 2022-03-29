@@ -8,5 +8,5 @@ COPY go.sum .
 RUN go mod download
 COPY . .
 RUN go build -o /bin/injective-guilds ./cmd/injective-guilds/
-EXPOSE 9920
+EXPOSE 9930
 CMD ["injective-guilds"]
