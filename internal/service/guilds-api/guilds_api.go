@@ -389,7 +389,7 @@ func (s *service) checkAddressLeaveCondition(
 		}
 	}
 
-	return existCount == 0, nil
+	return existCount < len(s.grants), nil
 }
 
 func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
@@ -428,11 +428,7 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	}
 
 	if qualificationResult.status != StatusQualified {
-		joinStatus := "not_qualified"
-		return &svc.EnterGuildResult{
-			JoinStatus: &joinStatus,
-			Message:    &qualificationResult.detail,
-		}, nil
+		return nil, svc.MakeInvalidArg(errors.New(qualificationResult.detail))
 	}
 
 	// add to database
