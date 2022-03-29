@@ -185,8 +185,16 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 				}
 			}
 
-			if len(portfolioSnapshot.BankBalances) > 0 && (portfolioSnapshot.BankBalances[0].Denom == config.DEMOM_INJ) {
-				sumInjBankBalance = sum(sumInjBankBalance, portfolioSnapshot.BankBalances[0].Balance)
+			// also fill denom price in bank balance
+			for _, b := range portfolioSnapshot.BankBalances {
+				if b.Denom == config.DEMOM_INJ {
+					sumInjBankBalance = sum(sumInjBankBalance, b.Balance)
+				}
+
+				priceUSD, exist := priceMap[b.Denom]
+				if exist {
+					b.PriceUSD = priceUSD
+				}
 			}
 
 			portfolioSnapshot.UpdatedAt = now

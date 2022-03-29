@@ -82,8 +82,9 @@ type AccountPortfolio struct {
 	// Which supports the case that an address can leave a guild and join another guild
 	GuildID primitive.ObjectID `bson:"guild_id" json:"guild_id"`
 
-	InjectiveAddress Address    `bson:"injective_address" json:"injective_address"`
-	Balances         []*Balance `bson:"balances" json:"balances"`
+	InjectiveAddress Address `bson:"injective_address" json:"injective_address"`
+	// Store default trading account's balance
+	Balances []*Balance `bson:"balances" json:"balances"`
 	// Store account's inj amount atm
 	BankBalances []*BankBalance `bson:"bank_balances" json:"bank_balances"`
 	// timestamp when this gets update
