@@ -139,11 +139,11 @@ func addGuildAction() {
 	validateAddGuildArgs()
 
 	ctx := context.Background()
-	log.Info("connect db service at", *dbURL)
+	log.Info("connect db service at ", *dbURL)
 	dbSvc, err := mongoimpl.NewService(ctx, *dbURL, "guilds")
 	panicIf(err)
 
-	log.Info("connecting exchange api at", *exchangeURL)
+	log.Info("connecting exchange api at ", *exchangeURL)
 	exchangeProvider, err := exchange.NewExchangeProvider(*exchangeURL, *lcdURL, *assetPriceURL)
 	panicIf(err)
 
@@ -262,7 +262,14 @@ func addGuildAction() {
 
 	log.Info("adding default member")
 	err = dbSvc.AddMember(ctx, id.Hex(), model.Address{AccAddress: defaultMember}, true)
-	panicIf(err)
+	if err != nil {
+		// TODO: Use transaction
+		log.Error(fmt.Sprintf("adding default member failed: %s. Going to revert ...", err.Error()))
+		err = dbSvc.DeleteGuild(ctx, id.Hex())
+		panicIf(err)
+
+		log.Fatal("revert done. no guild added")
+	}
 
 	log.Info("capturing default member portfolio")
 	portfolio, err := helper.CaptureSingleMemberPortfolio(ctx, guild, &model.GuildMember{
