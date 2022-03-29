@@ -11,6 +11,7 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	guildsprocess "github.com/InjectiveLabs/injective-guilds-service/internal/service/guilds-process"
+	"github.com/InjectiveLabs/metrics"
 	derivativeExchangePB "github.com/InjectiveLabs/sdk-go/exchange/derivative_exchange_rpc/pb"
 	spotExchangePB "github.com/InjectiveLabs/sdk-go/exchange/spot_exchange_rpc/pb"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
@@ -147,7 +148,7 @@ func addGuildAction() {
 	panicIf(err)
 
 	log.Info("initializing portfolio helper")
-	helper, err := guildsprocess.NewPortfolioHelper(ctx, exchangeProvider, log.WithField("svc", "add_guild"))
+	helper, err := guildsprocess.NewPortfolioHelper(ctx, exchangeProvider, log.WithField("svc", "add_guild"), metrics.Tags{})
 	panicIf(err)
 
 	spotClient := spotExchangePB.NewInjectiveSpotExchangeRPCClient(exchangeProvider.GetExchangeConn())

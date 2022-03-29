@@ -8,6 +8,7 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
+	metrics "github.com/InjectiveLabs/metrics"
 	"github.com/shopspring/decimal"
 	log "github.com/xlab/suplog"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -17,16 +18,19 @@ import (
 type PortfolioHelper struct {
 	exchangeProvider exchange.DataProvider
 	logger           log.Logger
+	svcTags          metrics.Tags
 }
 
 func NewPortfolioHelper(
 	ctx context.Context,
 	provider exchange.DataProvider,
 	logger log.Logger,
+	tags metrics.Tags,
 ) (*PortfolioHelper, error) {
 	helper := &PortfolioHelper{
 		exchangeProvider: provider,
 		logger:           logger,
+		svcTags:          tags,
 	}
 
 	return helper, nil
@@ -38,18 +42,24 @@ func (p *PortfolioHelper) CaptureSingleMemberPortfolio(
 	member *model.GuildMember,
 	addDenomPrices bool,
 ) (*model.AccountPortfolio, error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	denoms := model.GetGuildDenoms(guild)
 	defaultSubaccountID := defaultSubaccountIDFromInjAddress(member.InjectiveAddress)
 
 	// get balances
 	balances, err := p.getSubaccountBalances(ctx, denoms, defaultSubaccountID)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("get balance error: %w", err)
 	}
 
 	// get all positions
 	positions, err := p.exchangeProvider.GetPositions(ctx, defaultSubaccountID)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		// TODO: Put intro retry queue
 		return nil, fmt.Errorf("get position err: %w", err)
 	}
@@ -60,12 +70,14 @@ func (p *PortfolioHelper) CaptureSingleMemberPortfolio(
 	// compute margin hold
 	marginHold, err := p.getMarginHold(ctx, guild, positions, member)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("get margin hold err: %w", err)
 	}
 
 	// bank balance
 	injBalance, err := p.getInjBankBalances(ctx, member)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("get inj bank balance err: %w", err)
 	}
 
@@ -75,6 +87,7 @@ func (p *PortfolioHelper) CaptureSingleMemberPortfolio(
 		denoms := append(model.GetGuildDenoms(guild), "inj")
 		prices, err = p.GetDenomPrices(ctx, denoms)
 		if err != nil {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("get denom price err: %w", err)
 		}
 	}
@@ -231,12 +244,17 @@ func (p *PortfolioHelper) getMarginHold(
 
 // getDenomPrices returns map[denom]priceInUSD
 func (p *PortfolioHelper) GetDenomPrices(ctx context.Context, denoms []string) (map[string]float64, error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	result := make(map[string]float64)
 	coinIDs := make([]string, 0)
 
 	for _, d := range denoms {
 		denomCfg, exist := config.DenomConfigs[d]
 		if !exist {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, errors.New("not all denoms have coinIDs")
 		}
 
@@ -260,6 +278,7 @@ func (p *PortfolioHelper) GetDenomPrices(ctx context.Context, denoms []string) (
 		}
 
 		if !found {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("coin id have no price: %s", denomCfg.CoinID)
 		}
 	}

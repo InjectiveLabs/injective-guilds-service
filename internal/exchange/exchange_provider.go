@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/InjectiveLabs/metrics"
 	accountPB "github.com/InjectiveLabs/sdk-go/exchange/accounts_rpc/pb"
 	derivativeExchangePB "github.com/InjectiveLabs/sdk-go/exchange/derivative_exchange_rpc/pb"
 	spotExchangePB "github.com/InjectiveLabs/sdk-go/exchange/spot_exchange_rpc/pb"
@@ -32,6 +33,7 @@ type exchangeProvider struct {
 	conn           *grpc.ClientConn
 	lcdAddr        string
 	assetPriceAddr string
+	svcTags        metrics.Tags
 
 	httpClient               *http.Client
 	accountClient            accountPB.InjectiveAccountsRPCClient
@@ -100,12 +102,19 @@ func NewExchangeProvider(
 		accountClient:            accountPB.NewInjectiveAccountsRPCClient(conn),
 		spotExchangeClient:       spotExchangePB.NewInjectiveSpotExchangeRPCClient(conn),
 		derivativeExchangeClient: derivativeExchangePB.NewInjectiveDerivativeExchangeRPCClient(conn),
+		svcTags: metrics.Tags{
+			"svc": "internal_services",
+		},
 	}
 
 	return cc, nil
 }
 
 func (p *exchangeProvider) GetSubaccountBalances(ctx context.Context, subaccount string) (result []*Balance, err error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	// get all denoms
 	req := &accountPB.SubaccountBalancesListRequest{
 		SubaccountId: subaccount,
@@ -114,17 +123,20 @@ func (p *exchangeProvider) GetSubaccountBalances(ctx context.Context, subaccount
 	var header metadata.MD
 	res, err := p.accountClient.SubaccountBalancesList(ctx, req, grpc.Header(&header))
 	if err != nil {
-		return nil, err
+		metrics.ReportFuncError(p.svcTags)
+		return nil, fmt.Errorf("subaccount balance list err: %w", err)
 	}
 
 	for _, b := range res.GetBalances() {
 		totalBalance, err := decimal.NewFromString(b.GetDeposit().GetTotalBalance())
 		if err != nil {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("parse total balance err: %w", err)
 		}
 
 		availBalance, err := decimal.NewFromString(b.GetDeposit().GetAvailableBalance())
 		if err != nil {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("parse avail balance err: %w", err)
 		}
 
@@ -139,6 +151,10 @@ func (p *exchangeProvider) GetSubaccountBalances(ctx context.Context, subaccount
 }
 
 func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketIDs []string, subaccount string) (result []*SpotOrder, err error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	req := &spotExchangePB.OrdersRequest{
 		SubaccountId: subaccount,
 	}
@@ -146,7 +162,8 @@ func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketIDs []string
 	var header metadata.MD
 	res, err := p.spotExchangeClient.Orders(ctx, req, grpc.Header(&header))
 	if err != nil {
-		return nil, err
+		metrics.ReportFuncError(p.svcTags)
+		return nil, fmt.Errorf("get spot orders err: %w", err)
 	}
 
 	// we will filter on client side, support on exchange api later
@@ -162,11 +179,13 @@ func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketIDs []string
 
 		price, err := decimal.NewFromString(o.GetPrice())
 		if err != nil {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("parse price err: %w", err)
 		}
 
 		unfilledQuantity, err := decimal.NewFromString(o.GetUnfilledQuantity())
 		if err != nil {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("parse unfilled quantity err: %w", err)
 		}
 
@@ -185,6 +204,10 @@ func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketIDs []string
 }
 
 func (p *exchangeProvider) GetDerivativeOrders(ctx context.Context, marketIDs []string, subaccount string) (result []*DerivativeOrder, err error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	req := &derivativeExchangePB.OrdersRequest{
 		SubaccountId: subaccount,
 	}
@@ -192,7 +215,8 @@ func (p *exchangeProvider) GetDerivativeOrders(ctx context.Context, marketIDs []
 	var header metadata.MD
 	res, err := p.derivativeExchangeClient.Orders(ctx, req, grpc.Header(&header))
 	if err != nil {
-		return nil, err
+		metrics.ReportFuncError(p.svcTags)
+		return nil, fmt.Errorf("get derivative orders err: %w", err)
 	}
 
 	// we will filter on client side, support on exchange api later
@@ -208,6 +232,7 @@ func (p *exchangeProvider) GetDerivativeOrders(ctx context.Context, marketIDs []
 
 		margin, err := decimal.NewFromString(o.GetMargin())
 		if err != nil {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("parse margin err: %w", err)
 		}
 
@@ -223,6 +248,10 @@ func (p *exchangeProvider) GetDerivativeOrders(ctx context.Context, marketIDs []
 }
 
 func (p *exchangeProvider) GetPositions(ctx context.Context, subaccount string) (result []*DerivativePosition, err error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	req := &derivativeExchangePB.PositionsRequest{
 		SubaccountId: subaccount,
 	}
@@ -230,27 +259,31 @@ func (p *exchangeProvider) GetPositions(ctx context.Context, subaccount string) 
 	var header metadata.MD
 	res, err := p.derivativeExchangeClient.Positions(ctx, req, grpc.Header(&header))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get position err: %w", err)
 	}
 
 	for _, pos := range res.GetPositions() {
 		quantity, err := decimal.NewFromString(pos.GetQuantity())
 		if err != nil {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("parse quantity err: %w", err)
 		}
 
 		margin, err := decimal.NewFromString(pos.GetMargin())
 		if err != nil {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("parse quantity err: %w", err)
 		}
 
 		entryPrice, err := decimal.NewFromString(pos.GetEntryPrice())
 		if err != nil {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("parse quantity err: %w", err)
 		}
 
 		markPrice, err := decimal.NewFromString(pos.GetMarkPrice())
 		if err != nil {
+			metrics.ReportFuncError(p.svcTags)
 			return nil, fmt.Errorf("parse mark price err: %w", err)
 		}
 
@@ -269,6 +302,10 @@ func (p *exchangeProvider) GetPositions(ctx context.Context, subaccount string) 
 
 // GetGrants fetch first 100 grants atm, it should be engouh to check grants that bot needs
 func (p *exchangeProvider) GetGrants(ctx context.Context, granter, grantee string) (*Grants, error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	url := fmt.Sprintf(
 		"%s/cosmos/authz/v1beta1/grants?granter=%s&grantee=%s&pagination.limit=100",
 		p.lcdAddr, granter, grantee,
@@ -276,19 +313,23 @@ func (p *exchangeProvider) GetGrants(ctx context.Context, granter, grantee strin
 	resp, err := p.httpClient.Get(url)
 
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: %w", err)
 	}
 	if resp.StatusCode != http.StatusOK {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: bad status: %d", resp.StatusCode)
 	}
 
 	var res Grants
 	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("read request body err: %w", err)
 	}
 
 	if err := json.Unmarshal(bytes, &res); err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("marshal request body err: %w", err)
 	}
 
@@ -296,6 +337,10 @@ func (p *exchangeProvider) GetGrants(ctx context.Context, granter, grantee strin
 }
 
 func (p *exchangeProvider) GetPriceUSD(ctx context.Context, coinIDs []string) ([]*CoinPrice, error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	coinList := strings.Join(coinIDs, ",")
 
 	url := fmt.Sprintf(
@@ -305,25 +350,33 @@ func (p *exchangeProvider) GetPriceUSD(ctx context.Context, coinIDs []string) ([
 	resp, err := p.httpClient.Get(url)
 
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: %w", err)
 	}
 	if resp.StatusCode != http.StatusOK {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: bad status: %d", resp.StatusCode)
 	}
 
 	var res CoinPriceResult
 	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("read request body err: %w", err)
 	}
 
 	if err := json.Unmarshal(bytes, &res); err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("marshal request body err: %w", err)
 	}
 	return res.Data, nil
 }
 
 func (p *exchangeProvider) GetBankBalance(ctx context.Context, address string) (*BankAccountBalances, error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	url := fmt.Sprintf(
 		"%s/cosmos/bank/v1beta1/balances/%s?pagination.limit=1000",
 		p.lcdAddr, address,
@@ -331,19 +384,23 @@ func (p *exchangeProvider) GetBankBalance(ctx context.Context, address string) (
 	resp, err := p.httpClient.Get(url)
 
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: %w", err)
 	}
 	if resp.StatusCode != http.StatusOK {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: bad status: %d", resp.StatusCode)
 	}
 
 	bytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("read request body err: %w", err)
 	}
 
 	var res BankAccountBalances
 	if err := json.Unmarshal(bytes, &res); err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("failed marshal bankaccount resp: %w", err)
 	}
 

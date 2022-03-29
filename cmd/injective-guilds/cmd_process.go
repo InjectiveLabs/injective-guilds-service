@@ -16,13 +16,16 @@ func cmdProcess(c *cli.Cmd) {
 		err := cfg.Validate()
 		panicIf(err)
 
+		// check denom prices
 		doubleCheckDenomConfig(cfg.AssetPriceURL)
-
+		// stats
+		err = connectStatServerWithRetry(cfg.EnvName, cfg.StatsdConfig, retryCount)
+		panicIf(err)
 		// setup logger
 		log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
+
 		guildsProcess, err := guildsprocess.NewProcess(cfg)
 		panicIf(err)
-
 		// run process(es) and hold until interrupt
 		ctx := context.Background()
 		cancelCtx, cancelFn := context.WithCancel(ctx)
