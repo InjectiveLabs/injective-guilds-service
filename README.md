@@ -17,12 +17,13 @@ injective-guilds update-denom
 
 To manually create a guild:
 
+(There are too many params for now)
+
 ```
 injective-guilds add-guild \
---spot-id=0xf04d1b7acf40b331d239fcff7950f98a4f2ab7adb2ceb8f65aa32ac29455d7b4 --spot-require=0/20 \
---name=testguild --description "Peiyun guild" --master=inj1wng2ucn0ak3aw5gq9j7m2z88m5aznwntqnekuv \
---default-member=inj1fpmlw98jka5dc9cjrwurvutz87n87y45skvqkv \
---exchange-url=sentry2.injective.network:9910 --db-url=mongodb://localhost:27017
+--derivative-id=0x8158e603fb80c4e417696b0e98765b4ca89dcf886d3b9b2b90dc15bfb1aebd51 --derivative-require=20 \ --derivative-id=0x1c79dac019f73e4060494ab1b4fcba734350656d6fc4d474f6a238c13c6f9ced --derivative-require=10 \
+--name=Akukx --description "Akukx Thomas Guild" --master=inj1wng2ucn0ak3aw5gq9j7m2z88m5aznwntqnekuv \
+--default-member=inj1kgpvzl2sjd527a7u5jj99j9pdple5050yavsd4 --exchange-url=sentry2.injective.network:9910 --db-url=mongodb://mongo:27017 --lcd-url=https://lcd.injective.network
 ```
 
 To delete a guild
