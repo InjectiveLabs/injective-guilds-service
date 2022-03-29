@@ -270,7 +270,19 @@ func addGuildAction() {
 	}, true)
 	panicIf(err)
 
+	log.Info("add default member portfolio snapshot into db")
 	err = dbSvc.AddAccountPortfolios(ctx, []*model.AccountPortfolio{portfolio})
+	panicIf(err)
+
+	log.Info("update guild portfolio snapshot into db")
+	// guild portfolio balance now is first member's balance
+	guildPortfolio := &model.GuildPortfolio{
+		GuildID:      *id,
+		Balances:     portfolio.Balances,
+		BankBalances: portfolio.BankBalances,
+		UpdatedAt:    portfolio.UpdatedAt,
+	}
+	err = dbSvc.AddGuildPortfolios(ctx, []*model.GuildPortfolio{guildPortfolio})
 	panicIf(err)
 
 	log.Info("🍺 all done, guild created = ", *id)
