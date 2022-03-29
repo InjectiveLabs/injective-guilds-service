@@ -421,7 +421,7 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 
 		// expected to have 1 account deleted
 		if deleteRes.DeletedCount != 1 {
-			return nil, errors.New("cannot delete")
+			return nil, errors.New("cannot delete: no such member")
 		}
 
 		_, err = s.adjustMemberCount(sessCtx, guildObjectID, -1)
