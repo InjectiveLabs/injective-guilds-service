@@ -456,28 +456,14 @@ func EncodeLeaveGuildResponse(encoder func(context.Context, http.ResponseWriter)
 func DecodeLeaveGuildRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			body LeaveGuildRequestBody
-			err  error
-		)
-		err = decoder(r).Decode(&body)
-		if err != nil {
-			if err == io.EOF {
-				return nil, goa.MissingPayloadError()
-			}
-			return nil, goa.DecodePayloadError(err.Error())
-		}
-		err = ValidateLeaveGuildRequestBody(&body)
-		if err != nil {
-			return nil, err
-		}
-
-		var (
-			guildID string
+			guildID          string
+			injectiveAddress string
 
 			params = mux.Vars(r)
 		)
 		guildID = params["guildID"]
-		payload := NewLeaveGuildPayload(&body, guildID)
+		injectiveAddress = params["injective_address"]
+		payload := NewLeaveGuildPayload(guildID, injectiveAddress)
 
 		return payload, nil
 	}

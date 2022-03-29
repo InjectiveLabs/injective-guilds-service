@@ -74,7 +74,7 @@ func New(
 			{"GetGuildMasterAddress", "GET", "/guilds/{guildID}/guild-master"},
 			{"GetGuildDefaultMember", "GET", "/guilds/{guildID}/default-member"},
 			{"EnterGuild", "POST", "/guilds/{guildID}/member"},
-			{"LeaveGuild", "DELETE", "/guilds/{guildID}/member"},
+			{"LeaveGuild", "DELETE", "/guilds/{guildID}/member/{injective_address}"},
 			{"GetGuildMarkets", "GET", "/guilds/{guildID}/markets"},
 			{"GetGuildPortfolios", "GET", "/guilds/{guildID}/portfolios"},
 			{"GetAccountInfo", "GET", "/members/{injective_address}"},
@@ -86,6 +86,7 @@ func New(
 			{"CORS", "OPTIONS", "/guilds/{guildID}/guild-master"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/default-member"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/member"},
+			{"CORS", "OPTIONS", "/guilds/{guildID}/member/{injective_address}"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/markets"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/portfolios"},
 			{"CORS", "OPTIONS", "/members/{injective_address}"},
@@ -460,7 +461,7 @@ func MountLeaveGuildHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("DELETE", "/guilds/{guildID}/member", f)
+	mux.Handle("DELETE", "/guilds/{guildID}/member/{injective_address}", f)
 }
 
 // NewLeaveGuildHandler creates a HTTP handler which loads the HTTP request and
@@ -768,6 +769,7 @@ func MountCORSHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("OPTIONS", "/guilds/{guildID}/guild-master", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/default-member", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/member", h.ServeHTTP)
+	mux.Handle("OPTIONS", "/guilds/{guildID}/member/{injective_address}", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/markets", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/guilds/{guildID}/portfolios", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/members/{injective_address}", h.ServeHTTP)

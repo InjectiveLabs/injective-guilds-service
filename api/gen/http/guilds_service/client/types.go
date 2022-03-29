@@ -18,12 +18,6 @@ type EnterGuildRequestBody struct {
 	InjectiveAddress string `form:"injective_address" json:"injective_address" xml:"injective_address"`
 }
 
-// LeaveGuildRequestBody is the type of the "GuildsService" service
-// "LeaveGuild" endpoint HTTP request body.
-type LeaveGuildRequestBody struct {
-	InjectiveAddress string `form:"injective_address" json:"injective_address" xml:"injective_address"`
-}
-
 // GetAllGuildsResponseBody is the type of the "GuildsService" service
 // "GetAllGuilds" endpoint HTTP response body.
 type GetAllGuildsResponseBody struct {
@@ -615,15 +609,6 @@ type SingleAccountPortfolioResponseBody struct {
 // the "EnterGuild" endpoint of the "GuildsService" service.
 func NewEnterGuildRequestBody(p *guildsservice.EnterGuildPayload) *EnterGuildRequestBody {
 	body := &EnterGuildRequestBody{
-		InjectiveAddress: p.InjectiveAddress,
-	}
-	return body
-}
-
-// NewLeaveGuildRequestBody builds the HTTP request body from the payload of
-// the "LeaveGuild" endpoint of the "GuildsService" service.
-func NewLeaveGuildRequestBody(p *guildsservice.LeaveGuildPayload) *LeaveGuildRequestBody {
-	body := &LeaveGuildRequestBody{
 		InjectiveAddress: p.InjectiveAddress,
 	}
 	return body

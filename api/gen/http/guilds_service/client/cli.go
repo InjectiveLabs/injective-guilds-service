@@ -92,23 +92,18 @@ func BuildEnterGuildPayload(guildsServiceEnterGuildBody string, guildsServiceEnt
 
 // BuildLeaveGuildPayload builds the payload for the GuildsService LeaveGuild
 // endpoint from CLI flags.
-func BuildLeaveGuildPayload(guildsServiceLeaveGuildBody string, guildsServiceLeaveGuildGuildID string) (*guildsservice.LeaveGuildPayload, error) {
-	var err error
-	var body LeaveGuildRequestBody
-	{
-		err = json.Unmarshal([]byte(guildsServiceLeaveGuildBody), &body)
-		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"injective_address\": \"Velit culpa in quae.\"\n   }'")
-		}
-	}
+func BuildLeaveGuildPayload(guildsServiceLeaveGuildGuildID string, guildsServiceLeaveGuildInjectiveAddress string) (*guildsservice.LeaveGuildPayload, error) {
 	var guildID string
 	{
 		guildID = guildsServiceLeaveGuildGuildID
 	}
-	v := &guildsservice.LeaveGuildPayload{
-		InjectiveAddress: body.InjectiveAddress,
+	var injectiveAddress string
+	{
+		injectiveAddress = guildsServiceLeaveGuildInjectiveAddress
 	}
+	v := &guildsservice.LeaveGuildPayload{}
 	v.GuildID = guildID
+	v.InjectiveAddress = injectiveAddress
 
 	return v, nil
 }

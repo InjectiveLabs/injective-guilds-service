@@ -177,6 +177,7 @@ paths:
             $ref: '#/definitions/GuildsServiceEnterGuildInternalResponseBody'
       schemes:
       - http
+  /guilds/{guildID}/member/{injective_address}:
     delete:
       tags:
       - GuildsService
@@ -188,13 +189,10 @@ paths:
         in: path
         required: true
         type: string
-      - name: LeaveGuildRequestBody
-        in: body
+      - name: injective_address
+        in: path
         required: true
-        schema:
-          $ref: '#/definitions/GuildsServiceLeaveGuildRequestBody'
-          required:
-          - injective_address
+        type: string
       responses:
         "200":
           description: OK response.
@@ -372,30 +370,30 @@ definitions:
     properties:
       available_balance:
         type: string
-        example: Qui et est iste qui consequatur.
+        example: Recusandae in odio est.
       denom:
         type: string
-        example: Sit perferendis assumenda.
+        example: Omnis vitae maxime aperiam nesciunt.
       margin_hold:
         type: string
-        example: Ratione minus qui.
+        example: Est iste qui consequatur possimus quos id.
       price_usd:
         type: number
-        example: 0.6910193488331178
+        example: 0.7229659536064935
         format: double
       total_balance:
         type: string
-        example: In odio est dolorem sint eos.
+        example: Nesciunt magni sed sunt ut sit perferendis.
       unrealized_pnl:
         type: string
-        example: Quos id itaque velit.
+        example: Sint eos libero qui.
     example:
-      available_balance: Omnis necessitatibus rem ipsum.
-      denom: Dignissimos consequatur cupiditate adipisci iste.
-      margin_hold: Iure saepe.
-      price_usd: 0.5872879426393396
-      total_balance: Esse cupiditate exercitationem distinctio.
-      unrealized_pnl: Nostrum perferendis.
+      available_balance: Cupiditate adipisci iste hic esse cupiditate.
+      denom: Facere ratione minus.
+      margin_hold: Rem ipsum id nostrum.
+      price_usd: 0.9132088604856103
+      total_balance: Est nihil dignissimos.
+      unrealized_pnl: Distinctio eum omnis.
     required:
     - denom
     - total_balance
@@ -409,23 +407,23 @@ definitions:
     properties:
       guild_id:
         type: string
-        example: Nemo eum rem.
+        example: Impedit qui eos quidem voluptate.
       injective_address:
         type: string
-        example: Et corrupti rerum ex.
+        example: Explicabo provident illo maxime ea ex.
       is_default_guild_member:
         type: boolean
         example: false
       since:
         type: integer
-        example: 7523116042151192303
+        example: 7447575158580819284
         format: int64
     description: Guild member metadata
     example:
-      guild_id: Impedit qui eos quidem voluptate.
-      injective_address: Explicabo provident illo maxime ea ex.
+      guild_id: Commodi rerum qui odio doloribus.
+      injective_address: Inventore dignissimos sed iure sint enim dolorem.
       is_default_guild_member: false
-      since: 7447575158580819284
+      since: 7730116398462291806
     required:
     - injective_address
     - is_default_guild_member
@@ -436,29 +434,29 @@ definitions:
     properties:
       capacity:
         type: integer
-        example: 5611025927213299856
+        example: 1625004567469166140
         format: int64
       current_portfolio:
         $ref: '#/definitions/SingleGuildPortfolioResponseBody'
       default_member_address:
         type: string
-        example: Quasi quia magnam dolore sint.
+        example: Et quasi quia magnam dolore sint provident.
       description:
         type: string
-        example: Ab accusantium modi alias officiis consequuntur.
+        example: Dolor ut cupiditate qui.
       id:
         type: string
-        example: Fugiat velit sit rerum inventore ut aut.
+        example: Voluptatibus molestiae possimus fugiat velit sit.
       master_address:
         type: string
-        example: Quos aut omnis quia omnis et.
+        example: Accusantium modi.
       member_count:
         type: integer
-        example: 1085112201081730547
+        example: 8152941895603829715
         format: int64
       name:
         type: string
-        example: Occaecati deleniti dolor ut cupiditate.
+        example: Inventore ut aut laboriosam occaecati.
       requirements:
         type: array
         items:
@@ -473,12 +471,15 @@ definitions:
         - denom: Aut consectetur iste.
           min_amount: 0.7297009691051966
           min_amount_usd: 0.758142157309922
+        - denom: Aut consectetur iste.
+          min_amount: 0.7297009691051966
+          min_amount_usd: 0.758142157309922
       staking_requirement:
         type: string
-        example: Doloribus consequuntur quia corporis.
+        example: Facere ratione molestiae et.
     description: Guild info
     example:
-      capacity: 8994332224674135327
+      capacity: 602190403864732929
       current_portfolio:
         balances:
         - available_balance: Qui ea qui.
@@ -495,12 +496,12 @@ definitions:
           unrealized_pnl: Sit at et velit.
         guild_id: Ex saepe.
         updated_at: 3479703651976965601
-      default_member_address: Et iste quidem culpa.
-      description: Accusamus voluptatibus sapiente dolores corporis et veritatis.
-      id: Debitis nihil.
-      master_address: Expedita et mollitia.
-      member_count: 1039344502444978201
-      name: Et eos vitae expedita.
+      default_member_address: Et mollitia minus repellendus ex sit.
+      description: Eos expedita et mollitia voluptates.
+      id: Nihil in et eos vitae expedita ut.
+      master_address: Perspiciatis quas voluptate perferendis.
+      member_count: 2334681735654437276
+      name: Voluptatibus sapiente dolores corporis et.
       requirements:
       - denom: Aut consectetur iste.
         min_amount: 0.7297009691051966
@@ -508,7 +509,7 @@ definitions:
       - denom: Aut consectetur iste.
         min_amount: 0.7297009691051966
         min_amount_usd: 0.758142157309922
-      staking_requirement: Perspiciatis quas voluptate perferendis.
+      staking_requirement: Quas et iste quidem culpa in iste.
     required:
     - id
     - name
@@ -544,12 +545,57 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: Internal Server Error (default view)
+    example:
+      fault: true
+      id: 123abc
+      message: parameter 'p' must be an integer
+      name: bad_request
+      temporary: true
+      timeout: true
+    required:
+    - name
+    - id
+    - message
+    - temporary
+    - timeout
+    - fault
+  GuildsServiceEnterGuildNotFoundResponseBody:
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+    properties:
+      fault:
+        type: boolean
+        description: Is the error a server-side fault?
+        example: false
+      id:
+        type: string
+        description: ID is a unique identifier for this particular occurrence of the
+          problem.
+        example: 123abc
+      message:
+        type: string
+        description: Message is a human-readable explanation specific to this occurrence
+          of the problem.
+        example: parameter 'p' must be an integer
+      name:
+        type: string
+        description: Name is the name of this class of errors.
+        example: bad_request
+      temporary:
+        type: boolean
+        description: Is the error temporary?
+        example: true
+      timeout:
+        type: boolean
+        description: Is the error a timeout?
+        example: true
+    description: Not found (default view)
     example:
       fault: true
       id: 123abc
@@ -564,7 +610,31 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildsServiceEnterGuildNotFoundResponseBody:
+  GuildsServiceEnterGuildRequestBody:
+    title: GuildsServiceEnterGuildRequestBody
+    type: object
+    properties:
+      injective_address:
+        type: string
+        example: Rerum eligendi sed.
+    example:
+      injective_address: Voluptas occaecati illum dolor error porro laudantium.
+    required:
+    - injective_address
+  GuildsServiceEnterGuildResponseBody:
+    title: GuildsServiceEnterGuildResponseBody
+    type: object
+    properties:
+      join_status:
+        type: string
+        example: Eligendi quam architecto qui.
+      message:
+        type: string
+        example: Et rerum est rerum accusamus quis tenetur.
+    example:
+      join_status: Eius sit perferendis nam quasi expedita numquam.
+      message: Et quo.
+  GuildsServiceGetAccountInfoInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -589,87 +659,18 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
-    description: Not found (default view)
-    example:
-      fault: false
-      id: 123abc
-      message: parameter 'p' must be an integer
-      name: bad_request
-      temporary: false
-      timeout: false
-    required:
-    - name
-    - id
-    - message
-    - temporary
-    - timeout
-    - fault
-  GuildsServiceEnterGuildRequestBody:
-    title: GuildsServiceEnterGuildRequestBody
-    type: object
-    properties:
-      injective_address:
-        type: string
-        example: Eius sit perferendis nam quasi expedita numquam.
-    example:
-      injective_address: Et quo.
-    required:
-    - injective_address
-  GuildsServiceEnterGuildResponseBody:
-    title: GuildsServiceEnterGuildResponseBody
-    type: object
-    properties:
-      join_status:
-        type: string
-        example: Pariatur velit.
-      message:
-        type: string
-        example: Quos iste magni.
-    example:
-      join_status: Rerum sit.
-      message: Eligendi quia est voluptatem dolor.
-  GuildsServiceGetAccountInfoInternalResponseBody:
-    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
-    type: object
-    properties:
-      fault:
-        type: boolean
-        description: Is the error a server-side fault?
-        example: false
-      id:
-        type: string
-        description: ID is a unique identifier for this particular occurrence of the
-          problem.
-        example: 123abc
-      message:
-        type: string
-        description: Message is a human-readable explanation specific to this occurrence
-          of the problem.
-        example: parameter 'p' must be an integer
-      name:
-        type: string
-        description: Name is the name of this class of errors.
-        example: bad_request
-      temporary:
-        type: boolean
-        description: Is the error temporary?
-        example: false
-      timeout:
-        type: boolean
-        description: Is the error a timeout?
-        example: false
+        example: true
     description: Internal Server Error (default view)
     example:
       fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: true
     required:
     - name
@@ -707,14 +708,14 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: Not found (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -742,7 +743,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -767,11 +768,11 @@ definitions:
         example: true
     description: Internal Server Error (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -787,7 +788,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -816,7 +817,7 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: false
     required:
     - name
@@ -846,20 +847,8 @@ definitions:
           price_usd: 0.025452036676133237
           total_balance: Sunt fugiat.
           unrealized_pnl: Sit at et velit.
-        - available_balance: Qui ea qui.
-          denom: Est nobis dolores eveniet vel.
-          margin_hold: Inventore ut.
-          price_usd: 0.025452036676133237
-          total_balance: Sunt fugiat.
-          unrealized_pnl: Sit at et velit.
-        - available_balance: Qui ea qui.
-          denom: Est nobis dolores eveniet vel.
-          margin_hold: Inventore ut.
-          price_usd: 0.025452036676133237
-          total_balance: Sunt fugiat.
-          unrealized_pnl: Sit at et velit.
-        injective_address: Aliquam aliquam cum cumque.
-        updated_at: 5817986038243021313
+        injective_address: Autem est sit nesciunt ea et velit.
+        updated_at: 1980617989734843110
   GuildsServiceGetAccountPortfoliosInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -867,7 +856,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -892,12 +881,12 @@ definitions:
         example: true
     description: Internal Server Error (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -937,12 +926,12 @@ definitions:
         example: false
     description: Not found (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -972,20 +961,8 @@ definitions:
             price_usd: 0.025452036676133237
             total_balance: Sunt fugiat.
             unrealized_pnl: Sit at et velit.
-          - available_balance: Qui ea qui.
-            denom: Est nobis dolores eveniet vel.
-            margin_hold: Inventore ut.
-            price_usd: 0.025452036676133237
-            total_balance: Sunt fugiat.
-            unrealized_pnl: Sit at et velit.
-          - available_balance: Qui ea qui.
-            denom: Est nobis dolores eveniet vel.
-            margin_hold: Inventore ut.
-            price_usd: 0.025452036676133237
-            total_balance: Sunt fugiat.
-            unrealized_pnl: Sit at et velit.
-          injective_address: Aliquam aliquam cum cumque.
-          updated_at: 5817986038243021313
+          injective_address: Autem est sit nesciunt ea et velit.
+          updated_at: 1980617989734843110
         - balances:
           - available_balance: Qui ea qui.
             denom: Est nobis dolores eveniet vel.
@@ -999,20 +976,8 @@ definitions:
             price_usd: 0.025452036676133237
             total_balance: Sunt fugiat.
             unrealized_pnl: Sit at et velit.
-          - available_balance: Qui ea qui.
-            denom: Est nobis dolores eveniet vel.
-            margin_hold: Inventore ut.
-            price_usd: 0.025452036676133237
-            total_balance: Sunt fugiat.
-            unrealized_pnl: Sit at et velit.
-          - available_balance: Qui ea qui.
-            denom: Est nobis dolores eveniet vel.
-            margin_hold: Inventore ut.
-            price_usd: 0.025452036676133237
-            total_balance: Sunt fugiat.
-            unrealized_pnl: Sit at et velit.
-          injective_address: Aliquam aliquam cum cumque.
-          updated_at: 5817986038243021313
+          injective_address: Autem est sit nesciunt ea et velit.
+          updated_at: 1980617989734843110
     example:
       portfolios:
       - balances:
@@ -1028,20 +993,8 @@ definitions:
           price_usd: 0.025452036676133237
           total_balance: Sunt fugiat.
           unrealized_pnl: Sit at et velit.
-        - available_balance: Qui ea qui.
-          denom: Est nobis dolores eveniet vel.
-          margin_hold: Inventore ut.
-          price_usd: 0.025452036676133237
-          total_balance: Sunt fugiat.
-          unrealized_pnl: Sit at et velit.
-        - available_balance: Qui ea qui.
-          denom: Est nobis dolores eveniet vel.
-          margin_hold: Inventore ut.
-          price_usd: 0.025452036676133237
-          total_balance: Sunt fugiat.
-          unrealized_pnl: Sit at et velit.
-        injective_address: Aliquam aliquam cum cumque.
-        updated_at: 5817986038243021313
+        injective_address: Autem est sit nesciunt ea et velit.
+        updated_at: 1980617989734843110
       - balances:
         - available_balance: Qui ea qui.
           denom: Est nobis dolores eveniet vel.
@@ -1055,6 +1008,9 @@ definitions:
           price_usd: 0.025452036676133237
           total_balance: Sunt fugiat.
           unrealized_pnl: Sit at et velit.
+        injective_address: Autem est sit nesciunt ea et velit.
+        updated_at: 1980617989734843110
+      - balances:
         - available_balance: Qui ea qui.
           denom: Est nobis dolores eveniet vel.
           margin_hold: Inventore ut.
@@ -1067,8 +1023,8 @@ definitions:
           price_usd: 0.025452036676133237
           total_balance: Sunt fugiat.
           unrealized_pnl: Sit at et velit.
-        injective_address: Aliquam aliquam cum cumque.
-        updated_at: 5817986038243021313
+        injective_address: Autem est sit nesciunt ea et velit.
+        updated_at: 1980617989734843110
   GuildsServiceGetAllGuildsInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -1076,7 +1032,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1105,8 +1061,8 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: false
+      temporary: true
+      timeout: true
     required:
     - name
     - id
@@ -1139,19 +1095,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: true
     description: Not found (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: false
+      temporary: false
+      timeout: true
     required:
     - name
     - id
@@ -1341,40 +1297,6 @@ definitions:
           min_amount: 0.7297009691051966
           min_amount_usd: 0.758142157309922
         staking_requirement: Quos rerum culpa sit ut at.
-      - capacity: 5964216642713450062
-        current_portfolio:
-          balances:
-          - available_balance: Qui ea qui.
-            denom: Est nobis dolores eveniet vel.
-            margin_hold: Inventore ut.
-            price_usd: 0.025452036676133237
-            total_balance: Sunt fugiat.
-            unrealized_pnl: Sit at et velit.
-          - available_balance: Qui ea qui.
-            denom: Est nobis dolores eveniet vel.
-            margin_hold: Inventore ut.
-            price_usd: 0.025452036676133237
-            total_balance: Sunt fugiat.
-            unrealized_pnl: Sit at et velit.
-          guild_id: Ex saepe.
-          updated_at: 3479703651976965601
-        default_member_address: Nam vel in.
-        description: Quasi quibusdam.
-        id: Quaerat labore aut est.
-        master_address: Numquam id et quaerat cum in.
-        member_count: 3852276272004033949
-        name: Illum aperiam voluptatem maiores nulla.
-        requirements:
-        - denom: Aut consectetur iste.
-          min_amount: 0.7297009691051966
-          min_amount_usd: 0.758142157309922
-        - denom: Aut consectetur iste.
-          min_amount: 0.7297009691051966
-          min_amount_usd: 0.758142157309922
-        - denom: Aut consectetur iste.
-          min_amount: 0.7297009691051966
-          min_amount_usd: 0.758142157309922
-        staking_requirement: Quos rerum culpa sit ut at.
   GuildsServiceGetGuildDefaultMemberInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -1404,7 +1326,7 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: Internal Server Error (default view)
     example:
       fault: false
@@ -1412,7 +1334,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -1449,14 +1371,14 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: Not found (default view)
     example:
       fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: false
     required:
     - name
@@ -1484,7 +1406,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1502,7 +1424,7 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
@@ -1513,8 +1435,8 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: false
+      temporary: false
+      timeout: true
     required:
     - name
     - id
@@ -1547,18 +1469,18 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: false
     description: Not found (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: true
     required:
     - name
@@ -1577,21 +1499,15 @@ definitions:
           $ref: '#/definitions/MarketResponseBody'
         example:
         - is_perpetual: false
-          market_id: Molestiae cum.
+          market_id: Voluptatem autem animi corrupti.
         - is_perpetual: false
-          market_id: Molestiae cum.
-        - is_perpetual: false
-          market_id: Molestiae cum.
-        - is_perpetual: false
-          market_id: Molestiae cum.
+          market_id: Voluptatem autem animi corrupti.
     example:
       markets:
       - is_perpetual: false
-        market_id: Molestiae cum.
+        market_id: Voluptatem autem animi corrupti.
       - is_perpetual: false
-        market_id: Molestiae cum.
-      - is_perpetual: false
-        market_id: Molestiae cum.
+        market_id: Voluptatem autem animi corrupti.
   GuildsServiceGetGuildMasterAddressInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -1599,7 +1515,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1662,14 +1578,14 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: Not found (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
@@ -1688,9 +1604,9 @@ definitions:
     properties:
       master_address:
         type: string
-        example: Doloribus id eum.
+        example: Repudiandae officiis.
     example:
-      master_address: Magnam non nesciunt qui veniam ut.
+      master_address: Cum eius occaecati excepturi odit et.
   GuildsServiceGetGuildMembersInternalResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
@@ -1698,7 +1614,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1716,19 +1632,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: true
     description: Internal Server Error (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -1743,7 +1659,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -1761,11 +1677,11 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: Not found (default view)
     example:
       fault: true
@@ -1773,7 +1689,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -1803,8 +1719,16 @@ definitions:
           injective_address: Omnis expedita recusandae minima ipsam quis.
           is_default_guild_member: true
           since: 4200925254206743201
+        - guild_id: Qui culpa id.
+          injective_address: Omnis expedita recusandae minima ipsam quis.
+          is_default_guild_member: true
+          since: 4200925254206743201
     example:
       members:
+      - guild_id: Qui culpa id.
+        injective_address: Omnis expedita recusandae minima ipsam quis.
+        is_default_guild_member: true
+        since: 4200925254206743201
       - guild_id: Qui culpa id.
         injective_address: Omnis expedita recusandae minima ipsam quis.
         is_default_guild_member: true
@@ -1838,14 +1762,14 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: false
     description: Internal Server Error (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
@@ -1890,7 +1814,7 @@ definitions:
         example: true
     description: Not found (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
@@ -2033,14 +1957,14 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: Internal Server Error (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -2056,7 +1980,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -2078,14 +2002,14 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: Not found (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -2161,18 +2085,18 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: Internal Server Error (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: false
     required:
     - name
@@ -2188,7 +2112,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -2206,7 +2130,7 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
@@ -2217,7 +2141,7 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -2226,40 +2150,29 @@ definitions:
     - temporary
     - timeout
     - fault
-  GuildsServiceLeaveGuildRequestBody:
-    title: GuildsServiceLeaveGuildRequestBody
-    type: object
-    properties:
-      injective_address:
-        type: string
-        example: Expedita cupiditate praesentium sunt aliquam deleniti unde.
-    example:
-      injective_address: Labore est ex.
-    required:
-    - injective_address
   GuildsServiceLeaveGuildResponseBody:
     title: GuildsServiceLeaveGuildResponseBody
     type: object
     properties:
       leave_status:
         type: string
-        example: Hic eveniet dolor repellendus non.
+        example: Itaque expedita cupiditate praesentium sunt.
     example:
-      leave_status: Sed illum a fugiat saepe recusandae.
+      leave_status: Deleniti unde.
   MarketResponseBody:
     title: MarketResponseBody
     type: object
     properties:
       is_perpetual:
         type: boolean
-        example: true
+        example: false
       market_id:
         type: string
-        example: Velit ipsum minus.
+        example: Molestias qui laudantium commodi officia autem.
     description: Market supported by guild
     example:
       is_perpetual: false
-      market_id: Cupiditate ex quod molestias qui.
+      market_id: Cum maiores quidem voluptas eos minima illo.
     required:
     - market_id
     - is_perpetual
@@ -2269,19 +2182,19 @@ definitions:
     properties:
       denom:
         type: string
-        example: Ab sequi quasi dolores et repellat odio.
+        example: Officiis consequuntur reprehenderit quos aut.
       min_amount:
         type: number
-        example: 0.36117076889857325
+        example: 0.17716416160782647
         format: double
       min_amount_usd:
         type: number
-        example: 0.3838534333789376
+        example: 0.059040496097696175
         format: double
     example:
-      denom: Ratione molestiae et.
-      min_amount: 0.8839437315361759
-      min_amount_usd: 0.17618334823489373
+      denom: Et nobis ab sequi quasi dolores et.
+      min_amount: 0.3617595135804517
+      min_amount_usd: 0.6922242273250296
     required:
     - denom
     - min_amount_usd
@@ -2315,10 +2228,10 @@ definitions:
           unrealized_pnl: Sit at et velit.
       injective_address:
         type: string
-        example: Cupiditate enim corrupti ut deleniti.
+        example: Autem fugiat doloribus alias et illum est.
       updated_at:
         type: integer
-        example: 1189241467110417572
+        example: 190846007297854933
         format: int64
     description: Single account portfio snapshot
     example:
@@ -2335,8 +2248,8 @@ definitions:
         price_usd: 0.025452036676133237
         total_balance: Sunt fugiat.
         unrealized_pnl: Sit at et velit.
-      injective_address: Vitae aliquid ex a non autem fugiat.
-      updated_at: 337555930982130041
+      injective_address: Vel qui iste qui magnam amet.
+      updated_at: 1712438781851262705
     required:
     - injective_address
     - balances
@@ -2370,10 +2283,10 @@ definitions:
           unrealized_pnl: Sit at et velit.
       guild_id:
         type: string
-        example: Aperiam nesciunt ea nesciunt magni sed sunt.
+        example: Magni doloribus consequuntur quia.
       updated_at:
         type: integer
-        example: 5389168720341378982
+        example: 8496901137821124017
         format: int64
     description: Single guild portfolio snapshot
     example:
@@ -2396,14 +2309,8 @@ definitions:
         price_usd: 0.025452036676133237
         total_balance: Sunt fugiat.
         unrealized_pnl: Sit at et velit.
-      - available_balance: Qui ea qui.
-        denom: Est nobis dolores eveniet vel.
-        margin_hold: Inventore ut.
-        price_usd: 0.025452036676133237
-        total_balance: Sunt fugiat.
-        unrealized_pnl: Sit at et velit.
-      guild_id: Et rerum.
-      updated_at: 3176123931156999701
+      guild_id: Fugit maiores sit reiciendis et.
+      updated_at: 8727022290377989718
     required:
     - balances
     - updated_at

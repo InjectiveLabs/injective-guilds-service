@@ -42,8 +42,8 @@ func EnterGuildGuildsServicePath(guildID string) string {
 }
 
 // LeaveGuildGuildsServicePath returns the URL path to the GuildsService service LeaveGuild HTTP endpoint.
-func LeaveGuildGuildsServicePath(guildID string) string {
-	return fmt.Sprintf("/guilds/%v/member", guildID)
+func LeaveGuildGuildsServicePath(guildID string, injectiveAddress string) string {
+	return fmt.Sprintf("/guilds/%v/member/%v", guildID, injectiveAddress)
 }
 
 // GetGuildMarketsGuildsServicePath returns the URL path to the GuildsService service GetGuildMarkets HTTP endpoint.

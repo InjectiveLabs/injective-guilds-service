@@ -18,12 +18,6 @@ type EnterGuildRequestBody struct {
 	InjectiveAddress *string `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
 }
 
-// LeaveGuildRequestBody is the type of the "GuildsService" service
-// "LeaveGuild" endpoint HTTP request body.
-type LeaveGuildRequestBody struct {
-	InjectiveAddress *string `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
-}
-
 // GetAllGuildsResponseBody is the type of the "GuildsService" service
 // "GetAllGuilds" endpoint HTTP response body.
 type GetAllGuildsResponseBody struct {
@@ -1141,11 +1135,10 @@ func NewEnterGuildPayload(body *EnterGuildRequestBody, guildID string) *guildsse
 
 // NewLeaveGuildPayload builds a GuildsService service LeaveGuild endpoint
 // payload.
-func NewLeaveGuildPayload(body *LeaveGuildRequestBody, guildID string) *guildsservice.LeaveGuildPayload {
-	v := &guildsservice.LeaveGuildPayload{
-		InjectiveAddress: *body.InjectiveAddress,
-	}
+func NewLeaveGuildPayload(guildID string, injectiveAddress string) *guildsservice.LeaveGuildPayload {
+	v := &guildsservice.LeaveGuildPayload{}
 	v.GuildID = guildID
+	v.InjectiveAddress = injectiveAddress
 
 	return v
 }
@@ -1202,15 +1195,6 @@ func NewGetAccountPortfoliosPayload(injectiveAddress string, startTime *int64, e
 // ValidateEnterGuildRequestBody runs the validations defined on
 // EnterGuildRequestBody
 func ValidateEnterGuildRequestBody(body *EnterGuildRequestBody) (err error) {
-	if body.InjectiveAddress == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("injective_address", "body"))
-	}
-	return
-}
-
-// ValidateLeaveGuildRequestBody runs the validations defined on
-// LeaveGuildRequestBody
-func ValidateLeaveGuildRequestBody(body *LeaveGuildRequestBody) (err error) {
 	if body.InjectiveAddress == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("injective_address", "body"))
 	}
