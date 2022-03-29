@@ -4,7 +4,7 @@ services:
     container_name: injective-guilds-api
     image: injective-guilds:${APP_ENV}
     build: 
-      context: .
+      context: ../
       dockerfile: Dockerfile
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -30,7 +30,7 @@ services:
     restart: always
   injective-guilds-process:
     build:
-      context: .
+      context: ../
       dockerfile: Dockerfile
     container_name: injective-guilds-process
     image: injective-guilds:${APP_ENV}
