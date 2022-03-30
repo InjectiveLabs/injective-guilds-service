@@ -26,7 +26,7 @@ const (
 
 var (
 	ErrNotFound        = errors.New("dberr: not found")
-	ErrMemberExceedCap = errors.New("member exceeds cap")
+	ErrMemberExceedCap = errors.New("max guild capacity has been reached")
 	ErrAlreadyMember   = errors.New("already member")
 )
 
