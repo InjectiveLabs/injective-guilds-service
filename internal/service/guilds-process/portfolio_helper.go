@@ -225,7 +225,11 @@ func (p *PortfolioHelper) getMarginHold(
 	// for a limit buy in the ETH/USDT market, denom is USDT and balanceHold is (1 + takerFee)*(price * quantity)
 	// for a limit sell in the ETH/USDT market, denom is ETH and balanceHold is just quantity
 	for _, o := range spotOrders {
-		market := idToMarket[o.MarketID]
+		market, exist := idToMarket[o.MarketID]
+		if !exist {
+			continue
+		}
+
 		if o.OrderSide == OrderSideBuy {
 			// expected to parse successfully -> skip error
 			takerFee, _ := decimal.NewFromString(market.TakerFeeRate.String())

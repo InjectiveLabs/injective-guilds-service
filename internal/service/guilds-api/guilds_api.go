@@ -317,10 +317,6 @@ func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address s
 }
 
 func (s *service) getLatestGuildPortfolio(ctx context.Context, guildID string) (*model.GuildPortfolio, error) {
-	doneFn := metrics.ReportFuncTiming(s.svcTags)
-	defer doneFn()
-	metrics.ReportFuncCall(s.svcTags)
-
 	limit := int64(1)
 	portfolios, err := s.dbSvc.ListGuildPortfolios(ctx, model.GuildPortfoliosFilter{
 		GuildID: guildID,
@@ -331,8 +327,6 @@ func (s *service) getLatestGuildPortfolio(ctx context.Context, guildID string) (
 	}
 
 	if len(portfolios) == 0 {
-		metrics.ReportFuncError(s.svcTags)
-
 		return nil, errors.New("portfolio not found")
 	}
 
@@ -340,13 +334,7 @@ func (s *service) getLatestGuildPortfolio(ctx context.Context, guildID string) (
 }
 
 func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapshot *model.AccountPortfolio) (*qualificationResult, error) {
-	doneFn := metrics.ReportFuncTiming(s.svcTags)
-	defer doneFn()
-	metrics.ReportFuncCall(s.svcTags)
-
 	if snapshot == nil {
-		metrics.ReportFuncError(s.svcTags)
-
 		return nil, fmt.Errorf("no snapshot found to check")
 	}
 
@@ -409,9 +397,59 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 		if !availBalanceFloat.GreaterThanOrEqual(decimal.NewFromFloat(min)) {
 			return &qualificationResult{
 				status: StatusUnqualified,
-				detail: fmt.Sprintf("%s has balance %s < min %.2f", b.Denom, availBalanceFloat.String(), min),
+				detail: fmt.Sprintf("Denom %s balance: %s < min %.2f", b.Denom, availBalanceFloat.String(), min),
 			}, nil
 		}
+	}
+
+	return &qualificationResult{
+		status: StatusQualified,
+	}, nil
+}
+
+func (s *service) checkOrders(ctx context.Context, guild *model.Guild, portfolio *model.AccountPortfolio) (*qualificationResult, error) {
+	defaultSubaccountID := defaultSubaccountIDFromInjAddress(portfolio.InjectiveAddress)
+	derivOrders, err := s.exchangeProvider.GetDerivativeOrders(ctx, []string{}, defaultSubaccountID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(derivOrders) > 0 {
+		return &qualificationResult{
+			status: StatusUnqualified,
+			detail: "trading account still has open derivative orders",
+		}, nil
+	}
+
+	spotOrders, err := s.exchangeProvider.GetSpotOrders(ctx, []string{}, defaultSubaccountID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(spotOrders) > 0 {
+		return &qualificationResult{
+			status: StatusUnqualified,
+			detail: "trading account still has open spot orders",
+		}, nil
+	}
+
+	return &qualificationResult{
+		status: StatusQualified,
+	}, nil
+}
+
+func (s *service) checkPositions(ctx context.Context, guild *model.Guild, portfolio *model.AccountPortfolio) (*qualificationResult, error) {
+	defaultSubaccountID := defaultSubaccountIDFromInjAddress(portfolio.InjectiveAddress)
+	positions, err := s.exchangeProvider.GetPositions(ctx, defaultSubaccountID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(positions) > 0 {
+		return &qualificationResult{
+			status: StatusUnqualified,
+			detail: "trading account still has open positions",
+		}, nil
 	}
 	return &qualificationResult{
 		status: StatusQualified,
@@ -422,18 +460,31 @@ func (s *service) checkAddressQualification(
 	ctx context.Context,
 	guild *model.Guild, portfolio *model.AccountPortfolio,
 ) (*qualificationResult, error) {
-	doneFn := metrics.ReportFuncTiming(s.svcTags)
-	defer doneFn()
-	metrics.ReportFuncCall(s.svcTags)
-
-	// Total Balance == Available Balance
 	balanceQualifyResult, err := s.checkBalances(ctx, guild, portfolio)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("balance check err: %w", err)
 	}
 
 	if balanceQualifyResult.status != StatusQualified {
 		return balanceQualifyResult, nil
+	}
+
+	orderCheck, err := s.checkOrders(ctx, guild, portfolio)
+	if err != nil {
+		return nil, fmt.Errorf("order check err: %w", err)
+	}
+
+	if orderCheck.status != StatusQualified {
+		return orderCheck, nil
+	}
+
+	positionCheck, err := s.checkPositions(ctx, guild, portfolio)
+	if err != nil {
+		return nil, fmt.Errorf("position check err: %w", err)
+	}
+
+	if positionCheck.status != StatusQualified {
+		return positionCheck, nil
 	}
 
 	return s.checkGrants(ctx, guild, portfolio.InjectiveAddress.String())
@@ -444,10 +495,6 @@ func (s *service) checkAddressLeaveCondition(
 	guild *model.Guild,
 	address string,
 ) (bool, error) {
-	doneFn := metrics.ReportFuncTiming(s.svcTags)
-	defer doneFn()
-	metrics.ReportFuncCall(s.svcTags)
-
 	grants, err := s.exchangeProvider.GetGrants(ctx, address, guild.MasterAddress.String())
 	if err != nil {
 		return false, err
@@ -559,11 +606,13 @@ func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload
 	shouldRemove, err := s.checkAddressLeaveCondition(ctx, guild, accAddress.String())
 	if err != nil {
 		metrics.ReportFuncError(s.svcTags)
-		s.logger.WithError(err).Error("check leave guild condition err")
+		s.logger.WithError(err).Error("check leave guild condition error")
 		return nil, svc.MakeInternal(fmt.Errorf("failed to check leave condition: %w", err))
 	}
 
 	if !shouldRemove {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.Error("address hasnot remove some permissions")
 		return nil, svc.MakeInvalidArg(fmt.Errorf("address has not removed granted permissions"))
 	}
 
