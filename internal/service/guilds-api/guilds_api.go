@@ -434,7 +434,7 @@ func (s *service) checkOrders(ctx context.Context, guild *model.Guild, portfolio
 	}
 
 	return &qualificationResult{
-		status: StatusUnqualified,
+		status: StatusQualified,
 	}, nil
 }
 
@@ -452,7 +452,7 @@ func (s *service) checkPositions(ctx context.Context, guild *model.Guild, portfo
 		}, nil
 	}
 	return &qualificationResult{
-		status: StatusUnqualified,
+		status: StatusQualified,
 	}, nil
 }
 
