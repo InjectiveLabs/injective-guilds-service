@@ -144,10 +144,12 @@ func cmdApi(c *cli.Cmd) {
 
 		// check prices
 		doubleCheckDenomConfig(cfg.AssetPriceURL)
+		if !cfg.StatsdConfig.Disabled {
+			// set global stat and log
+			err = connectStatServerWithRetry(cfg.EnvName, cfg.StatsdConfig, retryCount)
+			panicIf(err)
+		}
 
-		// set global stat and log
-		err = connectStatServerWithRetry(cfg.EnvName, cfg.StatsdConfig, retryCount)
-		panicIf(err)
 		// setup logger
 		log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
 
