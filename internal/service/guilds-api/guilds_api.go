@@ -409,10 +409,20 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 		if !availBalanceFloat.GreaterThanOrEqual(decimal.NewFromFloat(min)) {
 			return &qualificationResult{
 				status: StatusUnqualified,
-				detail: fmt.Sprintf("%s has balance %s < min %.2f", b.Denom, availBalanceFloat.String(), min),
+				detail: fmt.Sprintf("Denom %s balance: %s < min %.2f", b.Denom, availBalanceFloat.String(), min),
+			}, nil
+		}
+
+		// a trading account shouldn't have margin
+		// which means they have orders/positions
+		if !b.MarginHold.IsZero() {
+			return &qualificationResult{
+				status: StatusUnqualified,
+				detail: "account still have open orders/position",
 			}, nil
 		}
 	}
+
 	return &qualificationResult{
 		status: StatusQualified,
 	}, nil
@@ -426,7 +436,6 @@ func (s *service) checkAddressQualification(
 	defer doneFn()
 	metrics.ReportFuncCall(s.svcTags)
 
-	// Total Balance == Available Balance
 	balanceQualifyResult, err := s.checkBalances(ctx, guild, portfolio)
 	if err != nil {
 		return nil, err

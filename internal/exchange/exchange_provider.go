@@ -172,8 +172,14 @@ func (p *exchangeProvider) GetSpotOrders(ctx context.Context, marketIDs []string
 		m[id] = true
 	}
 
+	isAllowAll := false
+	if len(m) == 0 {
+		isAllowAll = true
+	}
+
 	for _, o := range res.GetOrders() {
-		if _, exist := m[o.MarketId]; !exist {
+		_, exist := m[o.MarketId]
+		if !isAllowAll && !exist {
 			continue
 		}
 
@@ -225,8 +231,14 @@ func (p *exchangeProvider) GetDerivativeOrders(ctx context.Context, marketIDs []
 		m[id] = true
 	}
 
+	isAllowAll := false
+	if len(m) == 0 {
+		isAllowAll = true
+	}
+
 	for _, o := range res.GetOrders() {
-		if _, exist := m[o.MarketId]; !exist {
+		_, exist := m[o.MarketId]
+		if !isAllowAll && !exist {
 			continue
 		}
 
