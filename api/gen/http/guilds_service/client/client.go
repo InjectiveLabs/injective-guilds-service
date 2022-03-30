@@ -233,15 +233,10 @@ func (c *Client) EnterGuild() goa.Endpoint {
 // service LeaveGuild server.
 func (c *Client) LeaveGuild() goa.Endpoint {
 	var (
-		encodeRequest  = EncodeLeaveGuildRequest(c.encoder)
 		decodeResponse = DecodeLeaveGuildResponse(c.decoder, c.RestoreResponseBody)
 	)
 	return func(ctx context.Context, v interface{}) (interface{}, error) {
 		req, err := c.BuildLeaveGuildRequest(ctx, v)
-		if err != nil {
-			return nil, err
-		}
-		err = encodeRequest(req, v)
 		if err != nil {
 			return nil, err
 		}

@@ -172,7 +172,7 @@ var _ = Service("GuildsService", func() {
 			Field(1, "leave_status", String)
 		})
 		HTTP(func() {
-			DELETE("/guilds/{guildID}/member")
+			DELETE("/guilds/{guildID}/member/{injective_address}")
 
 			Response(CodeOK)
 			Response("not_found", StatusNotFound)

@@ -63,9 +63,9 @@ func ParseEndpoint(
 		guildsServiceEnterGuildBodyFlag    = guildsServiceEnterGuildFlags.String("body", "REQUIRED", "")
 		guildsServiceEnterGuildGuildIDFlag = guildsServiceEnterGuildFlags.String("guild-id", "REQUIRED", "")
 
-		guildsServiceLeaveGuildFlags       = flag.NewFlagSet("leave-guild", flag.ExitOnError)
-		guildsServiceLeaveGuildBodyFlag    = guildsServiceLeaveGuildFlags.String("body", "REQUIRED", "")
-		guildsServiceLeaveGuildGuildIDFlag = guildsServiceLeaveGuildFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceLeaveGuildFlags                = flag.NewFlagSet("leave-guild", flag.ExitOnError)
+		guildsServiceLeaveGuildGuildIDFlag          = guildsServiceLeaveGuildFlags.String("guild-id", "REQUIRED", "")
+		guildsServiceLeaveGuildInjectiveAddressFlag = guildsServiceLeaveGuildFlags.String("injective-address", "REQUIRED", "")
 
 		guildsServiceGetGuildMarketsFlags       = flag.NewFlagSet("get-guild-markets", flag.ExitOnError)
 		guildsServiceGetGuildMarketsGuildIDFlag = guildsServiceGetGuildMarketsFlags.String("guild-id", "REQUIRED", "")
@@ -215,7 +215,7 @@ func ParseEndpoint(
 				data, err = guildsservicec.BuildEnterGuildPayload(*guildsServiceEnterGuildBodyFlag, *guildsServiceEnterGuildGuildIDFlag)
 			case "leave-guild":
 				endpoint = c.LeaveGuild()
-				data, err = guildsservicec.BuildLeaveGuildPayload(*guildsServiceLeaveGuildBodyFlag, *guildsServiceLeaveGuildGuildIDFlag)
+				data, err = guildsservicec.BuildLeaveGuildPayload(*guildsServiceLeaveGuildGuildIDFlag, *guildsServiceLeaveGuildInjectiveAddressFlag)
 			case "get-guild-markets":
 				endpoint = c.GetGuildMarkets()
 				data, err = guildsservicec.BuildGetGuildMarketsPayload(*guildsServiceGetGuildMarketsGuildIDFlag)
@@ -335,16 +335,14 @@ Example:
 }
 
 func guildsServiceLeaveGuildUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service leave-guild -body JSON -guild-id STRING
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] guilds-service leave-guild -guild-id STRING -injective-address STRING
 
 Leave the guild, guildID
-    -body JSON: 
     -guild-id STRING: 
+    -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service leave-guild --body '{
-      "injective_address": "Velit culpa in quae."
-   }' --guild-id "Quia natus iste eaque."
+    %[1]s guilds-service leave-guild --guild-id "Quia natus iste eaque." --injective-address "Vel provident odio deserunt quas."
 `, os.Args[0])
 }
 
@@ -355,7 +353,7 @@ Get the guild markets
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-markets --guild-id "Voluptatem ut labore."
+    %[1]s guilds-service get-guild-markets --guild-id "Molestiae cum."
 `, os.Args[0])
 }
 
@@ -368,7 +366,7 @@ Get the guild markets
     -end-time INT64: 
 
 Example:
-    %[1]s guilds-service get-guild-portfolios --guild-id "Harum illo accusantium nobis quia nihil." --start-time 6787478751059554332 --end-time 6005939230312085927
+    %[1]s guilds-service get-guild-portfolios --guild-id "Accusantium nobis quia." --start-time 8038232831277701001 --end-time 6787478751059554332
 `, os.Args[0])
 }
 
@@ -379,7 +377,7 @@ Get current account member status
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-info --injective-address "Nulla et ipsum autem inventore sed maxime."
+    %[1]s guilds-service get-account-info --injective-address "Et ipsum."
 `, os.Args[0])
 }
 
@@ -390,7 +388,7 @@ Get current account portfolio snapshot
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-portfolio --injective-address "Autem est sit nesciunt ea et velit."
+    %[1]s guilds-service get-account-portfolio --injective-address "Voluptatum magnam dolorem nostrum velit non ipsa."
 `, os.Args[0])
 }
 
@@ -403,6 +401,6 @@ Get current account portfolios snapshots all the time
     -end-time INT64: 
 
 Example:
-    %[1]s guilds-service get-account-portfolios --injective-address "Voluptatem cum vel." --start-time 5108990148465824867 --end-time 6179154836790129392
+    %[1]s guilds-service get-account-portfolios --injective-address "Totam fugit possimus et nostrum voluptatem." --start-time 6149130476220960367 --end-time 8186644215274380022
 `, os.Args[0])
 }

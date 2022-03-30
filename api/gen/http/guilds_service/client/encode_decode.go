@@ -605,7 +605,8 @@ func DecodeEnterGuildResponse(decoder func(*http.Response) goahttp.Decoder, rest
 // path set to call the "GuildsService" service "LeaveGuild" endpoint
 func (c *Client) BuildLeaveGuildRequest(ctx context.Context, v interface{}) (*http.Request, error) {
 	var (
-		guildID string
+		guildID          string
+		injectiveAddress string
 	)
 	{
 		p, ok := v.(*guildsservice.LeaveGuildPayload)
@@ -613,8 +614,9 @@ func (c *Client) BuildLeaveGuildRequest(ctx context.Context, v interface{}) (*ht
 			return nil, goahttp.ErrInvalidType("GuildsService", "LeaveGuild", "*guildsservice.LeaveGuildPayload", v)
 		}
 		guildID = p.GuildID
+		injectiveAddress = p.InjectiveAddress
 	}
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: LeaveGuildGuildsServicePath(guildID)}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: LeaveGuildGuildsServicePath(guildID, injectiveAddress)}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("GuildsService", "LeaveGuild", u.String(), err)
@@ -624,22 +626,6 @@ func (c *Client) BuildLeaveGuildRequest(ctx context.Context, v interface{}) (*ht
 	}
 
 	return req, nil
-}
-
-// EncodeLeaveGuildRequest returns an encoder for requests sent to the
-// GuildsService LeaveGuild server.
-func EncodeLeaveGuildRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
-	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*guildsservice.LeaveGuildPayload)
-		if !ok {
-			return goahttp.ErrInvalidType("GuildsService", "LeaveGuild", "*guildsservice.LeaveGuildPayload", v)
-		}
-		body := NewLeaveGuildRequestBody(p)
-		if err := encoder(req).Encode(&body); err != nil {
-			return goahttp.ErrEncodingError("GuildsService", "LeaveGuild", err)
-		}
-		return nil
-	}
 }
 
 // DecodeLeaveGuildResponse returns a decoder for responses returned by the
