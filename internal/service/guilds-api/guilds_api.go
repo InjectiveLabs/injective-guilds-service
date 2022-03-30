@@ -400,20 +400,59 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 				detail: fmt.Sprintf("Denom %s balance: %s < min %.2f", b.Denom, availBalanceFloat.String(), min),
 			}, nil
 		}
-
-		s.logger.WithField("denom", b.Denom).WithField("amount", b.MarginHold.String()).WithField("isZero", b.MarginHold.IsZero()).Info("account margin hold")
-		// a trading account shouldn't have margin
-		// which means they have orders/positions
-		if !b.MarginHold.IsZero() {
-			return &qualificationResult{
-				status: StatusUnqualified,
-				detail: "account still have open orders/position",
-			}, nil
-		}
 	}
 
 	return &qualificationResult{
 		status: StatusQualified,
+	}, nil
+}
+
+func (s *service) checkOrders(ctx context.Context, guild *model.Guild, portfolio *model.AccountPortfolio) (*qualificationResult, error) {
+	defaultSubaccountID := defaultSubaccountIDFromInjAddress(portfolio.InjectiveAddress)
+	derivOrders, err := s.exchangeProvider.GetDerivativeOrders(ctx, []string{}, defaultSubaccountID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(derivOrders) > 0 {
+		return &qualificationResult{
+			status: StatusUnqualified,
+			detail: "trading account still has open derivative orders",
+		}, nil
+	}
+
+	spotOrders, err := s.exchangeProvider.GetSpotOrders(ctx, []string{}, defaultSubaccountID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(spotOrders) > 0 {
+		return &qualificationResult{
+			status: StatusUnqualified,
+			detail: "trading account still has open spot orders",
+		}, nil
+	}
+
+	return &qualificationResult{
+		status: StatusUnqualified,
+	}, nil
+}
+
+func (s *service) checkPositions(ctx context.Context, guild *model.Guild, portfolio *model.AccountPortfolio) (*qualificationResult, error) {
+	defaultSubaccountID := defaultSubaccountIDFromInjAddress(portfolio.InjectiveAddress)
+	positions, err := s.exchangeProvider.GetPositions(ctx, defaultSubaccountID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(positions) > 0 {
+		return &qualificationResult{
+			status: StatusUnqualified,
+			detail: "trading account still has open positions",
+		}, nil
+	}
+	return &qualificationResult{
+		status: StatusUnqualified,
 	}, nil
 }
 
@@ -423,11 +462,29 @@ func (s *service) checkAddressQualification(
 ) (*qualificationResult, error) {
 	balanceQualifyResult, err := s.checkBalances(ctx, guild, portfolio)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("balance check err: %w", err)
 	}
 
 	if balanceQualifyResult.status != StatusQualified {
 		return balanceQualifyResult, nil
+	}
+
+	orderCheck, err := s.checkOrders(ctx, guild, portfolio)
+	if err != nil {
+		return nil, fmt.Errorf("order check err: %w", err)
+	}
+
+	if orderCheck.status != StatusQualified {
+		return orderCheck, nil
+	}
+
+	positionCheck, err := s.checkPositions(ctx, guild, portfolio)
+	if err != nil {
+		return nil, fmt.Errorf("position check err: %w", err)
+	}
+
+	if positionCheck.status != StatusQualified {
+		return positionCheck, nil
 	}
 
 	return s.checkGrants(ctx, guild, portfolio.InjectiveAddress.String())

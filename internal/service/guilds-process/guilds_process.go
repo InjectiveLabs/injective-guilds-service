@@ -379,7 +379,7 @@ func (p *GuildsProcess) spotOrdersHaveInvalidFeeRecipient(
 
 	// open orders
 	spotOrders, err := p.exchange.GetSpotOrders(
-		ctx, marketsFromGuild(guild, false),
+		ctx, []string{},
 		defaultSubaccountID,
 	)
 	if err != nil {
@@ -413,7 +413,7 @@ func (p *GuildsProcess) derivativeOrdersHaveInvalidFeeRecipient(
 	metrics.ReportFuncCall(p.svcTags)
 
 	derivativeOrders, err := p.exchange.GetDerivativeOrders(
-		ctx, marketsFromGuild(guild, true),
+		ctx, []string{},
 		defaultSubaccountID,
 	)
 	if err != nil {

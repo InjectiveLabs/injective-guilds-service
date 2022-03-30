@@ -6,6 +6,7 @@ import (
 	svc "github.com/InjectiveLabs/injective-guilds-service/api/gen/guilds_service"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/shopspring/decimal"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -103,4 +104,9 @@ func sum(a primitive.Decimal128, b primitive.Decimal128) primitive.Decimal128 {
 	parsedB, _ := decimal.NewFromString(b.String())
 	result, _ := primitive.ParseDecimal128(parsedA.Add(parsedB).String())
 	return result
+}
+
+func defaultSubaccountIDFromInjAddress(injAddress model.Address) string {
+	ethAddr := common.BytesToAddress(injAddress.Bytes())
+	return ethAddr.Hex() + "000000000000000000000000"
 }
