@@ -401,6 +401,7 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 			}, nil
 		}
 
+		s.logger.WithField("denom", b.Denom).WithField("amount", b.MarginHold.String()).WithField("isZero", b.MarginHold.IsZero()).Info("account margin hold")
 		// a trading account shouldn't have margin
 		// which means they have orders/positions
 		if !b.MarginHold.IsZero() {
