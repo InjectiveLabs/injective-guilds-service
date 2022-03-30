@@ -65,18 +65,22 @@ func LoadEnvDuration(name string, defaultValue time.Duration) time.Duration {
 }
 
 type StatsdConfig struct {
+	Agent    string
+	Disabled bool
 	Prefix   string
 	Addr     string
 	StuckDur time.Duration
-	Disabled bool
+	Mocking  bool
 }
 
 func loadStatsdConfig(envPrefix string) StatsdConfig {
 	return StatsdConfig{
+		Agent:    LoadEnvString(fmt.Sprintf("%s_STATSD_AGENT", envPrefix), "telegraf"),
 		Disabled: LoadEnvBool(fmt.Sprintf("%s_STATSD_DISABLED", envPrefix), false),
 		Prefix:   LoadEnvString(fmt.Sprintf("%s_STATSD_PREFIX", envPrefix), ""),
 		Addr:     LoadEnvString(fmt.Sprintf("%s_STATSD_ADDR", envPrefix), ""),
 		StuckDur: LoadEnvDuration(fmt.Sprintf("%s_STATSD_STUCK_DUR", envPrefix), 5*time.Minute),
+		Mocking:  LoadEnvBool(fmt.Sprintf("%s_STATSD_MOCKING", envPrefix), false),
 	}
 }
 

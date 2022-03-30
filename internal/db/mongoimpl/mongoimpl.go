@@ -8,6 +8,7 @@ import (
 
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
+	"github.com/InjectiveLabs/metrics"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -40,6 +41,7 @@ type MongoImpl struct {
 	accountPortfolioCollection *mongo.Collection
 	guildPortfolioCollection   *mongo.Collection
 	denomCollection            *mongo.Collection
+	svcTags                    metrics.Tags
 }
 
 func NewService(ctx context.Context, connectionURL, databaseName string) (db.DBService, error) {
@@ -64,6 +66,9 @@ func NewService(ctx context.Context, connectionURL, databaseName string) (db.DBS
 		accountPortfolioCollection: client.Database(databaseName).Collection(AccountPortfolioCollectionName),
 		guildPortfolioCollection:   client.Database(databaseName).Collection(GuildPortfolioCollectionName),
 		denomCollection:            client.Database(databaseName).Collection(DenomCollectionName),
+		svcTags: metrics.Tags{
+			"svc": "db_svc",
+		},
 	}, nil
 }
 
@@ -110,8 +115,13 @@ func (s *MongoImpl) ListGuildPortfolios(
 	ctx context.Context,
 	filter model.GuildPortfoliosFilter,
 ) (result []*model.GuildPortfolio, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	guildObjectID, err := primitive.ObjectIDFromHex(filter.GuildID)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return nil, fmt.Errorf("cannot parse guildID: %w", err)
 	}
 
@@ -140,6 +150,7 @@ func (s *MongoImpl) ListGuildPortfolios(
 
 	cur, err := s.guildPortfolioCollection.Find(ctx, portfolioFilter, opt)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return nil, err
 	}
 	defer cur.Close(ctx)
@@ -148,6 +159,7 @@ func (s *MongoImpl) ListGuildPortfolios(
 		var guildPortfolio model.GuildPortfolio
 		err := cur.Decode(&guildPortfolio)
 		if err != nil {
+			metrics.ReportFuncError(s.svcTags)
 			return nil, err
 		}
 
@@ -158,8 +170,13 @@ func (s *MongoImpl) ListGuildPortfolios(
 }
 
 func (s *MongoImpl) AddGuild(ctx context.Context, guild *model.Guild) (*primitive.ObjectID, error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	insertOneRes, err := s.guildCollection.InsertOne(ctx, guild)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return nil, err
 	}
 
@@ -168,6 +185,10 @@ func (s *MongoImpl) AddGuild(ctx context.Context, guild *model.Guild) (*primitiv
 }
 
 func (s *MongoImpl) DeleteGuild(ctx context.Context, guildID string) error {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	guildObjectID, err := primitive.ObjectIDFromHex(guildID)
 	if err != nil {
 		return fmt.Errorf("cannot parse guildID: %w", err)
@@ -203,10 +224,20 @@ func (s *MongoImpl) DeleteGuild(ctx context.Context, guildID string) error {
 
 		return nil, nil
 	})
-	return err
+
+	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		return err
+	}
+
+	return nil
 }
 
 func (s *MongoImpl) ListAllGuilds(ctx context.Context) (result []*model.Guild, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	filter := bson.M{}
 	cur, err := s.guildCollection.Find(ctx, filter)
 	if err != nil {
@@ -218,6 +249,7 @@ func (s *MongoImpl) ListAllGuilds(ctx context.Context) (result []*model.Guild, e
 		var guild model.Guild
 		err := cur.Decode(&guild)
 		if err != nil {
+			metrics.ReportFuncError(s.svcTags)
 			return nil, err
 		}
 
@@ -228,6 +260,10 @@ func (s *MongoImpl) ListAllGuilds(ctx context.Context) (result []*model.Guild, e
 }
 
 func (s *MongoImpl) GetSingleGuild(ctx context.Context, guildID string) (*model.Guild, error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	guildObjectID, err := primitive.ObjectIDFromHex(guildID)
 	if err != nil {
 		return nil, fmt.Errorf("cannot parse guildID: %w", err)
@@ -239,11 +275,13 @@ func (s *MongoImpl) GetSingleGuild(ctx context.Context, guildID string) (*model.
 
 	res := s.guildCollection.FindOne(ctx, filter)
 	if err := res.Err(); err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return nil, err
 	}
 
 	var guild model.Guild
 	if err := res.Decode(&guild); err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return nil, err
 	}
 
@@ -251,6 +289,10 @@ func (s *MongoImpl) GetSingleGuild(ctx context.Context, guildID string) (*model.
 }
 
 func (s *MongoImpl) AddGuildPortfolios(ctx context.Context, portfolios []*model.GuildPortfolio) error {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	docs := make([]interface{}, len(portfolios))
 	for i, p := range portfolios {
 		docs[i] = p
@@ -264,11 +306,15 @@ func (s *MongoImpl) ListGuildMembers(
 	ctx context.Context,
 	memberFilter model.MemberFilter,
 ) (result []*model.GuildMember, err error) {
-	filter := bson.M{}
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
 
+	filter := bson.M{}
 	if memberFilter.GuildID != nil {
 		guildObjectID, err := primitive.ObjectIDFromHex(*memberFilter.GuildID)
 		if err != nil {
+			metrics.ReportFuncError(s.svcTags)
 			return nil, fmt.Errorf("cannot parse guildID: %w", err)
 		}
 		filter["guild_id"] = guildObjectID
@@ -284,6 +330,7 @@ func (s *MongoImpl) ListGuildMembers(
 
 	cur, err := s.memberCollection.Find(ctx, filter)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return nil, err
 	}
 	defer cur.Close(ctx)
@@ -292,6 +339,7 @@ func (s *MongoImpl) ListGuildMembers(
 		var member model.GuildMember
 		err := cur.Decode(&member)
 		if err != nil {
+			metrics.ReportFuncError(s.svcTags)
 			return nil, err
 		}
 
@@ -307,6 +355,10 @@ func (s *MongoImpl) upsertMember(
 	address model.Address,
 	isDefaultMember bool,
 ) (*mongo.UpdateResult, error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	filter := bson.M{
 		"injective_address": address.String(),
 	}
@@ -367,8 +419,13 @@ func (s *MongoImpl) adjustMemberCount(
 }
 
 func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model.Address, isDefaultMember bool) error {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	guildObjectID, err := primitive.ObjectIDFromHex(guildID)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return fmt.Errorf("cannot parse guildID: %w", err)
 	}
 
@@ -404,12 +461,22 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 		return nil, nil
 	})
 
-	return err
+	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		return err
+	}
+
+	return nil
 }
 
 func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address model.Address) error {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	guildObjectID, err := primitive.ObjectIDFromHex(guildID)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return fmt.Errorf("cannot parse guildID: %w", err)
 	}
 
@@ -437,12 +504,21 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 		return nil, nil
 	})
 
-	return err
+	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		return err
+	}
+
+	return nil
 }
 
 // account portfolio gets latest account portfolio
 // TODO: Unify getAccountPortfolio to 1 function
 func (s *MongoImpl) GetAccountPortfolio(ctx context.Context, address model.Address) (*model.AccountPortfolio, error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	filter := bson.M{
 		"injective_address": address.String(),
 	}
@@ -452,11 +528,13 @@ func (s *MongoImpl) GetAccountPortfolio(ctx context.Context, address model.Addre
 
 	singleRow := s.accountPortfolioCollection.FindOne(ctx, filter, opts)
 	if err := singleRow.Err(); err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return nil, err
 	}
 
 	var portfolio model.AccountPortfolio
 	if err := singleRow.Decode(&portfolio); err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return nil, err
 	}
 
@@ -467,6 +545,10 @@ func (s *MongoImpl) ListAccountPortfolios(
 	ctx context.Context,
 	filter model.AccountPortfoliosFilter,
 ) (result []*model.AccountPortfolio, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	portfolioFilter := bson.M{
 		"injective_address": filter.InjectiveAddress.String(),
 	}
@@ -489,6 +571,7 @@ func (s *MongoImpl) ListAccountPortfolios(
 
 	cur, err := s.accountPortfolioCollection.Find(ctx, portfolioFilter, opts)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		return nil, err
 	}
 	defer cur.Close(ctx)
@@ -497,6 +580,7 @@ func (s *MongoImpl) ListAccountPortfolios(
 		var portfolio model.AccountPortfolio
 		err := cur.Decode(&portfolio)
 		if err != nil {
+			metrics.ReportFuncError(s.svcTags)
 			return nil, err
 		}
 
@@ -510,13 +594,21 @@ func (s *MongoImpl) AddAccountPortfolios(
 	ctx context.Context,
 	portfolios []*model.AccountPortfolio,
 ) error {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	docs := make([]interface{}, len(portfolios))
 	for i, p := range portfolios {
 		docs[i] = p
 	}
 
-	_, err := s.accountPortfolioCollection.InsertMany(ctx, docs)
-	return err
+	if _, err := s.accountPortfolioCollection.InsertMany(ctx, docs); err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		return err
+	}
+
+	return nil
 }
 
 func (s *MongoImpl) Disconnect(ctx context.Context) error {

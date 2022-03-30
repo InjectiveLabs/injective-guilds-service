@@ -43,9 +43,6 @@ func NewServer(cfg config.GuildsAPIServerConfig) (*APIServer, error) {
 		return nil, err
 	}
 
-	// setup logger
-	log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
-
 	// prepare service implementations
 	guildsApi, err := guildsapi.NewService(ctx, s.dbSvc, s.exchange)
 	if err != nil {
@@ -145,7 +142,16 @@ func cmdApi(c *cli.Cmd) {
 		err := cfg.Validate()
 		panicIf(err)
 
+		// check prices
 		doubleCheckDenomConfig(cfg.AssetPriceURL)
+		if !cfg.StatsdConfig.Disabled {
+			// set global stat and log
+			err = connectStatServerWithRetry(cfg.EnvName, cfg.StatsdConfig, retryCount)
+			panicIf(err)
+		}
+
+		// setup logger
+		log.DefaultLogger.SetLevel(getLogLevel(cfg.LogLevel))
 
 		apiServer, err := NewServer(cfg)
 		panicIf(err)

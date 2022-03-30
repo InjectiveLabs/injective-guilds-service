@@ -7,6 +7,7 @@ import (
 
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
+	"github.com/InjectiveLabs/metrics"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/golang/mock/gomock"
@@ -37,7 +38,7 @@ func TestCaptureSinglePortfolio(t *testing.T) {
 	mockExchange := exchange.NewMockDataProvider(ctrl)
 	cosmtypes.GetConfig().SetBech32PrefixForAccount("inj", "injpub")
 
-	helper, err := NewPortfolioHelper(ctx, mockExchange, log.WithField("svc", "test"))
+	helper, err := NewPortfolioHelper(ctx, mockExchange, log.WithField("svc", "test"), metrics.Tags{})
 	assert.NoError(t, err)
 
 	subaccountID := "0xEB8cf88b739fE12E303E31fb88fC37751E17cF3D000000000000000000000000"

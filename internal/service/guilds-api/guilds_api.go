@@ -12,6 +12,7 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
 	guildsprocess "github.com/InjectiveLabs/injective-guilds-service/internal/service/guilds-process"
+	metrics "github.com/InjectiveLabs/metrics"
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/shopspring/decimal"
 	log "github.com/xlab/suplog"
@@ -38,14 +39,18 @@ type service struct {
 	dbSvc            db.DBService
 	portfolioHelper  *guildsprocess.PortfolioHelper
 	logger           log.Logger
+	svcTags          metrics.Tags
 	// TODO: Load as env var
 	grants []string
 }
 
 func NewService(ctx context.Context, dbSvc db.DBService, exchangeProvider exchange.DataProvider) (GuildsAPI, error) {
 	logger := log.WithField("svc", "guilds_api")
+	svcTags := metrics.Tags{
+		"svc": "guilds_api",
+	}
 
-	helper, err := guildsprocess.NewPortfolioHelper(ctx, exchangeProvider, logger)
+	helper, err := guildsprocess.NewPortfolioHelper(ctx, exchangeProvider, logger, svcTags)
 	if err != nil {
 		return nil, err
 	}
@@ -56,13 +61,20 @@ func NewService(ctx context.Context, dbSvc db.DBService, exchangeProvider exchan
 		portfolioHelper:  helper,
 		logger:           logger,
 		grants:           config.GrantRequirements,
+		svcTags:          svcTags,
 	}, nil
 }
 
 // TODO: Refine error handling
 func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	guilds, err := s.dbSvc.ListAllGuilds(ctx)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("list all guilds error")
 		return nil, svc.MakeInternal(err)
 	}
 
@@ -77,6 +89,9 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 			Limit:   &limit,
 		})
 		if err != nil {
+			metrics.ReportFuncError(s.svcTags)
+			s.logger.WithError(err).
+				WithField("guild_id", g.ID.Hex()).Error("list all guilds: default member error")
 			return nil, svc.MakeInternal(err)
 		}
 
@@ -93,10 +108,15 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 		})
 
 		if err != nil {
+			metrics.ReportFuncError(s.svcTags)
+			s.logger.WithError(err).
+				WithField("guild_id", g.ID.Hex()).Error("list all guilds: default member error")
 			return nil, svc.MakeInternal(err)
 		}
 
 		if len(defaultMember) == 0 {
+			metrics.ReportFuncError(s.svcTags)
+			s.logger.WithField("guild_id", g.ID.Hex()).Error("list all guilds: no default member")
 			return nil, svc.MakeInternal(errors.New("guild has no default member"))
 		}
 
@@ -107,6 +127,10 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 }
 
 func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuildPayload) (res *svc.GetSingleGuildResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
 	if err != nil {
 		s.logger.WithError(err).Error("list single guild error")
@@ -124,6 +148,7 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 		Limit:   &limit,
 	})
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Error("list guild portfolio errors")
 		return nil, svc.MakeInternal(err)
 	}
@@ -140,11 +165,14 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 		IsDefaultMember: &isDefaultMember,
 	})
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Error("list guild member error")
 		return nil, svc.MakeInternal(err)
 	}
 
 	if len(defaultMember) == 0 {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithField("guild_id", guildID).Error("no default member")
 		return nil, svc.MakeInternal(errors.New("guild has no default member"))
 	}
 
@@ -155,6 +183,10 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 
 // Get members
 func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMembersPayload) (res *svc.GetGuildMembersResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	members, err := s.dbSvc.ListGuildMembers(
 		ctx,
 		model.MemberFilter{
@@ -162,6 +194,8 @@ func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMemb
 		},
 	)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).WithField("guild_id", payload.GuildID).Error("list guild member error")
 		return nil, svc.MakeInternal(err)
 	}
 
@@ -182,8 +216,14 @@ func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMemb
 
 // Get master address of given guild
 func (s *service) GetGuildMasterAddress(ctx context.Context, payload *svc.GetGuildMasterAddressPayload) (res *svc.GetGuildMasterAddressResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+
 		s.logger.WithError(err).Error("get single guild error")
 		return nil, svc.MakeInternal(err)
 	}
@@ -195,6 +235,10 @@ func (s *service) GetGuildMasterAddress(ctx context.Context, payload *svc.GetGui
 }
 
 func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGuildDefaultMemberPayload) (res *svc.GetGuildDefaultMemberResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	isDefaultMember := true
 	defaultMember, err := s.dbSvc.ListGuildMembers(
 		ctx,
@@ -204,12 +248,16 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 		},
 	)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+
 		s.logger.WithError(err).Error("list guild members error")
 		return nil, svc.MakeInternal(err)
 	}
 
 	if len(defaultMember) == 0 {
-		s.logger.WithField("guildID", payload.GuildID).Error("default member not found")
+		metrics.ReportFuncError(s.svcTags)
+
+		s.logger.WithField("guild_id", payload.GuildID).Error("default member not found")
 		return nil, svc.MakeNotFound(errors.New("default member not found"))
 	}
 
@@ -222,8 +270,14 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 }
 
 func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address string) (*qualificationResult, error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	grants, err := s.exchangeProvider.GetGrants(ctx, address, guild.MasterAddress.String())
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+
 		return nil, fmt.Errorf("get grants err: %w", err)
 	}
 
@@ -263,6 +317,10 @@ func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address s
 }
 
 func (s *service) getLatestGuildPortfolio(ctx context.Context, guildID string) (*model.GuildPortfolio, error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	limit := int64(1)
 	portfolios, err := s.dbSvc.ListGuildPortfolios(ctx, model.GuildPortfoliosFilter{
 		GuildID: guildID,
@@ -273,6 +331,8 @@ func (s *service) getLatestGuildPortfolio(ctx context.Context, guildID string) (
 	}
 
 	if len(portfolios) == 0 {
+		metrics.ReportFuncError(s.svcTags)
+
 		return nil, errors.New("portfolio not found")
 	}
 
@@ -280,7 +340,13 @@ func (s *service) getLatestGuildPortfolio(ctx context.Context, guildID string) (
 }
 
 func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapshot *model.AccountPortfolio) (*qualificationResult, error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	if snapshot == nil {
+		metrics.ReportFuncError(s.svcTags)
+
 		return nil, fmt.Errorf("no snapshot found to check")
 	}
 
@@ -322,16 +388,19 @@ func (s *service) checkBalances(ctx context.Context, guild *model.Guild, snapsho
 		availBalance, _ := decimal.NewFromString(b.AvailableBalance.String())
 		dec, exist := denomToDecimal[b.Denom]
 		if !exist {
+			metrics.ReportFuncError(s.svcTags)
 			return nil, fmt.Errorf("failed check denom not belongs to market")
 		}
 
 		min, exist := denomToMinAmount[b.Denom]
 		if !exist {
+			metrics.ReportFuncError(s.svcTags)
 			return nil, fmt.Errorf("failed check denom not belongs to market")
 		}
 
 		priceUsd, exist := denomToUsdPrice[b.Denom]
 		if !exist {
+			metrics.ReportFuncError(s.svcTags)
 			return nil, fmt.Errorf("failed to check denom price in usd")
 		}
 
@@ -353,6 +422,10 @@ func (s *service) checkAddressQualification(
 	ctx context.Context,
 	guild *model.Guild, portfolio *model.AccountPortfolio,
 ) (*qualificationResult, error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	// Total Balance == Available Balance
 	balanceQualifyResult, err := s.checkBalances(ctx, guild, portfolio)
 	if err != nil {
@@ -371,6 +444,10 @@ func (s *service) checkAddressLeaveCondition(
 	guild *model.Guild,
 	address string,
 ) (bool, error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	grants, err := s.exchangeProvider.GetGrants(ctx, address, guild.MasterAddress.String())
 	if err != nil {
 		return false, err
@@ -393,13 +470,20 @@ func (s *service) checkAddressLeaveCondition(
 }
 
 func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload) (res *svc.EnterGuildResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	accAddress, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("parse acc address error")
 		return nil, svc.MakeInvalidArg(err)
 	}
 
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Error("get single guild error")
 		return nil, svc.MakeInternal(fmt.Errorf("guild error: %w", err))
 	}
@@ -415,6 +499,7 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 		true,
 	)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).
 			WithField("address", payload.InjectiveAddress).Error("capture portfolio error")
 		return nil, svc.MakeInternal(fmt.Errorf("capture portfolio error: %w", err))
@@ -423,6 +508,7 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	// check qualification
 	qualificationResult, err := s.checkAddressQualification(ctx, guild, portfolio)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Error("check qualifcation error")
 		return nil, svc.MakeInternal(fmt.Errorf("check qualification error: %w", err))
 	}
@@ -452,18 +538,28 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 }
 
 func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload) (res *svc.LeaveGuildResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	accAddress, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("leave guild: invalid arg")
 		return nil, svc.MakeInvalidArg(err)
 	}
 
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("get single guild error")
 		return nil, svc.MakeInternal(err)
 	}
 
 	shouldRemove, err := s.checkAddressLeaveCondition(ctx, guild, accAddress.String())
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("check leave guild condition err")
 		return nil, svc.MakeInternal(fmt.Errorf("failed to check leave condition: %w", err))
 	}
 
@@ -474,6 +570,8 @@ func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload
 	// remove member from database
 	err = s.dbSvc.RemoveMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress})
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("cannot remove member on leave guild")
 		return nil, svc.MakeInternal(err)
 	}
 
@@ -484,8 +582,14 @@ func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload
 }
 
 func (s *service) GetGuildMarkets(ctx context.Context, payload *svc.GetGuildMarketsPayload) (res *svc.GetGuildMarketsResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("get guild market error")
 		return nil, svc.MakeInternal(err)
 	}
 
@@ -506,6 +610,10 @@ func (s *service) GetGuildPortfolios(
 	ctx context.Context,
 	payload *svc.GetGuildPortfoliosPayload,
 ) (res *svc.GetGuildPortfoliosResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	filter := model.GuildPortfoliosFilter{
 		GuildID: payload.GuildID,
 	}
@@ -523,6 +631,8 @@ func (s *service) GetGuildPortfolios(
 
 	portfolios, err := s.dbSvc.ListGuildPortfolios(ctx, filter)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("list guild portfolio error")
 		return nil, svc.MakeInternal(fmt.Errorf("list guild portfolio err: %w", err))
 	}
 
@@ -558,8 +668,14 @@ func (s *service) GetGuildPortfolios(
 }
 
 func (s *service) GetAccountInfo(ctx context.Context, payload *svc.GetAccountInfoPayload) (res *svc.GetAccountInfoResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("parse acc address error")
 		return nil, svc.MakeInvalidArg(err)
 	}
 
@@ -570,10 +686,13 @@ func (s *service) GetAccountInfo(ctx context.Context, payload *svc.GetAccountInf
 		},
 	)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("list guild member error")
 		return nil, svc.MakeInternal(err)
 	}
 
 	if len(members) == 0 {
+		metrics.ReportFuncError(s.svcTags)
 		return nil, svc.MakeNotFound(errors.New("member not found"))
 	}
 	guildID := members[0].GuildID.Hex()
@@ -589,8 +708,14 @@ func (s *service) GetAccountInfo(ctx context.Context, payload *svc.GetAccountInf
 }
 
 func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccountPortfolioPayload) (res *svc.GetAccountPortfolioResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("parse acc address error")
 		return nil, svc.MakeInvalidArg(err)
 	}
 
@@ -598,6 +723,7 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 		AccAddress: address,
 	})
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Error("get account portfolio error")
 		return nil, svc.MakeInternal(err)
 	}
@@ -635,8 +761,13 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 }
 
 func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAccountPortfoliosPayload) (res *svc.GetAccountPortfoliosResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
+		s.logger.WithError(err).Error("parse acc address error")
 		return nil, svc.MakeInvalidArg(err)
 	}
 
@@ -656,6 +787,8 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 
 	portfolios, err := s.dbSvc.ListAccountPortfolios(ctx, filter)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("list account portfolios error")
 		return nil, svc.MakeInternal(err)
 	}
 

@@ -11,6 +11,7 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
+	metrics "github.com/InjectiveLabs/metrics"
 	log "github.com/xlab/suplog"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -34,7 +35,8 @@ type GuildsProcess struct {
 	portfolioUpdateInterval time.Duration
 	disqualifyInterval      time.Duration
 
-	grants []string
+	grants  []string
+	svcTags metrics.Tags
 }
 
 func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
@@ -60,7 +62,10 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 		return nil, err
 	}
 
-	portfolioHelper, err := NewPortfolioHelper(ctx, exchangeProvider, logger)
+	svcTags := metrics.Tags{
+		"svc": "guilds_process",
+	}
+	portfolioHelper, err := NewPortfolioHelper(ctx, exchangeProvider, logger, svcTags)
 	if err != nil {
 		return nil, err
 	}
@@ -73,6 +78,7 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 		disqualifyInterval:      cfg.DisqualifyInterval,
 		portfolioHelper:         portfolioHelper,
 		grants:                  config.GrantRequirements,
+		svcTags:                 svcTags,
 	}, nil
 }
 
@@ -110,6 +116,10 @@ func (p *GuildsProcess) runWithInterval(ctx context.Context, interval time.Durat
 
 // TODO: Improvement: Implement retryable mechanism
 func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	guilds, err := p.dbSvc.ListAllGuilds(ctx)
 	if err != nil {
 		return fmt.Errorf("list guild err: %w", err)
@@ -125,7 +135,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 		if err != nil {
 			err = fmt.Errorf("list non-default member err: %w", err)
 			p.logger.
-				WithField("guildID", guildID).
+				WithField("guild_id", guildID).
 				WithError(err).Warningln("skip this guild")
 			continue
 		}
@@ -138,7 +148,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 		if err != nil {
 			err = fmt.Errorf("get denom price err: %w", err)
 			p.logger.
-				WithField("guildID", guildID).
+				WithField("guild_id", guildID).
 				WithError(err).Warningln("get price err, skip this guild")
 			continue
 		}
@@ -152,7 +162,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 			portfolioSnapshot, err := p.portfolioHelper.CaptureSingleMemberPortfolio(ctx, guild, member, false)
 			if err != nil {
 				p.logger.
-					WithField("guildID", guildID).
+					WithField("guild_id", guildID).
 					WithField("memberAddr", member.InjectiveAddress.String()).
 					WithError(err).Warningln("capture snapshot error")
 				continue
@@ -204,11 +214,11 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 		if len(portfolios) > 0 {
 			p.logger.
 				WithField("count", len(portfolios)).
-				WithField("guildID", guildID).Infoln("updated portfolios")
+				WithField("guild_id", guildID).Infoln("updated portfolios")
 			err = p.dbSvc.AddAccountPortfolios(ctx, portfolios)
 			if err != nil {
 				p.logger.
-					WithField("guildID", guildID).
+					WithField("guild_id", guildID).
 					WithError(err).Warningln("skip this guild")
 			}
 		}
@@ -234,7 +244,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 			err = p.dbSvc.AddGuildPortfolios(ctx, []*model.GuildPortfolio{guildPortfolio})
 			if err != nil {
 				p.logger.
-					WithField("guildID", guildID).
+					WithField("guild_id", guildID).
 					WithError(err).Warningln("cannot add guild portfolio")
 			}
 		}
@@ -245,8 +255,13 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 // processDisqualify get orders from guild's markets
 // then remove members whose orders' fee_recipient is not masterAddress
 func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	guilds, err := p.dbSvc.ListAllGuilds(ctx)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return fmt.Errorf("list guild err: %w", err)
 	}
 
@@ -262,7 +277,7 @@ func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
 		if err != nil {
 			err = fmt.Errorf("list non-default member err: %w", err)
 			p.logger.
-				WithField("guildID", guildID).
+				WithField("guild_id", guildID).
 				WithError(err).Warningln("skip this guild")
 			continue
 		}
@@ -293,10 +308,7 @@ func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
 			}
 		}
 
-		p.logger.
-			WithField("count", countDisqualifed).
-			WithField("guildID", guildID).
-			Info("disqualifed members")
+		p.logger.WithField("count", countDisqualifed).WithField("guild_id", guildID).Info("disqualifed members")
 	}
 	return nil
 }
@@ -306,8 +318,13 @@ func (p *GuildsProcess) meetGrantRequirements(
 	guild *model.Guild,
 	address string,
 ) (bool, error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	grants, err := p.exchange.GetGrants(ctx, address, guild.MasterAddress.String())
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return false, err
 	}
 
@@ -327,10 +344,22 @@ func (p *GuildsProcess) meetGrantRequirements(
 	for _, expectedMsg := range p.grants {
 		expiration, ok := msgToExpiration[expectedMsg]
 		if !ok {
+			p.logger.WithFields(log.Fields{
+				"address":        address,
+				"guild_id":       guild.ID.Hex(),
+				"missed_message": expectedMsg,
+			}).Info("account missed a grant")
+
 			return false, nil
 		}
 
 		if expiration.Before(now) {
+			p.logger.WithFields(log.Fields{
+				"address":         address,
+				"guild_id":        guild.ID.Hex(),
+				"expired_message": expectedMsg,
+				"expired_at":      expiration.String(),
+			}).Info("account missed a grant")
 			return false, nil
 		}
 	}
@@ -344,17 +373,28 @@ func (p *GuildsProcess) spotOrdersHaveInvalidFeeRecipient(
 	defaultSubaccountID string,
 	masterAddress string,
 ) (bool, error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	// open orders
 	spotOrders, err := p.exchange.GetSpotOrders(
 		ctx, marketsFromGuild(guild, false),
 		defaultSubaccountID,
 	)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return false, fmt.Errorf("get spot orders err: %w", err)
 	}
 
 	for _, o := range spotOrders {
 		if strings.ToLower(o.FeeRecipient) != masterAddress {
+			// we can log here to trace
+			p.logger.WithFields(log.Fields{
+				"subaccount_id": defaultSubaccountID,
+				"guild_id":      guild.ID.Hex(),
+				"fee_recipient": o.FeeRecipient,
+			}).Info("account has invalid spot order")
 			return true, nil
 		}
 	}
@@ -368,16 +408,26 @@ func (p *GuildsProcess) derivativeOrdersHaveInvalidFeeRecipient(
 	defaultSubaccountID string,
 	masterAddress string,
 ) (bool, error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	derivativeOrders, err := p.exchange.GetDerivativeOrders(
 		ctx, marketsFromGuild(guild, true),
 		defaultSubaccountID,
 	)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return false, fmt.Errorf("get derivative orders err: %w", err)
 	}
 
 	for _, o := range derivativeOrders {
 		if strings.ToLower(o.FeeRecipient) != masterAddress {
+			p.logger.WithFields(log.Fields{
+				"subaccount_id": defaultSubaccountID,
+				"guild_id":      guild.ID.Hex(),
+				"fee_recipient": o.FeeRecipient,
+			}).Info("account has invalid derivative order")
 			return true, nil
 		}
 	}
@@ -393,11 +443,17 @@ func (p *GuildsProcess) shouldDisqualify(
 	guild *model.Guild,
 	address model.Address,
 ) (bool, error) {
+	doneFn := metrics.ReportFuncTiming(p.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(p.svcTags)
+
 	defaultSubaccountID := defaultSubaccountIDFromInjAddress(address)
 	masterAddress := strings.ToLower(guild.MasterAddress.String())
 	// check grants
 	meetRequirement, err := p.meetGrantRequirements(ctx, guild, address.String())
 	if err != nil {
+		// even it's not a fatal error, we should have metrics to monitor them
+		metrics.ReportFuncError(p.svcTags)
 		p.logger.WithField("address", address.String()).
 			WithError(err).Warningln("check grants error")
 	}
@@ -409,6 +465,7 @@ func (p *GuildsProcess) shouldDisqualify(
 
 	isInvalid, err := p.spotOrdersHaveInvalidFeeRecipient(ctx, guild, defaultSubaccountID, masterAddress)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		p.logger.WithField("address", address.String()).
 			WithError(err).Warningln("check orders error")
 	}
@@ -419,6 +476,7 @@ func (p *GuildsProcess) shouldDisqualify(
 
 	isInvalid, err = p.derivativeOrdersHaveInvalidFeeRecipient(ctx, guild, defaultSubaccountID, masterAddress)
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return false, err
 	}
 
