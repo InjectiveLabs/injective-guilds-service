@@ -91,7 +91,7 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 		if err != nil {
 			metrics.ReportFuncError(s.svcTags)
 			s.logger.WithError(err).
-				WithField("guildID", g.ID.Hex()).Error("list all guilds: default member error")
+				WithField("guild_id", g.ID.Hex()).Error("list all guilds: default member error")
 			return nil, svc.MakeInternal(err)
 		}
 
@@ -110,13 +110,13 @@ func (s *service) GetAllGuilds(ctx context.Context) (res *svc.GetAllGuildsResult
 		if err != nil {
 			metrics.ReportFuncError(s.svcTags)
 			s.logger.WithError(err).
-				WithField("guildID", g.ID.Hex()).Error("list all guilds: default member error")
+				WithField("guild_id", g.ID.Hex()).Error("list all guilds: default member error")
 			return nil, svc.MakeInternal(err)
 		}
 
 		if len(defaultMember) == 0 {
 			metrics.ReportFuncError(s.svcTags)
-			s.logger.WithField("guildID", g.ID.Hex()).Error("list all guilds: no default member")
+			s.logger.WithField("guild_id", g.ID.Hex()).Error("list all guilds: no default member")
 			return nil, svc.MakeInternal(errors.New("guild has no default member"))
 		}
 
@@ -172,7 +172,7 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 
 	if len(defaultMember) == 0 {
 		metrics.ReportFuncError(s.svcTags)
-		s.logger.WithField("guildID", guildID).Error("no default member")
+		s.logger.WithField("guild_id", guildID).Error("no default member")
 		return nil, svc.MakeInternal(errors.New("guild has no default member"))
 	}
 
@@ -195,7 +195,7 @@ func (s *service) GetGuildMembers(ctx context.Context, payload *svc.GetGuildMemb
 	)
 	if err != nil {
 		metrics.ReportFuncError(s.svcTags)
-		s.logger.WithError(err).WithField("guildID", payload.GuildID).Error("list guild member error")
+		s.logger.WithError(err).WithField("guild_id", payload.GuildID).Error("list guild member error")
 		return nil, svc.MakeInternal(err)
 	}
 
@@ -257,7 +257,7 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 	if len(defaultMember) == 0 {
 		metrics.ReportFuncError(s.svcTags)
 
-		s.logger.WithField("guildID", payload.GuildID).Error("default member not found")
+		s.logger.WithField("guild_id", payload.GuildID).Error("default member not found")
 		return nil, svc.MakeNotFound(errors.New("default member not found"))
 	}
 

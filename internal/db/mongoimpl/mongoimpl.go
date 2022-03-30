@@ -314,6 +314,7 @@ func (s *MongoImpl) ListGuildMembers(
 	if memberFilter.GuildID != nil {
 		guildObjectID, err := primitive.ObjectIDFromHex(*memberFilter.GuildID)
 		if err != nil {
+			metrics.ReportFuncError(s.svcTags)
 			return nil, fmt.Errorf("cannot parse guildID: %w", err)
 		}
 		filter["guild_id"] = guildObjectID

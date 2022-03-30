@@ -135,7 +135,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 		if err != nil {
 			err = fmt.Errorf("list non-default member err: %w", err)
 			p.logger.
-				WithField("guildID", guildID).
+				WithField("guild_id", guildID).
 				WithError(err).Warningln("skip this guild")
 			continue
 		}
@@ -148,7 +148,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 		if err != nil {
 			err = fmt.Errorf("get denom price err: %w", err)
 			p.logger.
-				WithField("guildID", guildID).
+				WithField("guild_id", guildID).
 				WithError(err).Warningln("get price err, skip this guild")
 			continue
 		}
@@ -162,7 +162,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 			portfolioSnapshot, err := p.portfolioHelper.CaptureSingleMemberPortfolio(ctx, guild, member, false)
 			if err != nil {
 				p.logger.
-					WithField("guildID", guildID).
+					WithField("guild_id", guildID).
 					WithField("memberAddr", member.InjectiveAddress.String()).
 					WithError(err).Warningln("capture snapshot error")
 				continue
@@ -214,11 +214,11 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 		if len(portfolios) > 0 {
 			p.logger.
 				WithField("count", len(portfolios)).
-				WithField("guildID", guildID).Infoln("updated portfolios")
+				WithField("guild_id", guildID).Infoln("updated portfolios")
 			err = p.dbSvc.AddAccountPortfolios(ctx, portfolios)
 			if err != nil {
 				p.logger.
-					WithField("guildID", guildID).
+					WithField("guild_id", guildID).
 					WithError(err).Warningln("skip this guild")
 			}
 		}
@@ -244,7 +244,7 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 			err = p.dbSvc.AddGuildPortfolios(ctx, []*model.GuildPortfolio{guildPortfolio})
 			if err != nil {
 				p.logger.
-					WithField("guildID", guildID).
+					WithField("guild_id", guildID).
 					WithError(err).Warningln("cannot add guild portfolio")
 			}
 		}
@@ -277,7 +277,7 @@ func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
 		if err != nil {
 			err = fmt.Errorf("list non-default member err: %w", err)
 			p.logger.
-				WithField("guildID", guildID).
+				WithField("guild_id", guildID).
 				WithError(err).Warningln("skip this guild")
 			continue
 		}
@@ -308,10 +308,7 @@ func (p *GuildsProcess) processDisqualification(ctx context.Context) error {
 			}
 		}
 
-		p.logger.
-			WithField("count", countDisqualifed).
-			WithField("guildID", guildID).
-			Info("disqualifed members")
+		p.logger.WithField("count", countDisqualifed).WithField("guild_id", guildID).Info("disqualifed members")
 	}
 	return nil
 }
@@ -347,10 +344,22 @@ func (p *GuildsProcess) meetGrantRequirements(
 	for _, expectedMsg := range p.grants {
 		expiration, ok := msgToExpiration[expectedMsg]
 		if !ok {
+			p.logger.WithFields(log.Fields{
+				"address":        address,
+				"guild_id":       guild.ID.Hex(),
+				"missed_message": expectedMsg,
+			}).Info("account missed a grant")
+
 			return false, nil
 		}
 
 		if expiration.Before(now) {
+			p.logger.WithFields(log.Fields{
+				"address":         address,
+				"guild_id":        guild.ID.Hex(),
+				"expired_message": expectedMsg,
+				"expired_at":      expiration.String(),
+			}).Info("account missed a grant")
 			return false, nil
 		}
 	}
@@ -380,6 +389,12 @@ func (p *GuildsProcess) spotOrdersHaveInvalidFeeRecipient(
 
 	for _, o := range spotOrders {
 		if strings.ToLower(o.FeeRecipient) != masterAddress {
+			// we can log here to trace
+			p.logger.WithFields(log.Fields{
+				"subaccount_id": defaultSubaccountID,
+				"guild_id":      guild.ID.Hex(),
+				"fee_recipient": o.FeeRecipient,
+			}).Info("account has invalid spot order")
 			return true, nil
 		}
 	}
@@ -408,6 +423,11 @@ func (p *GuildsProcess) derivativeOrdersHaveInvalidFeeRecipient(
 
 	for _, o := range derivativeOrders {
 		if strings.ToLower(o.FeeRecipient) != masterAddress {
+			p.logger.WithFields(log.Fields{
+				"subaccount_id": defaultSubaccountID,
+				"guild_id":      guild.ID.Hex(),
+				"fee_recipient": o.FeeRecipient,
+			}).Info("account has invalid derivative order")
 			return true, nil
 		}
 	}
