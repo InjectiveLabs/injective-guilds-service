@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/mongoimpl"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/exchange"
@@ -135,6 +136,25 @@ func toMinAmounts(s string) (res []float64, err error) {
 	return res, nil
 }
 
+func checkGrant(ctx context.Context, exchangeProvider exchange.DataProvider, address string, masterAddress string) error {
+	grants, err := exchangeProvider.GetGrants(ctx, address, masterAddress)
+	if err != nil {
+		return fmt.Errorf("get grants err: %w", err)
+	}
+
+	grantMap := make(map[string]bool)
+	for _, g := range grants.Grants {
+		grantMap[g.Authorization.Msg] = true
+	}
+
+	for _, msg := range config.GrantRequirements {
+		if _, exist := grantMap[msg]; !exist {
+			return fmt.Errorf("missing grant msg: %s", msg)
+		}
+	}
+	return nil
+}
+
 func addGuildAction() {
 	validateAddGuildArgs()
 
@@ -158,7 +178,6 @@ func addGuildAction() {
 	srIndex := 0
 
 	log.Info("checking markets using exchange api service")
-
 	markets := make([]*model.GuildMarket, 0)
 	for _, m := range *spotIDs {
 		log.Info(fmt.Sprintf(">>> checking spot market id: %s", m))
@@ -256,9 +275,28 @@ func addGuildAction() {
 		Capacity:     *capacity,
 	}
 
+	log.Info("double check grants of default member")
+	err = checkGrant(ctx, exchangeProvider, defaultMember.String(), master.String())
+	panicIf(err)
+
+	// everything goes right, add to db
 	log.Info("adding guild: ", *name)
 	id, err := dbSvc.AddGuild(ctx, guild)
 	panicIf(err)
+
+	log.Info("capturing default member portfolio")
+	portfolio, err := helper.CaptureSingleMemberPortfolio(ctx, guild, &model.GuildMember{
+		GuildID:          *id,
+		InjectiveAddress: model.Address{AccAddress: defaultMember},
+	}, true)
+	if err != nil {
+		// TODO: Use transaction
+		log.Error(fmt.Sprintf("capture portfolio failed: %s. Going to revert ...", err.Error()))
+		err = dbSvc.DeleteGuild(ctx, id.Hex())
+		panicIf(err)
+
+		log.Fatal("revert done. no guild added")
+	}
 
 	log.Info("adding default member")
 	err = dbSvc.AddMember(ctx, id.Hex(), model.Address{AccAddress: defaultMember}, true)
@@ -270,13 +308,6 @@ func addGuildAction() {
 
 		log.Fatal("revert done. no guild added")
 	}
-
-	log.Info("capturing default member portfolio")
-	portfolio, err := helper.CaptureSingleMemberPortfolio(ctx, guild, &model.GuildMember{
-		GuildID:          *id,
-		InjectiveAddress: model.Address{AccAddress: defaultMember},
-	}, true)
-	panicIf(err)
 
 	log.Info("add default member portfolio snapshot into db")
 	err = dbSvc.AddAccountPortfolios(ctx, []*model.AccountPortfolio{portfolio})
