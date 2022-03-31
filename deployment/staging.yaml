@@ -19,6 +19,7 @@ services:
       - GUILDS_LCD_URL=https://lcd.injective.network
       - GUILDS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
       # stat
+      - GUILDS_STATSD_AGENT=telegraf
       - GUILDS_STATSD_PREFIX=guilds-api
       - GUILDS_STATSD_ADDR=statsd.injective.dev:8125
       - GUILDS_STATSD_STUCK_DUR=5m

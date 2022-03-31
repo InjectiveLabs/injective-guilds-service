@@ -82,7 +82,14 @@ func makeIndex(unique bool, keys interface{}) mongo.IndexModel {
 
 func (s *MongoImpl) EnsureIndex(ctx context.Context) error {
 	// use CreateMany here for future custom
-	_, err := s.memberCollection.Indexes().CreateMany(ctx, []mongo.IndexModel{
+	_, err := s.guildCollection.Indexes().CreateMany(ctx, []mongo.IndexModel{
+		makeIndex(true, bson.D{{Key: "name", Value: 1}}),
+	})
+	if err != nil {
+		return err
+	}
+
+	_, err = s.memberCollection.Indexes().CreateMany(ctx, []mongo.IndexModel{
 		makeIndex(true, bson.D{{Key: "injective_address", Value: 1}}),
 		makeIndex(false, bson.D{{Key: "is_default_guild_member", Value: 1}}),
 		makeIndex(false, bson.D{{Key: "guild_id", Value: 1}}),

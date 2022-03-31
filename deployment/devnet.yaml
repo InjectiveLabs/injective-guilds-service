@@ -12,7 +12,6 @@ services:
       - GUILDS_ENV=${APP_ENV}
       - GUILDS_LOG_LEVEL=DEBUG
       - GUILDS_LISTEN_ADDRESS=http://0.0.0.0:9930
-      # config main-net
       - GUILDS_DB_CONNECTION_URL=mongodb://mongo:27017
       - GUILDS_DB_NAME=guilds
       - GUILDS_EXCHANGE_GRPC_URL=host.docker.internal:9910
@@ -74,6 +73,3 @@ services:
     image: mongo
     entrypoint: |
       bash -c "sleep 10 && mongo --host mongo:27017 --eval 'rs.initiate()'"
-
-
-  
