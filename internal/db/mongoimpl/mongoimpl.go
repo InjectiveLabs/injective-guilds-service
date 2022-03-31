@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	connectionTimeout              = 10 * time.Second
+	connectionTimeout              = 20 * time.Second
 	GuildCollectionName            = "guilds"
 	MemberCollectionName           = "members"
 	AccountPortfolioCollectionName = "account_portfolios"
