@@ -275,9 +275,9 @@ func addGuildAction() {
 		Capacity:     *capacity,
 	}
 
-	log.Info("double check grants of default member")
-	err = checkGrant(ctx, exchangeProvider, defaultMember.String(), master.String())
-	panicIf(err)
+	// log.Info("double check grants of default member")
+	// err = checkGrant(ctx, exchangeProvider, defaultMember.String(), master.String())
+	// panicIf(err)
 
 	// everything goes right, add to db
 	log.Info("adding guild: ", *name)
