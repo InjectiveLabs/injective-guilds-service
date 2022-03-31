@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -19,7 +18,6 @@ import (
 	cosmtypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/ethereum/go-ethereum/common"
 	cli "github.com/jawher/mow.cli"
-	"github.com/shopspring/decimal"
 	log "github.com/xlab/suplog"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -155,22 +153,6 @@ func checkGrant(ctx context.Context, exchangeProvider exchange.DataProvider, add
 		}
 	}
 	return nil
-}
-
-// checkNonZeroPortfolio returns no error if portfolio is non-zero
-// i.e at least 1 of the denom has non-zero balance
-func checkNonZeroPortfolio(portfolio *model.AccountPortfolio) error {
-	for _, b := range portfolio.Balances {
-		availBalance, err := decimal.NewFromString(b.AvailableBalance.String())
-		if err != nil {
-			return err
-		}
-
-		if availBalance.GreaterThan(decimal.NewFromFloat(1e-3)) {
-			return nil
-		}
-	}
-	return errors.New("no denoms balance is greater than zero")
 }
 
 func addGuildAction() {
@@ -315,8 +297,6 @@ func addGuildAction() {
 
 		log.Fatal("revert done. no guild added")
 	}
-
-	log.Info("checking portfolio")
 
 	log.Info("adding default member")
 	err = dbSvc.AddMember(ctx, id.Hex(), model.Address{AccAddress: defaultMember}, true)
