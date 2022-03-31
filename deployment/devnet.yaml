@@ -19,8 +19,9 @@ services:
       - GUILDS_LCD_URL=https://devnet.lcd.injective.dev
       - GUILDS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
       # stat
+      - GUILDS_STATSD_AGENT=telegraf
       - GUILDS_STATSD_PREFIX=guilds-api
-      - GUILDS_STATSD_ADDR=host.docker.internal:8125
+      - GUILDS_STATSD_ADDR=statsd.injective.dev:8125
       - GUILDS_STATSD_STUCK_DUR=5m
       - GUILDS_STATSD_MOCKING=false
       - GUILDS_STATSD_DISABLED=false
@@ -48,8 +49,9 @@ services:
       - GUILDS_PROCESS_PORTFOLIO_UPDATE_INTERVAL=1h
       - GUILDS_PROCESS_DISQUALIFY_INTERVAL=20m
 
+      - GUILDS_PROCESS_STATSD_AGENT=telegraf
       - GUILDS_PROCESS_STATSD_PREFIX=guilds-process
-      - GUILDS_PROCESS_STATSD_ADDR=host.docker.internal:8125
+      - GUILDS_PROCESS_STATSD_ADDR=statsd.injective.dev:8125
       - GUILDS_PROCESS_STATSD_STUCK_DUR=5m
       - GUILDS_PROCESS_STATSD_MOCKING=false
       - GUILDS_PROCESS_STATSD_DISABLED=false
