@@ -13,10 +13,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 const (
-	connectionTimeout              = 30 * time.Second
+	connectionTimeout              = 10 * time.Second
 	GuildCollectionName            = "guilds"
 	MemberCollectionName           = "members"
 	AccountPortfolioCollectionName = "account_portfolios"
@@ -51,6 +52,11 @@ func NewService(ctx context.Context, connectionURL, databaseName string) (db.DBS
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionURL))
 	if err != nil {
 		return nil, fmt.Errorf("connect mongo err: %w", err)
+	}
+
+	err = client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		return nil, err
 	}
 
 	session, err := client.StartSession()
