@@ -271,6 +271,7 @@ func (p *exchangeProvider) GetPositions(ctx context.Context, subaccount string) 
 	var header metadata.MD
 	res, err := p.derivativeExchangeClient.Positions(ctx, req, grpc.Header(&header))
 	if err != nil {
+		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("get position err: %w", err)
 	}
 
