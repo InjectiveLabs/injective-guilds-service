@@ -603,6 +603,25 @@ func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload
 		return nil, svc.MakeInternal(err)
 	}
 
+	members, err := s.dbSvc.ListGuildMembers(ctx, model.MemberFilter{
+		InjectiveAddress: &model.Address{AccAddress: accAddress},
+	})
+	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("get guild member error")
+		return nil, svc.MakeInternal(fmt.Errorf("guild error: %w", err))
+	}
+
+	if len(members) == 0 {
+		s.logger.WithField("injective_address", accAddress.String()).Error("no such member with address")
+		return nil, svc.MakeNotFound(errors.New("member list error: no such member"))
+	}
+
+	if members[0].IsDefaultGuildMember {
+		s.logger.WithField("injective_address", accAddress.String()).Error("default member can't leave guild")
+		return nil, svc.MakeInvalidArg(errors.New("default member cannot leave guild"))
+	}
+
 	shouldRemove, err := s.checkAddressLeaveCondition(ctx, guild, accAddress.String())
 	if err != nil {
 		metrics.ReportFuncError(s.svcTags)
