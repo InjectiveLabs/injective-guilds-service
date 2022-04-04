@@ -613,12 +613,12 @@ func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload
 	}
 
 	if len(members) == 0 {
-		s.logger.WithField("injective_address", accAddress.String()).Error("no such member with address")
+		s.logger.WithField("injective_address", accAddress.String()).Error("no such member with given address")
 		return nil, svc.MakeNotFound(errors.New("member list error: no such member"))
 	}
 
 	if members[0].IsDefaultGuildMember {
-		s.logger.WithField("injective_address", accAddress.String()).Error("default member can't leave guild")
+		s.logger.WithField("injective_address", accAddress.String()).Error("default member cannot leave guild")
 		return nil, svc.MakeInvalidArg(errors.New("default member cannot leave guild"))
 	}
 
