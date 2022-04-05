@@ -133,7 +133,11 @@ func (s *service) GetSingleGuild(ctx context.Context, payload *svc.GetSingleGuil
 
 	guild, err := s.dbSvc.GetSingleGuild(ctx, payload.GuildID)
 	if err != nil {
-		s.logger.WithError(err).Error("list single guild error")
+		s.logger.WithError(err).Error("get single guild error")
+		if err == db.ErrNotFound {
+			return nil, svc.MakeNotFound(err)
+		}
+
 		return nil, svc.MakeInternal(err)
 	}
 

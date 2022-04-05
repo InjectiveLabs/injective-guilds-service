@@ -25,12 +25,6 @@ const (
 	DenomCollectionName            = "denoms"
 )
 
-var (
-	ErrNotFound        = errors.New("dberr: not found")
-	ErrMemberExceedCap = errors.New("max guild capacity has been reached")
-	ErrAlreadyMember   = errors.New("already member")
-)
-
 type MongoImpl struct {
 	db.DBService
 
@@ -289,6 +283,10 @@ func (s *MongoImpl) GetSingleGuild(ctx context.Context, guildID string) (*model.
 	res := s.guildCollection.FindOne(ctx, filter)
 	if err := res.Err(); err != nil {
 		metrics.ReportFuncError(s.svcTags)
+
+		if err == mongo.ErrNoDocuments {
+			return nil, db.ErrNotFound
+		}
 		return nil, err
 	}
 
@@ -449,7 +447,7 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 		}
 
 		if guild.MemberCount >= guild.Capacity {
-			return nil, ErrMemberExceedCap
+			return nil, db.ErrMemberExceedCap
 		}
 
 		_, err = s.adjustMemberCount(sessCtx, guildObjectID, 1)
@@ -464,7 +462,7 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 
 		// duplicate member, revert transaction
 		if upsertRes.UpsertedCount < 1 {
-			return nil, ErrAlreadyMember
+			return nil, db.ErrAlreadyMember
 		}
 
 		return nil, nil

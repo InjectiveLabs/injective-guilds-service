@@ -2,9 +2,16 @@ package db
 
 import (
 	"context"
+	"errors"
 
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+var (
+	ErrNotFound        = errors.New("not found")
+	ErrMemberExceedCap = errors.New("max guild capacity has been reached")
+	ErrAlreadyMember   = errors.New("already member")
 )
 
 type DBService interface {
