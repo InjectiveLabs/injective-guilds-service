@@ -410,7 +410,7 @@ func (s *MongoImpl) deletePortfolios(
 		"injective_address": address.String(),
 	}
 
-	return s.memberCollection.DeleteMany(ctx, filter)
+	return s.accountPortfolioCollection.DeleteMany(ctx, filter)
 }
 
 func (s *MongoImpl) adjustMemberCount(
