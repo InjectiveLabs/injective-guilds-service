@@ -103,7 +103,7 @@ func NewExchangeProvider(
 		spotExchangeClient:       spotExchangePB.NewInjectiveSpotExchangeRPCClient(conn),
 		derivativeExchangeClient: derivativeExchangePB.NewInjectiveDerivativeExchangeRPCClient(conn),
 		svcTags: metrics.Tags{
-			"svc": "internal_services",
+			"svc": "data_providers",
 		},
 	}
 
@@ -331,7 +331,7 @@ func (p *exchangeProvider) GetGrants(ctx context.Context, granter, grantee strin
 	}
 	if resp.StatusCode != http.StatusOK {
 		metrics.ReportFuncError(p.svcTags)
-		return nil, fmt.Errorf("request err: bad status: %d", resp.StatusCode)
+		return nil, fmt.Errorf("response bad status: %d", resp.StatusCode)
 	}
 
 	var res Grants

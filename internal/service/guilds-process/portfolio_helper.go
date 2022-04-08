@@ -25,12 +25,13 @@ func NewPortfolioHelper(
 	ctx context.Context,
 	provider exchange.DataProvider,
 	logger log.Logger,
-	tags metrics.Tags,
 ) (*PortfolioHelper, error) {
 	helper := &PortfolioHelper{
 		exchangeProvider: provider,
 		logger:           logger,
-		svcTags:          tags,
+		svcTags: metrics.Tags{
+			"svc": "portfolio_helper",
+		},
 	}
 
 	return helper, nil
@@ -101,7 +102,7 @@ func (p *PortfolioHelper) getInjBankBalances(
 ) ([]*model.BankBalance, error) {
 	balancesRes, err := p.exchangeProvider.GetBankBalance(ctx, member.InjectiveAddress.String())
 	if err != nil {
-		return nil, fmt.Errorf("get bank balance err: %w", err)
+		return nil, fmt.Errorf("request bank balance err: %w", err)
 	}
 
 	for _, b := range balancesRes.Balances {

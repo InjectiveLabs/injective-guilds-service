@@ -50,7 +50,7 @@ func NewService(ctx context.Context, dbSvc db.DBService, exchangeProvider exchan
 		"svc": "guilds_api",
 	}
 
-	helper, err := guildsprocess.NewPortfolioHelper(ctx, exchangeProvider, logger, svcTags)
+	helper, err := guildsprocess.NewPortfolioHelper(ctx, exchangeProvider, logger)
 	if err != nil {
 		return nil, err
 	}
@@ -274,14 +274,8 @@ func (s *service) GetGuildDefaultMember(ctx context.Context, payload *svc.GetGui
 }
 
 func (s *service) checkGrants(ctx context.Context, guild *model.Guild, address string) (*qualificationResult, error) {
-	doneFn := metrics.ReportFuncTiming(s.svcTags)
-	defer doneFn()
-	metrics.ReportFuncCall(s.svcTags)
-
 	grants, err := s.exchangeProvider.GetGrants(ctx, address, guild.MasterAddress.String())
 	if err != nil {
-		metrics.ReportFuncError(s.svcTags)
-
 		return nil, fmt.Errorf("get grants err: %w", err)
 	}
 
@@ -571,6 +565,7 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	// add to database
 	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress}, false)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Errorln("cannot add member")
 		return nil, svc.MakeInternal(err)
 	}
@@ -616,7 +611,7 @@ func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload
 
 	if !shouldRemove {
 		metrics.ReportFuncError(s.svcTags)
-		s.logger.Error("address hasnot remove some permissions")
+		s.logger.WithField("injective_address", accAddress.String()).Error("address hasnot remove some permissions")
 		return nil, svc.MakeInvalidArg(fmt.Errorf("address has not removed granted permissions"))
 	}
 

@@ -65,7 +65,7 @@ func NewProcess(cfg config.GuildProcessConfig) (*GuildsProcess, error) {
 	svcTags := metrics.Tags{
 		"svc": "guilds_process",
 	}
-	portfolioHelper, err := NewPortfolioHelper(ctx, exchangeProvider, logger, svcTags)
+	portfolioHelper, err := NewPortfolioHelper(ctx, exchangeProvider, logger)
 	if err != nil {
 		return nil, err
 	}
