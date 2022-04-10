@@ -913,6 +913,104 @@ func EncodeGetAccountPortfoliosError(encoder func(context.Context, http.Response
 	}
 }
 
+// EncodeGetAccountMonthlyPortfoliosResponse returns an encoder for responses
+// returned by the GuildsService GetAccountMonthlyPortfolios endpoint.
+func EncodeGetAccountMonthlyPortfoliosResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*guildsservice.GetAccountMonthlyPortfoliosResult)
+		enc := encoder(ctx, w)
+		body := NewGetAccountMonthlyPortfoliosResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeGetAccountMonthlyPortfoliosRequest returns a decoder for requests sent
+// to the GuildsService GetAccountMonthlyPortfolios endpoint.
+func DecodeGetAccountMonthlyPortfoliosRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			injectiveAddress string
+			startTime        int64
+			endTime          int64
+			err              error
+
+			params = mux.Vars(r)
+		)
+		injectiveAddress = params["injective_address"]
+		{
+			startTimeRaw := r.URL.Query().Get("start_time")
+			if startTimeRaw == "" {
+				err = goa.MergeErrors(err, goa.MissingFieldError("start_time", "query string"))
+			}
+			v, err2 := strconv.ParseInt(startTimeRaw, 10, 64)
+			if err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("startTime", startTimeRaw, "integer"))
+			}
+			startTime = v
+		}
+		{
+			endTimeRaw := r.URL.Query().Get("end_time")
+			if endTimeRaw == "" {
+				err = goa.MergeErrors(err, goa.MissingFieldError("end_time", "query string"))
+			}
+			v, err2 := strconv.ParseInt(endTimeRaw, 10, 64)
+			if err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("endTime", endTimeRaw, "integer"))
+			}
+			endTime = v
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewGetAccountMonthlyPortfoliosPayload(injectiveAddress, startTime, endTime)
+
+		return payload, nil
+	}
+}
+
+// EncodeGetAccountMonthlyPortfoliosError returns an encoder for errors
+// returned by the GetAccountMonthlyPortfolios GuildsService endpoint.
+func EncodeGetAccountMonthlyPortfoliosError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		var en ErrorNamer
+		if !errors.As(v, &en) {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "not_found":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewGetAccountMonthlyPortfoliosNotFoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		case "internal":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewGetAccountMonthlyPortfoliosInternalResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusInternalServerError)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
 // marshalGuildsserviceGuildToGuildResponseBody builds a value of type
 // *GuildResponseBody from a value of type *guildsservice.Guild.
 func marshalGuildsserviceGuildToGuildResponseBody(v *guildsservice.Guild) *GuildResponseBody {

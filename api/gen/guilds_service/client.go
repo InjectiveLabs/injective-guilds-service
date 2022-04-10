@@ -15,35 +15,37 @@ import (
 
 // Client is the "GuildsService" service client.
 type Client struct {
-	GetAllGuildsEndpoint          goa.Endpoint
-	GetSingleGuildEndpoint        goa.Endpoint
-	GetGuildMembersEndpoint       goa.Endpoint
-	GetGuildMasterAddressEndpoint goa.Endpoint
-	GetGuildDefaultMemberEndpoint goa.Endpoint
-	EnterGuildEndpoint            goa.Endpoint
-	LeaveGuildEndpoint            goa.Endpoint
-	GetGuildMarketsEndpoint       goa.Endpoint
-	GetGuildPortfoliosEndpoint    goa.Endpoint
-	GetAccountInfoEndpoint        goa.Endpoint
-	GetAccountPortfolioEndpoint   goa.Endpoint
-	GetAccountPortfoliosEndpoint  goa.Endpoint
+	GetAllGuildsEndpoint                goa.Endpoint
+	GetSingleGuildEndpoint              goa.Endpoint
+	GetGuildMembersEndpoint             goa.Endpoint
+	GetGuildMasterAddressEndpoint       goa.Endpoint
+	GetGuildDefaultMemberEndpoint       goa.Endpoint
+	EnterGuildEndpoint                  goa.Endpoint
+	LeaveGuildEndpoint                  goa.Endpoint
+	GetGuildMarketsEndpoint             goa.Endpoint
+	GetGuildPortfoliosEndpoint          goa.Endpoint
+	GetAccountInfoEndpoint              goa.Endpoint
+	GetAccountPortfolioEndpoint         goa.Endpoint
+	GetAccountPortfoliosEndpoint        goa.Endpoint
+	GetAccountMonthlyPortfoliosEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "GuildsService" service client given the endpoints.
-func NewClient(getAllGuilds, getSingleGuild, getGuildMembers, getGuildMasterAddress, getGuildDefaultMember, enterGuild, leaveGuild, getGuildMarkets, getGuildPortfolios, getAccountInfo, getAccountPortfolio, getAccountPortfolios goa.Endpoint) *Client {
+func NewClient(getAllGuilds, getSingleGuild, getGuildMembers, getGuildMasterAddress, getGuildDefaultMember, enterGuild, leaveGuild, getGuildMarkets, getGuildPortfolios, getAccountInfo, getAccountPortfolio, getAccountPortfolios, getAccountMonthlyPortfolios goa.Endpoint) *Client {
 	return &Client{
-		GetAllGuildsEndpoint:          getAllGuilds,
-		GetSingleGuildEndpoint:        getSingleGuild,
-		GetGuildMembersEndpoint:       getGuildMembers,
-		GetGuildMasterAddressEndpoint: getGuildMasterAddress,
-		GetGuildDefaultMemberEndpoint: getGuildDefaultMember,
-		EnterGuildEndpoint:            enterGuild,
-		LeaveGuildEndpoint:            leaveGuild,
-		GetGuildMarketsEndpoint:       getGuildMarkets,
-		GetGuildPortfoliosEndpoint:    getGuildPortfolios,
-		GetAccountInfoEndpoint:        getAccountInfo,
-		GetAccountPortfolioEndpoint:   getAccountPortfolio,
-		GetAccountPortfoliosEndpoint:  getAccountPortfolios,
+		GetAllGuildsEndpoint:                getAllGuilds,
+		GetSingleGuildEndpoint:              getSingleGuild,
+		GetGuildMembersEndpoint:             getGuildMembers,
+		GetGuildMasterAddressEndpoint:       getGuildMasterAddress,
+		GetGuildDefaultMemberEndpoint:       getGuildDefaultMember,
+		EnterGuildEndpoint:                  enterGuild,
+		LeaveGuildEndpoint:                  leaveGuild,
+		GetGuildMarketsEndpoint:             getGuildMarkets,
+		GetGuildPortfoliosEndpoint:          getGuildPortfolios,
+		GetAccountInfoEndpoint:              getAccountInfo,
+		GetAccountPortfolioEndpoint:         getAccountPortfolio,
+		GetAccountPortfoliosEndpoint:        getAccountPortfolios,
+		GetAccountMonthlyPortfoliosEndpoint: getAccountMonthlyPortfolios,
 	}
 }
 
@@ -175,4 +177,15 @@ func (c *Client) GetAccountPortfolios(ctx context.Context, p *GetAccountPortfoli
 		return
 	}
 	return ires.(*GetAccountPortfoliosResult), nil
+}
+
+// GetAccountMonthlyPortfolios calls the "GetAccountMonthlyPortfolios" endpoint
+// of the "GuildsService" service.
+func (c *Client) GetAccountMonthlyPortfolios(ctx context.Context, p *GetAccountMonthlyPortfoliosPayload) (res *GetAccountMonthlyPortfoliosResult, err error) {
+	var ires interface{}
+	ires, err = c.GetAccountMonthlyPortfoliosEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*GetAccountMonthlyPortfoliosResult), nil
 }

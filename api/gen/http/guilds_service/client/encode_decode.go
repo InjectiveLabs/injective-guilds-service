@@ -1224,6 +1224,121 @@ func DecodeGetAccountPortfoliosResponse(decoder func(*http.Response) goahttp.Dec
 	}
 }
 
+// BuildGetAccountMonthlyPortfoliosRequest instantiates a HTTP request object
+// with method and path set to call the "GuildsService" service
+// "GetAccountMonthlyPortfolios" endpoint
+func (c *Client) BuildGetAccountMonthlyPortfoliosRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	var (
+		injectiveAddress string
+	)
+	{
+		p, ok := v.(*guildsservice.GetAccountMonthlyPortfoliosPayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("GuildsService", "GetAccountMonthlyPortfolios", "*guildsservice.GetAccountMonthlyPortfoliosPayload", v)
+		}
+		injectiveAddress = p.InjectiveAddress
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetAccountMonthlyPortfoliosGuildsServicePath(injectiveAddress)}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("GuildsService", "GetAccountMonthlyPortfolios", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeGetAccountMonthlyPortfoliosRequest returns an encoder for requests
+// sent to the GuildsService GetAccountMonthlyPortfolios server.
+func EncodeGetAccountMonthlyPortfoliosRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*guildsservice.GetAccountMonthlyPortfoliosPayload)
+		if !ok {
+			return goahttp.ErrInvalidType("GuildsService", "GetAccountMonthlyPortfolios", "*guildsservice.GetAccountMonthlyPortfoliosPayload", v)
+		}
+		values := req.URL.Query()
+		values.Add("start_time", fmt.Sprintf("%v", p.StartTime))
+		values.Add("end_time", fmt.Sprintf("%v", p.EndTime))
+		req.URL.RawQuery = values.Encode()
+		return nil
+	}
+}
+
+// DecodeGetAccountMonthlyPortfoliosResponse returns a decoder for responses
+// returned by the GuildsService GetAccountMonthlyPortfolios endpoint.
+// restoreBody controls whether the response body should be restored after
+// having been read.
+// DecodeGetAccountMonthlyPortfoliosResponse may return the following errors:
+//	- "not_found" (type *goa.ServiceError): http.StatusNotFound
+//	- "internal" (type *goa.ServiceError): http.StatusInternalServerError
+//	- error: internal error
+func DecodeGetAccountMonthlyPortfoliosResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body GetAccountMonthlyPortfoliosResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("GuildsService", "GetAccountMonthlyPortfolios", err)
+			}
+			err = ValidateGetAccountMonthlyPortfoliosResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetAccountMonthlyPortfolios", err)
+			}
+			res := NewGetAccountMonthlyPortfoliosResultOK(&body)
+			return res, nil
+		case http.StatusNotFound:
+			var (
+				body GetAccountMonthlyPortfoliosNotFoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("GuildsService", "GetAccountMonthlyPortfolios", err)
+			}
+			err = ValidateGetAccountMonthlyPortfoliosNotFoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetAccountMonthlyPortfolios", err)
+			}
+			return nil, NewGetAccountMonthlyPortfoliosNotFound(&body)
+		case http.StatusInternalServerError:
+			var (
+				body GetAccountMonthlyPortfoliosInternalResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("GuildsService", "GetAccountMonthlyPortfolios", err)
+			}
+			err = ValidateGetAccountMonthlyPortfoliosInternalResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("GuildsService", "GetAccountMonthlyPortfolios", err)
+			}
+			return nil, NewGetAccountMonthlyPortfoliosInternal(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("GuildsService", "GetAccountMonthlyPortfolios", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // unmarshalGuildResponseBodyToGuildsserviceGuild builds a value of type
 // *guildsservice.Guild from a value of type *GuildResponseBody.
 func unmarshalGuildResponseBodyToGuildsserviceGuild(v *GuildResponseBody) *guildsservice.Guild {

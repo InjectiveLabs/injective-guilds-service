@@ -94,6 +94,12 @@ type GetAccountPortfoliosResponseBody struct {
 	Portfolios []*SingleAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
 }
 
+// GetAccountMonthlyPortfoliosResponseBody is the type of the "GuildsService"
+// service "GetAccountMonthlyPortfolios" endpoint HTTP response body.
+type GetAccountMonthlyPortfoliosResponseBody struct {
+	Portfolios []*SingleAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
+}
+
 // GetAllGuildsNotFoundResponseBody is the type of the "GuildsService" service
 // "GetAllGuilds" endpoint HTTP response body for the "not_found" error.
 type GetAllGuildsNotFoundResponseBody struct {
@@ -529,6 +535,44 @@ type GetAccountPortfoliosNotFoundResponseBody struct {
 // service "GetAccountPortfolios" endpoint HTTP response body for the
 // "internal" error.
 type GetAccountPortfoliosInternalResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// GetAccountMonthlyPortfoliosNotFoundResponseBody is the type of the
+// "GuildsService" service "GetAccountMonthlyPortfolios" endpoint HTTP response
+// body for the "not_found" error.
+type GetAccountMonthlyPortfoliosNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// GetAccountMonthlyPortfoliosInternalResponseBody is the type of the
+// "GuildsService" service "GetAccountMonthlyPortfolios" endpoint HTTP response
+// body for the "internal" error.
+type GetAccountMonthlyPortfoliosInternalResponseBody struct {
 	// Name is the name of this class of errors.
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -1119,6 +1163,50 @@ func NewGetAccountPortfoliosInternal(body *GetAccountPortfoliosInternalResponseB
 	return v
 }
 
+// NewGetAccountMonthlyPortfoliosResultOK builds a "GuildsService" service
+// "GetAccountMonthlyPortfolios" endpoint result from a HTTP "OK" response.
+func NewGetAccountMonthlyPortfoliosResultOK(body *GetAccountMonthlyPortfoliosResponseBody) *guildsservice.GetAccountMonthlyPortfoliosResult {
+	v := &guildsservice.GetAccountMonthlyPortfoliosResult{}
+	if body.Portfolios != nil {
+		v.Portfolios = make([]*guildsservice.SingleAccountPortfolio, len(body.Portfolios))
+		for i, val := range body.Portfolios {
+			v.Portfolios[i] = unmarshalSingleAccountPortfolioResponseBodyToGuildsserviceSingleAccountPortfolio(val)
+		}
+	}
+
+	return v
+}
+
+// NewGetAccountMonthlyPortfoliosNotFound builds a GuildsService service
+// GetAccountMonthlyPortfolios endpoint not_found error.
+func NewGetAccountMonthlyPortfoliosNotFound(body *GetAccountMonthlyPortfoliosNotFoundResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
+// NewGetAccountMonthlyPortfoliosInternal builds a GuildsService service
+// GetAccountMonthlyPortfolios endpoint internal error.
+func NewGetAccountMonthlyPortfoliosInternal(body *GetAccountMonthlyPortfoliosInternalResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
+	}
+
+	return v
+}
+
 // ValidateGetAllGuildsResponseBody runs the validations defined on
 // GetAllGuildsResponseBody
 func ValidateGetAllGuildsResponseBody(body *GetAllGuildsResponseBody) (err error) {
@@ -1218,6 +1306,19 @@ func ValidateGetAccountPortfolioResponseBody(body *GetAccountPortfolioResponseBo
 // ValidateGetAccountPortfoliosResponseBody runs the validations defined on
 // GetAccountPortfoliosResponseBody
 func ValidateGetAccountPortfoliosResponseBody(body *GetAccountPortfoliosResponseBody) (err error) {
+	for _, e := range body.Portfolios {
+		if e != nil {
+			if err2 := ValidateSingleAccountPortfolioResponseBody(e); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// ValidateGetAccountMonthlyPortfoliosResponseBody runs the validations defined
+// on GetAccountMonthlyPortfoliosResponseBody
+func ValidateGetAccountMonthlyPortfoliosResponseBody(body *GetAccountMonthlyPortfoliosResponseBody) (err error) {
 	for _, e := range body.Portfolios {
 		if e != nil {
 			if err2 := ValidateSingleAccountPortfolioResponseBody(e); err2 != nil {
@@ -1783,6 +1884,54 @@ func ValidateGetAccountPortfoliosNotFoundResponseBody(body *GetAccountPortfolios
 // ValidateGetAccountPortfoliosInternalResponseBody runs the validations
 // defined on GetAccountPortfolios_internal_Response_Body
 func ValidateGetAccountPortfoliosInternalResponseBody(body *GetAccountPortfoliosInternalResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateGetAccountMonthlyPortfoliosNotFoundResponseBody runs the validations
+// defined on GetAccountMonthlyPortfolios_not_found_Response_Body
+func ValidateGetAccountMonthlyPortfoliosNotFoundResponseBody(body *GetAccountMonthlyPortfoliosNotFoundResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateGetAccountMonthlyPortfoliosInternalResponseBody runs the validations
+// defined on GetAccountMonthlyPortfolios_internal_Response_Body
+func ValidateGetAccountMonthlyPortfoliosInternalResponseBody(body *GetAccountMonthlyPortfoliosInternalResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}

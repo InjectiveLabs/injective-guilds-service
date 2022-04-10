@@ -39,6 +39,9 @@ type Service interface {
 	GetAccountPortfolio(context.Context, *GetAccountPortfolioPayload) (res *GetAccountPortfolioResult, err error)
 	// Get current account portfolios snapshots all the time
 	GetAccountPortfolios(context.Context, *GetAccountPortfoliosPayload) (res *GetAccountPortfoliosResult, err error)
+	// Get current account portfolios monthly snapshots, including start_time,
+	// end_time snapshots
+	GetAccountMonthlyPortfolios(context.Context, *GetAccountMonthlyPortfoliosPayload) (res *GetAccountMonthlyPortfoliosResult, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -49,7 +52,7 @@ const ServiceName = "GuildsService"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [12]string{"GetAllGuilds", "GetSingleGuild", "GetGuildMembers", "GetGuildMasterAddress", "GetGuildDefaultMember", "EnterGuild", "LeaveGuild", "GetGuildMarkets", "GetGuildPortfolios", "GetAccountInfo", "GetAccountPortfolio", "GetAccountPortfolios"}
+var MethodNames = [13]string{"GetAllGuilds", "GetSingleGuild", "GetGuildMembers", "GetGuildMasterAddress", "GetGuildDefaultMember", "EnterGuild", "LeaveGuild", "GetGuildMarkets", "GetGuildPortfolios", "GetAccountInfo", "GetAccountPortfolio", "GetAccountPortfolios", "GetAccountMonthlyPortfolios"}
 
 type Balance struct {
 	Denom            string
@@ -84,6 +87,20 @@ type GetAccountInfoPayload struct {
 // GetAccountInfo method.
 type GetAccountInfoResult struct {
 	Data *GuildMember
+}
+
+// GetAccountMonthlyPortfoliosPayload is the payload type of the GuildsService
+// service GetAccountMonthlyPortfolios method.
+type GetAccountMonthlyPortfoliosPayload struct {
+	InjectiveAddress string
+	StartTime        int64
+	EndTime          int64
+}
+
+// GetAccountMonthlyPortfoliosResult is the result type of the GuildsService
+// service GetAccountMonthlyPortfolios method.
+type GetAccountMonthlyPortfoliosResult struct {
+	Portfolios []*SingleAccountPortfolio
 }
 
 // GetAccountPortfolioPayload is the payload type of the GuildsService service

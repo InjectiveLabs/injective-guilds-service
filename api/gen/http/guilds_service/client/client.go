@@ -65,6 +65,10 @@ type Client struct {
 	// GetAccountPortfolios endpoint.
 	GetAccountPortfoliosDoer goahttp.Doer
 
+	// GetAccountMonthlyPortfolios Doer is the HTTP client used to make requests to
+	// the GetAccountMonthlyPortfolios endpoint.
+	GetAccountMonthlyPortfoliosDoer goahttp.Doer
+
 	// CORS Doer is the HTTP client used to make requests to the  endpoint.
 	CORSDoer goahttp.Doer
 
@@ -89,24 +93,25 @@ func NewClient(
 	restoreBody bool,
 ) *Client {
 	return &Client{
-		GetAllGuildsDoer:          doer,
-		GetSingleGuildDoer:        doer,
-		GetGuildMembersDoer:       doer,
-		GetGuildMasterAddressDoer: doer,
-		GetGuildDefaultMemberDoer: doer,
-		EnterGuildDoer:            doer,
-		LeaveGuildDoer:            doer,
-		GetGuildMarketsDoer:       doer,
-		GetGuildPortfoliosDoer:    doer,
-		GetAccountInfoDoer:        doer,
-		GetAccountPortfolioDoer:   doer,
-		GetAccountPortfoliosDoer:  doer,
-		CORSDoer:                  doer,
-		RestoreResponseBody:       restoreBody,
-		scheme:                    scheme,
-		host:                      host,
-		decoder:                   dec,
-		encoder:                   enc,
+		GetAllGuildsDoer:                doer,
+		GetSingleGuildDoer:              doer,
+		GetGuildMembersDoer:             doer,
+		GetGuildMasterAddressDoer:       doer,
+		GetGuildDefaultMemberDoer:       doer,
+		EnterGuildDoer:                  doer,
+		LeaveGuildDoer:                  doer,
+		GetGuildMarketsDoer:             doer,
+		GetGuildPortfoliosDoer:          doer,
+		GetAccountInfoDoer:              doer,
+		GetAccountPortfolioDoer:         doer,
+		GetAccountPortfoliosDoer:        doer,
+		GetAccountMonthlyPortfoliosDoer: doer,
+		CORSDoer:                        doer,
+		RestoreResponseBody:             restoreBody,
+		scheme:                          scheme,
+		host:                            host,
+		decoder:                         dec,
+		encoder:                         enc,
 	}
 }
 
@@ -348,6 +353,30 @@ func (c *Client) GetAccountPortfolios() goa.Endpoint {
 		resp, err := c.GetAccountPortfoliosDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("GuildsService", "GetAccountPortfolios", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// GetAccountMonthlyPortfolios returns an endpoint that makes HTTP requests to
+// the GuildsService service GetAccountMonthlyPortfolios server.
+func (c *Client) GetAccountMonthlyPortfolios() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeGetAccountMonthlyPortfoliosRequest(c.encoder)
+		decodeResponse = DecodeGetAccountMonthlyPortfoliosResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildGetAccountMonthlyPortfoliosRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.GetAccountMonthlyPortfoliosDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("GuildsService", "GetAccountMonthlyPortfolios", err)
 		}
 		return decodeResponse(resp)
 	}

@@ -75,7 +75,7 @@ func BuildEnterGuildPayload(guildsServiceEnterGuildBody string, guildsServiceEnt
 	{
 		err = json.Unmarshal([]byte(guildsServiceEnterGuildBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"injective_address\": \"Voluptates est.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"injective_address\": \"Harum eum vel quia.\"\n   }'")
 		}
 	}
 	var guildID string
@@ -210,6 +210,36 @@ func BuildGetAccountPortfoliosPayload(guildsServiceGetAccountPortfoliosInjective
 		}
 	}
 	v := &guildsservice.GetAccountPortfoliosPayload{}
+	v.InjectiveAddress = injectiveAddress
+	v.StartTime = startTime
+	v.EndTime = endTime
+
+	return v, nil
+}
+
+// BuildGetAccountMonthlyPortfoliosPayload builds the payload for the
+// GuildsService GetAccountMonthlyPortfolios endpoint from CLI flags.
+func BuildGetAccountMonthlyPortfoliosPayload(guildsServiceGetAccountMonthlyPortfoliosInjectiveAddress string, guildsServiceGetAccountMonthlyPortfoliosStartTime string, guildsServiceGetAccountMonthlyPortfoliosEndTime string) (*guildsservice.GetAccountMonthlyPortfoliosPayload, error) {
+	var err error
+	var injectiveAddress string
+	{
+		injectiveAddress = guildsServiceGetAccountMonthlyPortfoliosInjectiveAddress
+	}
+	var startTime int64
+	{
+		startTime, err = strconv.ParseInt(guildsServiceGetAccountMonthlyPortfoliosStartTime, 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("invalid value for startTime, must be INT64")
+		}
+	}
+	var endTime int64
+	{
+		endTime, err = strconv.ParseInt(guildsServiceGetAccountMonthlyPortfoliosEndTime, 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("invalid value for endTime, must be INT64")
+		}
+	}
+	v := &guildsservice.GetAccountMonthlyPortfoliosPayload{}
 	v.InjectiveAddress = injectiveAddress
 	v.StartTime = startTime
 	v.EndTime = endTime

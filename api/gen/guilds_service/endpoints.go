@@ -15,35 +15,37 @@ import (
 
 // Endpoints wraps the "GuildsService" service endpoints.
 type Endpoints struct {
-	GetAllGuilds          goa.Endpoint
-	GetSingleGuild        goa.Endpoint
-	GetGuildMembers       goa.Endpoint
-	GetGuildMasterAddress goa.Endpoint
-	GetGuildDefaultMember goa.Endpoint
-	EnterGuild            goa.Endpoint
-	LeaveGuild            goa.Endpoint
-	GetGuildMarkets       goa.Endpoint
-	GetGuildPortfolios    goa.Endpoint
-	GetAccountInfo        goa.Endpoint
-	GetAccountPortfolio   goa.Endpoint
-	GetAccountPortfolios  goa.Endpoint
+	GetAllGuilds                goa.Endpoint
+	GetSingleGuild              goa.Endpoint
+	GetGuildMembers             goa.Endpoint
+	GetGuildMasterAddress       goa.Endpoint
+	GetGuildDefaultMember       goa.Endpoint
+	EnterGuild                  goa.Endpoint
+	LeaveGuild                  goa.Endpoint
+	GetGuildMarkets             goa.Endpoint
+	GetGuildPortfolios          goa.Endpoint
+	GetAccountInfo              goa.Endpoint
+	GetAccountPortfolio         goa.Endpoint
+	GetAccountPortfolios        goa.Endpoint
+	GetAccountMonthlyPortfolios goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "GuildsService" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
-		GetAllGuilds:          NewGetAllGuildsEndpoint(s),
-		GetSingleGuild:        NewGetSingleGuildEndpoint(s),
-		GetGuildMembers:       NewGetGuildMembersEndpoint(s),
-		GetGuildMasterAddress: NewGetGuildMasterAddressEndpoint(s),
-		GetGuildDefaultMember: NewGetGuildDefaultMemberEndpoint(s),
-		EnterGuild:            NewEnterGuildEndpoint(s),
-		LeaveGuild:            NewLeaveGuildEndpoint(s),
-		GetGuildMarkets:       NewGetGuildMarketsEndpoint(s),
-		GetGuildPortfolios:    NewGetGuildPortfoliosEndpoint(s),
-		GetAccountInfo:        NewGetAccountInfoEndpoint(s),
-		GetAccountPortfolio:   NewGetAccountPortfolioEndpoint(s),
-		GetAccountPortfolios:  NewGetAccountPortfoliosEndpoint(s),
+		GetAllGuilds:                NewGetAllGuildsEndpoint(s),
+		GetSingleGuild:              NewGetSingleGuildEndpoint(s),
+		GetGuildMembers:             NewGetGuildMembersEndpoint(s),
+		GetGuildMasterAddress:       NewGetGuildMasterAddressEndpoint(s),
+		GetGuildDefaultMember:       NewGetGuildDefaultMemberEndpoint(s),
+		EnterGuild:                  NewEnterGuildEndpoint(s),
+		LeaveGuild:                  NewLeaveGuildEndpoint(s),
+		GetGuildMarkets:             NewGetGuildMarketsEndpoint(s),
+		GetGuildPortfolios:          NewGetGuildPortfoliosEndpoint(s),
+		GetAccountInfo:              NewGetAccountInfoEndpoint(s),
+		GetAccountPortfolio:         NewGetAccountPortfolioEndpoint(s),
+		GetAccountPortfolios:        NewGetAccountPortfoliosEndpoint(s),
+		GetAccountMonthlyPortfolios: NewGetAccountMonthlyPortfoliosEndpoint(s),
 	}
 }
 
@@ -62,6 +64,7 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.GetAccountInfo = m(e.GetAccountInfo)
 	e.GetAccountPortfolio = m(e.GetAccountPortfolio)
 	e.GetAccountPortfolios = m(e.GetAccountPortfolios)
+	e.GetAccountMonthlyPortfolios = m(e.GetAccountMonthlyPortfolios)
 }
 
 // NewGetAllGuildsEndpoint returns an endpoint function that calls the method
@@ -168,5 +171,14 @@ func NewGetAccountPortfoliosEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*GetAccountPortfoliosPayload)
 		return s.GetAccountPortfolios(ctx, p)
+	}
+}
+
+// NewGetAccountMonthlyPortfoliosEndpoint returns an endpoint function that
+// calls the method "GetAccountMonthlyPortfolios" of service "GuildsService".
+func NewGetAccountMonthlyPortfoliosEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*GetAccountMonthlyPortfoliosPayload)
+		return s.GetAccountMonthlyPortfolios(ctx, p)
 	}
 }

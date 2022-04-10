@@ -94,6 +94,12 @@ type GetAccountPortfoliosResponseBody struct {
 	Portfolios []*SingleAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
 }
 
+// GetAccountMonthlyPortfoliosResponseBody is the type of the "GuildsService"
+// service "GetAccountMonthlyPortfolios" endpoint HTTP response body.
+type GetAccountMonthlyPortfoliosResponseBody struct {
+	Portfolios []*SingleAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
+}
+
 // GetAllGuildsNotFoundResponseBody is the type of the "GuildsService" service
 // "GetAllGuilds" endpoint HTTP response body for the "not_found" error.
 type GetAllGuildsNotFoundResponseBody struct {
@@ -544,6 +550,44 @@ type GetAccountPortfoliosInternalResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
+// GetAccountMonthlyPortfoliosNotFoundResponseBody is the type of the
+// "GuildsService" service "GetAccountMonthlyPortfolios" endpoint HTTP response
+// body for the "not_found" error.
+type GetAccountMonthlyPortfoliosNotFoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// GetAccountMonthlyPortfoliosInternalResponseBody is the type of the
+// "GuildsService" service "GetAccountMonthlyPortfolios" endpoint HTTP response
+// body for the "internal" error.
+type GetAccountMonthlyPortfoliosInternalResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
 // GuildResponseBody is used to define fields on response body types.
 type GuildResponseBody struct {
 	ID                   string                            `form:"id" json:"id" xml:"id"`
@@ -731,6 +775,20 @@ func NewGetAccountPortfolioResponseBody(res *guildsservice.GetAccountPortfolioRe
 // result of the "GetAccountPortfolios" endpoint of the "GuildsService" service.
 func NewGetAccountPortfoliosResponseBody(res *guildsservice.GetAccountPortfoliosResult) *GetAccountPortfoliosResponseBody {
 	body := &GetAccountPortfoliosResponseBody{}
+	if res.Portfolios != nil {
+		body.Portfolios = make([]*SingleAccountPortfolioResponseBody, len(res.Portfolios))
+		for i, val := range res.Portfolios {
+			body.Portfolios[i] = marshalGuildsserviceSingleAccountPortfolioToSingleAccountPortfolioResponseBody(val)
+		}
+	}
+	return body
+}
+
+// NewGetAccountMonthlyPortfoliosResponseBody builds the HTTP response body
+// from the result of the "GetAccountMonthlyPortfolios" endpoint of the
+// "GuildsService" service.
+func NewGetAccountMonthlyPortfoliosResponseBody(res *guildsservice.GetAccountMonthlyPortfoliosResult) *GetAccountMonthlyPortfoliosResponseBody {
+	body := &GetAccountMonthlyPortfoliosResponseBody{}
 	if res.Portfolios != nil {
 		body.Portfolios = make([]*SingleAccountPortfolioResponseBody, len(res.Portfolios))
 		for i, val := range res.Portfolios {
@@ -1086,6 +1144,36 @@ func NewGetAccountPortfoliosInternalResponseBody(res *goa.ServiceError) *GetAcco
 	return body
 }
 
+// NewGetAccountMonthlyPortfoliosNotFoundResponseBody builds the HTTP response
+// body from the result of the "GetAccountMonthlyPortfolios" endpoint of the
+// "GuildsService" service.
+func NewGetAccountMonthlyPortfoliosNotFoundResponseBody(res *goa.ServiceError) *GetAccountMonthlyPortfoliosNotFoundResponseBody {
+	body := &GetAccountMonthlyPortfoliosNotFoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewGetAccountMonthlyPortfoliosInternalResponseBody builds the HTTP response
+// body from the result of the "GetAccountMonthlyPortfolios" endpoint of the
+// "GuildsService" service.
+func NewGetAccountMonthlyPortfoliosInternalResponseBody(res *goa.ServiceError) *GetAccountMonthlyPortfoliosInternalResponseBody {
+	body := &GetAccountMonthlyPortfoliosInternalResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
 // NewGetSingleGuildPayload builds a GuildsService service GetSingleGuild
 // endpoint payload.
 func NewGetSingleGuildPayload(guildID string) *guildsservice.GetSingleGuildPayload {
@@ -1185,6 +1273,17 @@ func NewGetAccountPortfolioPayload(injectiveAddress string) *guildsservice.GetAc
 // GetAccountPortfolios endpoint payload.
 func NewGetAccountPortfoliosPayload(injectiveAddress string, startTime *int64, endTime *int64) *guildsservice.GetAccountPortfoliosPayload {
 	v := &guildsservice.GetAccountPortfoliosPayload{}
+	v.InjectiveAddress = injectiveAddress
+	v.StartTime = startTime
+	v.EndTime = endTime
+
+	return v
+}
+
+// NewGetAccountMonthlyPortfoliosPayload builds a GuildsService service
+// GetAccountMonthlyPortfolios endpoint payload.
+func NewGetAccountMonthlyPortfoliosPayload(injectiveAddress string, startTime int64, endTime int64) *guildsservice.GetAccountMonthlyPortfoliosPayload {
+	v := &guildsservice.GetAccountMonthlyPortfoliosPayload{}
 	v.InjectiveAddress = injectiveAddress
 	v.StartTime = startTime
 	v.EndTime = endTime
