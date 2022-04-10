@@ -808,6 +808,13 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 	}, nil
 }
 
+func (s *service) GetAccountMonthlyPortfolios(
+	ctx context.Context,
+	payload *svc.GetAccountMonthlyPortfoliosPayload,
+) (res *svc.GetAccountMonthlyPortfoliosResult, err error) {
+	return nil, err
+}
+
 func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAccountPortfoliosPayload) (res *svc.GetAccountPortfoliosResult, err error) {
 	doneFn := metrics.ReportFuncTiming(s.svcTags)
 	defer doneFn()
