@@ -20,7 +20,6 @@ type MemberMessage struct {
 // list timestamp [fromTime, ceilToMonth(toTime))
 func monthlyTimes(fromTime, toTime time.Time) (result []time.Time) {
 	current := fromTime
-	toTime = toTime.AddDate(0, 1, 0)
 	for current.Before(toTime) {
 		result = append(result, current)
 		beginOfMonth := time.Date(current.Year(), current.Month(), 1, 0, 0, 0, 0, current.Location())

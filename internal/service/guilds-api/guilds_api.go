@@ -870,6 +870,16 @@ func (s *service) GetAccountMonthlyPortfolios(
 		}
 	}
 
+	// add latest snapshot for FE to compute APY for current month
+	if payload.EndTime == nil {
+		result = append(result, portfolios[len(portfolios)-1])
+	}
+
+	// reverse
+	for i := 0; i < len(result)/2; i++ {
+		result[i], result[len(result)-i-1] = result[len(result)-i-1], result[i]
+	}
+
 	return &svc.GetAccountMonthlyPortfoliosResult{}, err
 }
 
