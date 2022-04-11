@@ -858,21 +858,28 @@ func (s *service) GetAccountMonthlyPortfolios(
 		return &svc.GetAccountMonthlyPortfoliosResult{}, nil
 	}
 
-	var result []*model.AccountPortfolio
+	var result []*svc.GetAccountMonthlyPortfoliosResult
 	startTime = portfolios[len(portfolios)-1].UpdatedAt.Add(-time.Second)
-	i := 0
-	for _, updatedAt := range monthlyTimes(startTime, endTime) {
-		for ; i < len(portfolios); i++ {
-			if updatedAt.Before(portfolios[i].UpdatedAt) {
-				result = append(result, portfolios[i])
+
+	i := len(portfolios) - 1
+	for _, period := range monthlyTimes(startTime, endTime) {
+		var startPortfolio, endPortfolio *model.AccountPortfolio
+		for ; i >= 0; i-- {
+			if portfolios[i].UpdatedAt.After(period.StartTime) {
+				startPortfolio = portfolios[i]
 				break
 			}
 		}
-	}
 
-	// add latest snapshot for FE to compute APY for current month
-	if payload.EndTime == nil {
-		result = append(result, portfolios[len(portfolios)-1])
+		for ; i >= 0; i-- {
+			if portfolios[i].UpdatedAt.After(period.EndTime) {
+				break
+			}
+			endPortfolio = portfolios[i]
+		}
+		if endPortfolio == nil {
+			endPortfolio = startPortfolio
+		}
 	}
 
 	// reverse
