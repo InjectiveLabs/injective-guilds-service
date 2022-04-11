@@ -858,7 +858,7 @@ func (s *service) GetAccountMonthlyPortfolios(
 		return &svc.GetAccountMonthlyPortfoliosResult{}, nil
 	}
 
-	var result []*svc.GetAccountMonthlyPortfoliosResult
+	var result []*svc.MonthlyAccountPortfolio
 	startTime = portfolios[len(portfolios)-1].UpdatedAt.Add(-time.Second)
 
 	i := len(portfolios) - 1
@@ -880,6 +880,16 @@ func (s *service) GetAccountMonthlyPortfolios(
 		if endPortfolio == nil {
 			endPortfolio = startPortfolio
 		}
+
+		if startPortfolio == nil {
+			continue
+		}
+
+		result = append(result, &svc.MonthlyAccountPortfolio{
+			Time:          uint64(startPortfolio.UpdatedAt.UnixMilli()),
+			BeginSnapshot: modelPortfolioToHTTP(startPortfolio),
+			EndSnapshot:   modelPortfolioToHTTP(endPortfolio),
+		})
 	}
 
 	// reverse
@@ -887,7 +897,32 @@ func (s *service) GetAccountMonthlyPortfolios(
 		result[i], result[len(result)-i-1] = result[len(result)-i-1], result[i]
 	}
 
-	return &svc.GetAccountMonthlyPortfoliosResult{}, err
+	return &svc.GetAccountMonthlyPortfoliosResult{
+		Portfolios: result,
+	}, nil
+}
+
+func modelPortfolioToHTTP(p *model.AccountPortfolio) *svc.SingleAccountPortfolio {
+	if len(p.BankBalances) > 0 && p.BankBalances[0].Denom == config.DEMOM_INJ {
+		p.Balances = addInjBankToBalance(p.Balances, p.BankBalances[0])
+	}
+
+	var balances []*svc.Balance
+	for _, b := range p.Balances {
+		balances = append(balances, &svc.Balance{
+			Denom:            b.Denom,
+			PriceUsd:         b.PriceUSD,
+			TotalBalance:     b.TotalBalance.String(),
+			AvailableBalance: b.AvailableBalance.String(),
+			UnrealizedPnl:    b.UnrealizedPNL.String(),
+			MarginHold:       b.MarginHold.String(),
+		})
+	}
+	return &svc.SingleAccountPortfolio{
+		InjectiveAddress: p.InjectiveAddress.String(),
+		Balances:         balances,
+		UpdatedAt:        p.UpdatedAt.UnixMilli(),
+	}
 }
 
 func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAccountPortfoliosPayload) (res *svc.GetAccountPortfoliosResult, err error) {
