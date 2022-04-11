@@ -97,7 +97,7 @@ type GetAccountPortfoliosResponseBody struct {
 // GetAccountMonthlyPortfoliosResponseBody is the type of the "GuildsService"
 // service "GetAccountMonthlyPortfolios" endpoint HTTP response body.
 type GetAccountMonthlyPortfoliosResponseBody struct {
-	Portfolios []*SingleAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
+	Portfolios []*MonthlyAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
 }
 
 // GetAllGuildsNotFoundResponseBody is the type of the "GuildsService" service
@@ -649,6 +649,14 @@ type SingleAccountPortfolioResponseBody struct {
 	UpdatedAt        int64                  `form:"updated_at" json:"updated_at" xml:"updated_at"`
 }
 
+// MonthlyAccountPortfolioResponseBody is used to define fields on response
+// body types.
+type MonthlyAccountPortfolioResponseBody struct {
+	Time          uint64                              `form:"time" json:"time" xml:"time"`
+	BeginSnapshot *SingleAccountPortfolioResponseBody `form:"begin_snapshot" json:"begin_snapshot" xml:"begin_snapshot"`
+	EndSnapshot   *SingleAccountPortfolioResponseBody `form:"end_snapshot" json:"end_snapshot" xml:"end_snapshot"`
+}
+
 // NewGetAllGuildsResponseBody builds the HTTP response body from the result of
 // the "GetAllGuilds" endpoint of the "GuildsService" service.
 func NewGetAllGuildsResponseBody(res *guildsservice.GetAllGuildsResult) *GetAllGuildsResponseBody {
@@ -790,9 +798,9 @@ func NewGetAccountPortfoliosResponseBody(res *guildsservice.GetAccountPortfolios
 func NewGetAccountMonthlyPortfoliosResponseBody(res *guildsservice.GetAccountMonthlyPortfoliosResult) *GetAccountMonthlyPortfoliosResponseBody {
 	body := &GetAccountMonthlyPortfoliosResponseBody{}
 	if res.Portfolios != nil {
-		body.Portfolios = make([]*SingleAccountPortfolioResponseBody, len(res.Portfolios))
+		body.Portfolios = make([]*MonthlyAccountPortfolioResponseBody, len(res.Portfolios))
 		for i, val := range res.Portfolios {
-			body.Portfolios[i] = marshalGuildsserviceSingleAccountPortfolioToSingleAccountPortfolioResponseBody(val)
+			body.Portfolios[i] = marshalGuildsserviceMonthlyAccountPortfolioToMonthlyAccountPortfolioResponseBody(val)
 		}
 	}
 	return body

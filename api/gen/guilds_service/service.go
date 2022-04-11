@@ -100,7 +100,7 @@ type GetAccountMonthlyPortfoliosPayload struct {
 // GetAccountMonthlyPortfoliosResult is the result type of the GuildsService
 // service GetAccountMonthlyPortfolios method.
 type GetAccountMonthlyPortfoliosResult struct {
-	Portfolios []*SingleAccountPortfolio
+	Portfolios []*MonthlyAccountPortfolio
 }
 
 // GetAccountPortfolioPayload is the payload type of the GuildsService service
@@ -251,6 +251,13 @@ type LeaveGuildResult struct {
 type Market struct {
 	MarketID    string
 	IsPerpetual bool
+}
+
+// Account monthly first and last portfio snapshot of a month
+type MonthlyAccountPortfolio struct {
+	Time          uint64
+	BeginSnapshot *SingleAccountPortfolio
+	EndSnapshot   *SingleAccountPortfolio
 }
 
 type Requirement struct {

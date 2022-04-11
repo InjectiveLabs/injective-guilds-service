@@ -75,7 +75,7 @@ func BuildEnterGuildPayload(guildsServiceEnterGuildBody string, guildsServiceEnt
 	{
 		err = json.Unmarshal([]byte(guildsServiceEnterGuildBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"injective_address\": \"Harum eum vel quia.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"injective_address\": \"Culpa in quae ut quia.\"\n   }'")
 		}
 	}
 	var guildID string

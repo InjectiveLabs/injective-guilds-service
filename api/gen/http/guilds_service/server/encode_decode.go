@@ -1138,3 +1138,23 @@ func marshalGuildsserviceSingleAccountPortfolioToSingleAccountPortfolioResponseB
 
 	return res
 }
+
+// marshalGuildsserviceMonthlyAccountPortfolioToMonthlyAccountPortfolioResponseBody
+// builds a value of type *MonthlyAccountPortfolioResponseBody from a value of
+// type *guildsservice.MonthlyAccountPortfolio.
+func marshalGuildsserviceMonthlyAccountPortfolioToMonthlyAccountPortfolioResponseBody(v *guildsservice.MonthlyAccountPortfolio) *MonthlyAccountPortfolioResponseBody {
+	if v == nil {
+		return nil
+	}
+	res := &MonthlyAccountPortfolioResponseBody{
+		Time: v.Time,
+	}
+	if v.BeginSnapshot != nil {
+		res.BeginSnapshot = marshalGuildsserviceSingleAccountPortfolioToSingleAccountPortfolioResponseBody(v.BeginSnapshot)
+	}
+	if v.EndSnapshot != nil {
+		res.EndSnapshot = marshalGuildsserviceSingleAccountPortfolioToSingleAccountPortfolioResponseBody(v.EndSnapshot)
+	}
+
+	return res
+}

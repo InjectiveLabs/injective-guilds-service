@@ -1466,3 +1466,19 @@ func unmarshalSingleAccountPortfolioResponseBodyToGuildsserviceSingleAccountPort
 
 	return res
 }
+
+// unmarshalMonthlyAccountPortfolioResponseBodyToGuildsserviceMonthlyAccountPortfolio
+// builds a value of type *guildsservice.MonthlyAccountPortfolio from a value
+// of type *MonthlyAccountPortfolioResponseBody.
+func unmarshalMonthlyAccountPortfolioResponseBodyToGuildsserviceMonthlyAccountPortfolio(v *MonthlyAccountPortfolioResponseBody) *guildsservice.MonthlyAccountPortfolio {
+	if v == nil {
+		return nil
+	}
+	res := &guildsservice.MonthlyAccountPortfolio{
+		Time: *v.Time,
+	}
+	res.BeginSnapshot = unmarshalSingleAccountPortfolioResponseBodyToGuildsserviceSingleAccountPortfolio(v.BeginSnapshot)
+	res.EndSnapshot = unmarshalSingleAccountPortfolioResponseBodyToGuildsserviceSingleAccountPortfolio(v.EndSnapshot)
+
+	return res
+}

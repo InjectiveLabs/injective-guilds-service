@@ -97,7 +97,7 @@ type GetAccountPortfoliosResponseBody struct {
 // GetAccountMonthlyPortfoliosResponseBody is the type of the "GuildsService"
 // service "GetAccountMonthlyPortfolios" endpoint HTTP response body.
 type GetAccountMonthlyPortfoliosResponseBody struct {
-	Portfolios []*SingleAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
+	Portfolios []*MonthlyAccountPortfolioResponseBody `form:"portfolios,omitempty" json:"portfolios,omitempty" xml:"portfolios,omitempty"`
 }
 
 // GetAllGuildsNotFoundResponseBody is the type of the "GuildsService" service
@@ -649,6 +649,14 @@ type SingleAccountPortfolioResponseBody struct {
 	UpdatedAt        *int64                 `form:"updated_at,omitempty" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
 }
 
+// MonthlyAccountPortfolioResponseBody is used to define fields on response
+// body types.
+type MonthlyAccountPortfolioResponseBody struct {
+	Time          *uint64                             `form:"time,omitempty" json:"time,omitempty" xml:"time,omitempty"`
+	BeginSnapshot *SingleAccountPortfolioResponseBody `form:"begin_snapshot,omitempty" json:"begin_snapshot,omitempty" xml:"begin_snapshot,omitempty"`
+	EndSnapshot   *SingleAccountPortfolioResponseBody `form:"end_snapshot,omitempty" json:"end_snapshot,omitempty" xml:"end_snapshot,omitempty"`
+}
+
 // NewEnterGuildRequestBody builds the HTTP request body from the payload of
 // the "EnterGuild" endpoint of the "GuildsService" service.
 func NewEnterGuildRequestBody(p *guildsservice.EnterGuildPayload) *EnterGuildRequestBody {
@@ -1168,9 +1176,9 @@ func NewGetAccountPortfoliosInternal(body *GetAccountPortfoliosInternalResponseB
 func NewGetAccountMonthlyPortfoliosResultOK(body *GetAccountMonthlyPortfoliosResponseBody) *guildsservice.GetAccountMonthlyPortfoliosResult {
 	v := &guildsservice.GetAccountMonthlyPortfoliosResult{}
 	if body.Portfolios != nil {
-		v.Portfolios = make([]*guildsservice.SingleAccountPortfolio, len(body.Portfolios))
+		v.Portfolios = make([]*guildsservice.MonthlyAccountPortfolio, len(body.Portfolios))
 		for i, val := range body.Portfolios {
-			v.Portfolios[i] = unmarshalSingleAccountPortfolioResponseBodyToGuildsserviceSingleAccountPortfolio(val)
+			v.Portfolios[i] = unmarshalMonthlyAccountPortfolioResponseBodyToGuildsserviceMonthlyAccountPortfolio(val)
 		}
 	}
 
@@ -1321,7 +1329,7 @@ func ValidateGetAccountPortfoliosResponseBody(body *GetAccountPortfoliosResponse
 func ValidateGetAccountMonthlyPortfoliosResponseBody(body *GetAccountMonthlyPortfoliosResponseBody) (err error) {
 	for _, e := range body.Portfolios {
 		if e != nil {
-			if err2 := ValidateSingleAccountPortfolioResponseBody(e); err2 != nil {
+			if err2 := ValidateMonthlyAccountPortfolioResponseBody(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
 		}
@@ -2098,6 +2106,31 @@ func ValidateSingleAccountPortfolioResponseBody(body *SingleAccountPortfolioResp
 			if err2 := ValidateBalanceResponseBody(e); err2 != nil {
 				err = goa.MergeErrors(err, err2)
 			}
+		}
+	}
+	return
+}
+
+// ValidateMonthlyAccountPortfolioResponseBody runs the validations defined on
+// MonthlyAccountPortfolioResponseBody
+func ValidateMonthlyAccountPortfolioResponseBody(body *MonthlyAccountPortfolioResponseBody) (err error) {
+	if body.Time == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("time", "body"))
+	}
+	if body.BeginSnapshot == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("begin_snapshot", "body"))
+	}
+	if body.EndSnapshot == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("end_snapshot", "body"))
+	}
+	if body.BeginSnapshot != nil {
+		if err2 := ValidateSingleAccountPortfolioResponseBody(body.BeginSnapshot); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if body.EndSnapshot != nil {
+		if err2 := ValidateSingleAccountPortfolioResponseBody(body.EndSnapshot); err2 != nil {
+			err = goa.MergeErrors(err, err2)
 		}
 	}
 	return
