@@ -306,7 +306,7 @@ var _ = Service("GuildsService", func() {
 		})
 
 		Result(func() {
-			Field(1, "portfolios", ArrayOf(SingleAccountPortfolio))
+			Field(1, "portfolios", ArrayOf(MonthlyAccountPortfolio))
 		})
 
 		HTTP(func() {

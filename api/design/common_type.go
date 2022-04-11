@@ -77,6 +77,16 @@ var SingleAccountPortfolio = Type("SingleAccountPortfolio", func() {
 	Required("updated_at")
 })
 
+var MonthlyAccountPortfolio = Type("MonthlyAccountPortfolio", func() {
+	Description("Account monthly first and last portfio snapshot of a month")
+	Field(0, "time", UInt64)
+	Field(1, "begin_snapshot", SingleAccountPortfolio)
+	Field(2, "end_snapshot", SingleAccountPortfolio)
+	Required("time")
+	Required("begin_snapshot")
+	Required("end_snapshot")
+})
+
 var SingleGuildPortfolio = Type("SingleGuildPortfolio", func() {
 	Description("Single guild portfolio snapshot")
 	Field(0, "guild_id", String)
