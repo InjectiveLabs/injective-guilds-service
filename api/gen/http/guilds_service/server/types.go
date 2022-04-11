@@ -1282,7 +1282,7 @@ func NewGetAccountPortfoliosPayload(injectiveAddress string, startTime *int64, e
 
 // NewGetAccountMonthlyPortfoliosPayload builds a GuildsService service
 // GetAccountMonthlyPortfolios endpoint payload.
-func NewGetAccountMonthlyPortfoliosPayload(injectiveAddress string, startTime int64, endTime int64) *guildsservice.GetAccountMonthlyPortfoliosPayload {
+func NewGetAccountMonthlyPortfoliosPayload(injectiveAddress string, startTime *int64, endTime *int64) *guildsservice.GetAccountMonthlyPortfoliosPayload {
 	v := &guildsservice.GetAccountMonthlyPortfoliosPayload{}
 	v.InjectiveAddress = injectiveAddress
 	v.StartTime = startTime

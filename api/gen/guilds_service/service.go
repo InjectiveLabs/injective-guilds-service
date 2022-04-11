@@ -93,8 +93,8 @@ type GetAccountInfoResult struct {
 // service GetAccountMonthlyPortfolios method.
 type GetAccountMonthlyPortfoliosPayload struct {
 	InjectiveAddress string
-	StartTime        int64
-	EndTime          int64
+	StartTime        *int64
+	EndTime          *int64
 }
 
 // GetAccountMonthlyPortfoliosResult is the result type of the GuildsService

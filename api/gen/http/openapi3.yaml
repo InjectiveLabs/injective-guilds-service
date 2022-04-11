@@ -813,7 +813,6 @@ paths:
       - name: start_time
         in: query
         allowEmptyValue: true
-        required: true
         schema:
           type: integer
           example: 4191665701240771643
@@ -822,7 +821,6 @@ paths:
       - name: end_time
         in: query
         allowEmptyValue: true
-        required: true
         schema:
           type: integer
           example: 5941375548111118625

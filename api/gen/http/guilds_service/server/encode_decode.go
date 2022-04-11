@@ -931,8 +931,8 @@ func DecodeGetAccountMonthlyPortfoliosRequest(mux goahttp.Muxer, decoder func(*h
 	return func(r *http.Request) (interface{}, error) {
 		var (
 			injectiveAddress string
-			startTime        int64
-			endTime          int64
+			startTime        *int64
+			endTime          *int64
 			err              error
 
 			params = mux.Vars(r)
@@ -940,25 +940,23 @@ func DecodeGetAccountMonthlyPortfoliosRequest(mux goahttp.Muxer, decoder func(*h
 		injectiveAddress = params["injective_address"]
 		{
 			startTimeRaw := r.URL.Query().Get("start_time")
-			if startTimeRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("start_time", "query string"))
+			if startTimeRaw != "" {
+				v, err2 := strconv.ParseInt(startTimeRaw, 10, 64)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("startTime", startTimeRaw, "integer"))
+				}
+				startTime = &v
 			}
-			v, err2 := strconv.ParseInt(startTimeRaw, 10, 64)
-			if err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("startTime", startTimeRaw, "integer"))
-			}
-			startTime = v
 		}
 		{
 			endTimeRaw := r.URL.Query().Get("end_time")
-			if endTimeRaw == "" {
-				err = goa.MergeErrors(err, goa.MissingFieldError("end_time", "query string"))
+			if endTimeRaw != "" {
+				v, err2 := strconv.ParseInt(endTimeRaw, 10, 64)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("endTime", endTimeRaw, "integer"))
+				}
+				endTime = &v
 			}
-			v, err2 := strconv.ParseInt(endTimeRaw, 10, 64)
-			if err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("endTime", endTimeRaw, "integer"))
-			}
-			endTime = v
 		}
 		if err != nil {
 			return nil, err

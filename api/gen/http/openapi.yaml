@@ -310,12 +310,12 @@ paths:
       parameters:
       - name: start_time
         in: query
-        required: true
+        required: false
         type: integer
         format: int64
       - name: end_time
         in: query
-        required: true
+        required: false
         type: integer
         format: int64
       - name: injective_address

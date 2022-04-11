@@ -818,25 +818,58 @@ func (s *service) GetAccountMonthlyPortfolios(
 
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Error("parse acc address error")
 		return nil, svc.MakeInvalidArg(err)
 	}
 
-	endTime := time.UnixMilli(payload.EndTime)
-	startTime := time.UnixMilli(payload.StartTime)
-
 	filter := model.AccountPortfoliosFilter{
 		InjectiveAddress: model.Address{AccAddress: address},
-		StartTime:        &startTime,
-		EndTime:          &endTime,
+	}
+	var (
+		startTime = time.UnixMilli(0)
+		endTime   = time.Now()
+	)
+
+	if payload.EndTime != nil {
+		endTime = time.UnixMilli(*payload.EndTime)
+		filter.EndTime = &endTime
 	}
 
-	_, err = s.dbSvc.ListAccountPortfolios(ctx, filter)
+	if payload.StartTime != nil {
+		startTime = time.UnixMilli(*payload.StartTime)
+		filter.StartTime = &startTime
+	}
+
+	if startTime.After(endTime) {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.Error("startTime shouldnot be after endTime")
+		return nil, svc.MakeInvalidArg(errors.New("startTime should not be after endTime"))
+	}
+
+	portfolios, err := s.dbSvc.ListAccountPortfolios(ctx, filter)
 	if err != nil {
 		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Error("list account portfolios error")
 		return nil, svc.MakeInternal(err)
 	}
+
+	if len(portfolios) == 0 {
+		return &svc.GetAccountMonthlyPortfoliosResult{}, nil
+	}
+
+	var result []*model.AccountPortfolio
+	startTime = portfolios[len(portfolios)-1].UpdatedAt.Add(-time.Second)
+	i := 0
+	for _, updatedAt := range monthlyTimes(startTime, endTime) {
+		for ; i < len(portfolios); i++ {
+			if updatedAt.Before(portfolios[i].UpdatedAt) {
+				result = append(result, portfolios[i])
+				break
+			}
+		}
+	}
+
 	return &svc.GetAccountMonthlyPortfoliosResult{}, err
 }
 
@@ -847,6 +880,7 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Error("parse acc address error")
 		return nil, svc.MakeInvalidArg(err)
 	}

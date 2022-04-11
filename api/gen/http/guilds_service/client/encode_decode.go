@@ -1259,8 +1259,12 @@ func EncodeGetAccountMonthlyPortfoliosRequest(encoder func(*http.Request) goahtt
 			return goahttp.ErrInvalidType("GuildsService", "GetAccountMonthlyPortfolios", "*guildsservice.GetAccountMonthlyPortfoliosPayload", v)
 		}
 		values := req.URL.Query()
-		values.Add("start_time", fmt.Sprintf("%v", p.StartTime))
-		values.Add("end_time", fmt.Sprintf("%v", p.EndTime))
+		if p.StartTime != nil {
+			values.Add("start_time", fmt.Sprintf("%v", *p.StartTime))
+		}
+		if p.EndTime != nil {
+			values.Add("end_time", fmt.Sprintf("%v", *p.EndTime))
+		}
 		req.URL.RawQuery = values.Encode()
 		return nil
 	}

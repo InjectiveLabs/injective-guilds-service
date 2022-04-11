@@ -220,23 +220,28 @@ func BuildGetAccountPortfoliosPayload(guildsServiceGetAccountPortfoliosInjective
 // BuildGetAccountMonthlyPortfoliosPayload builds the payload for the
 // GuildsService GetAccountMonthlyPortfolios endpoint from CLI flags.
 func BuildGetAccountMonthlyPortfoliosPayload(guildsServiceGetAccountMonthlyPortfoliosInjectiveAddress string, guildsServiceGetAccountMonthlyPortfoliosStartTime string, guildsServiceGetAccountMonthlyPortfoliosEndTime string) (*guildsservice.GetAccountMonthlyPortfoliosPayload, error) {
-	var err error
 	var injectiveAddress string
 	{
 		injectiveAddress = guildsServiceGetAccountMonthlyPortfoliosInjectiveAddress
 	}
-	var startTime int64
+	var startTime *int64
 	{
-		startTime, err = strconv.ParseInt(guildsServiceGetAccountMonthlyPortfoliosStartTime, 10, 64)
-		if err != nil {
-			return nil, fmt.Errorf("invalid value for startTime, must be INT64")
+		if guildsServiceGetAccountMonthlyPortfoliosStartTime != "" {
+			val, err := strconv.ParseInt(guildsServiceGetAccountMonthlyPortfoliosStartTime, 10, 64)
+			startTime = &val
+			if err != nil {
+				return nil, fmt.Errorf("invalid value for startTime, must be INT64")
+			}
 		}
 	}
-	var endTime int64
+	var endTime *int64
 	{
-		endTime, err = strconv.ParseInt(guildsServiceGetAccountMonthlyPortfoliosEndTime, 10, 64)
-		if err != nil {
-			return nil, fmt.Errorf("invalid value for endTime, must be INT64")
+		if guildsServiceGetAccountMonthlyPortfoliosEndTime != "" {
+			val, err := strconv.ParseInt(guildsServiceGetAccountMonthlyPortfoliosEndTime, 10, 64)
+			endTime = &val
+			if err != nil {
+				return nil, fmt.Errorf("invalid value for endTime, must be INT64")
+			}
 		}
 	}
 	v := &guildsservice.GetAccountMonthlyPortfoliosPayload{}

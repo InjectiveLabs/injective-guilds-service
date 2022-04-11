@@ -88,8 +88,8 @@ func ParseEndpoint(
 
 		guildsServiceGetAccountMonthlyPortfoliosFlags                = flag.NewFlagSet("get-account-monthly-portfolios", flag.ExitOnError)
 		guildsServiceGetAccountMonthlyPortfoliosInjectiveAddressFlag = guildsServiceGetAccountMonthlyPortfoliosFlags.String("injective-address", "REQUIRED", "")
-		guildsServiceGetAccountMonthlyPortfoliosStartTimeFlag        = guildsServiceGetAccountMonthlyPortfoliosFlags.String("start-time", "REQUIRED", "")
-		guildsServiceGetAccountMonthlyPortfoliosEndTimeFlag          = guildsServiceGetAccountMonthlyPortfoliosFlags.String("end-time", "REQUIRED", "")
+		guildsServiceGetAccountMonthlyPortfoliosStartTimeFlag        = guildsServiceGetAccountMonthlyPortfoliosFlags.String("start-time", "", "")
+		guildsServiceGetAccountMonthlyPortfoliosEndTimeFlag          = guildsServiceGetAccountMonthlyPortfoliosFlags.String("end-time", "", "")
 	)
 	guildsServiceFlags.Usage = guildsServiceUsage
 	guildsServiceGetAllGuildsFlags.Usage = guildsServiceGetAllGuildsUsage
