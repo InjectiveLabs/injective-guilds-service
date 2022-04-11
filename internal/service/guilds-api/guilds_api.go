@@ -812,7 +812,32 @@ func (s *service) GetAccountMonthlyPortfolios(
 	ctx context.Context,
 	payload *svc.GetAccountMonthlyPortfoliosPayload,
 ) (res *svc.GetAccountMonthlyPortfoliosResult, err error) {
-	return nil, err
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
+	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
+	if err != nil {
+		s.logger.WithError(err).Error("parse acc address error")
+		return nil, svc.MakeInvalidArg(err)
+	}
+
+	endTime := time.UnixMilli(payload.EndTime)
+	startTime := time.UnixMilli(payload.StartTime)
+
+	filter := model.AccountPortfoliosFilter{
+		InjectiveAddress: model.Address{AccAddress: address},
+		StartTime:        &startTime,
+		EndTime:          &endTime,
+	}
+
+	_, err = s.dbSvc.ListAccountPortfolios(ctx, filter)
+	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("list account portfolios error")
+		return nil, svc.MakeInternal(err)
+	}
+	return &svc.GetAccountMonthlyPortfoliosResult{}, err
 }
 
 func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAccountPortfoliosPayload) (res *svc.GetAccountPortfoliosResult, err error) {

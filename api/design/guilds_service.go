@@ -302,7 +302,7 @@ var _ = Service("GuildsService", func() {
 			Field(1, "injective_address", String)
 			Field(2, "start_time", Int64)
 			Field(3, "end_time", Int64)
-			Required("injective_address", "start_time", "end_time")
+			Required("injective_address")
 		})
 
 		Result(func() {
