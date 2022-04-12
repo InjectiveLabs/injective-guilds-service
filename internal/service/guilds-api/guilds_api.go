@@ -886,11 +886,9 @@ func (s *service) GetAccountMonthlyPortfolios(
 			}
 			endPortfolio = portfolios[i]
 		}
-		if endPortfolio == nil {
-			endPortfolio = startPortfolio
-		}
 
-		if startPortfolio == nil {
+		// handle case when a month didn't contain any snapshots
+		if startPortfolio == nil || endPortfolio == nil || startPortfolio.UpdatedAt == endPortfolio.UpdatedAt {
 			continue
 		}
 
