@@ -23,18 +23,18 @@ type Period struct {
 }
 
 // list timestamp [fromTime, ceilToMonth(toTime))
-func monthlyTimes(fromTime, toTime time.Time) (result []*Period) {
-	current := fromTime
-	toTime = toTime.AddDate(0, 1, 0)
+func monthlyTimes(startTime, endTime time.Time) (result []*Period) {
+	current := startTime
+	endTime = endTime.AddDate(0, 1, 0)
 
 	times := make([]time.Time, 0)
-	for current.Before(toTime) {
+	for current.Before(endTime) {
 		times = append(times, current)
 		beginOfMonth := time.Date(current.Year(), current.Month(), 1, 0, 0, 0, 0, current.Location())
 		current = beginOfMonth.AddDate(0, 1, 0)
 	}
 
-	for i := 0; i < len(result)-1; i++ {
+	for i := 0; i < len(times)-1; i++ {
 		result = append(result, &Period{
 			StartTime: times[i],
 			EndTime:   times[i+1],
