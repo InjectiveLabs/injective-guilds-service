@@ -22,7 +22,7 @@ type Period struct {
 	EndTime   time.Time
 }
 
-// list timestamp [fromTime, ceilToMonth(toTime))
+// list timestamp [startTime, ceilToMonth(endTime))
 func monthlyTimes(startTime, endTime time.Time) (result []*Period) {
 	current := startTime
 	endTime = endTime.AddDate(0, 1, 0)

@@ -833,6 +833,13 @@ func (s *service) GetAccountMonthlyPortfolios(
 
 	if payload.EndTime != nil {
 		endTime = time.UnixMilli(*payload.EndTime)
+		if endTime.After(time.Now()) {
+			err := errors.New("end_time cannot be after current time")
+
+			metrics.ReportFuncError(s.svcTags)
+			s.logger.WithField("end_time", endTime.String()).WithError(err).Error("invalid arg")
+			return nil, svc.MakeInvalidArg(err)
+		}
 		filter.EndTime = &endTime
 	}
 
@@ -842,9 +849,11 @@ func (s *service) GetAccountMonthlyPortfolios(
 	}
 
 	if startTime.After(endTime) {
+		err := errors.New("start_time should not be after end_time")
+
 		metrics.ReportFuncError(s.svcTags)
-		s.logger.Error("startTime shouldnot be after endTime")
-		return nil, svc.MakeInvalidArg(errors.New("startTime should not be after endTime"))
+		s.logger.WithError(err).Error("invalid arg")
+		return nil, svc.MakeInvalidArg(err)
 	}
 
 	portfolios, err := s.dbSvc.ListAccountPortfolios(ctx, filter)
