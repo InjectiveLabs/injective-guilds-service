@@ -2,6 +2,7 @@ package guildsapi
 
 import (
 	"math"
+	"time"
 
 	svc "github.com/InjectiveLabs/injective-guilds-service/api/gen/guilds_service"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/config"
@@ -14,6 +15,33 @@ import (
 type MemberMessage struct {
 	Action    string `json:"action"`
 	ExpiredAt int64  `json:"expired_at"` // unix timestamp, second
+}
+
+type Period struct {
+	StartTime time.Time
+	EndTime   time.Time
+}
+
+// list timestamp [startTime, ceilToMonth(endTime))
+func monthlyTimes(startTime, endTime time.Time) (result []*Period) {
+	current := startTime
+	endTime = endTime.AddDate(0, 1, 0)
+
+	times := make([]time.Time, 0)
+	for current.Before(endTime) {
+		times = append(times, current)
+		beginOfMonth := time.Date(current.Year(), current.Month(), 1, 0, 0, 0, 0, current.Location())
+		current = beginOfMonth.AddDate(0, 1, 0)
+	}
+
+	for i := 0; i < len(times)-1; i++ {
+		result = append(result, &Period{
+			StartTime: times[i],
+			EndTime:   times[i+1],
+		})
+	}
+
+	return result
 }
 
 func addInjBankToBalance(balance []*model.Balance, inj *model.BankBalance) []*model.Balance {

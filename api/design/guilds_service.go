@@ -294,4 +294,29 @@ var _ = Service("GuildsService", func() {
 			Response("internal", StatusInternalServerError)
 		})
 	})
+
+	Method("GetAccountMonthlyPortfolios", func() {
+		Description("Get current account portfolios monthly snapshots, including start_time, end_time snapshots")
+
+		Payload(func() {
+			Field(1, "injective_address", String)
+			Field(2, "start_time", Int64)
+			Field(3, "end_time", Int64)
+			Required("injective_address")
+		})
+
+		Result(func() {
+			Field(1, "portfolios", ArrayOf(MonthlyAccountPortfolio))
+		})
+
+		HTTP(func() {
+			GET("/members/{injective_address}/monthly-portfolios")
+			Param("start_time")
+			Param("end_time")
+
+			Response(CodeOK)
+			Response("not_found", StatusNotFound)
+			Response("internal", StatusInternalServerError)
+		})
+	})
 })

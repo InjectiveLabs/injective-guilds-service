@@ -70,3 +70,8 @@ func GetAccountPortfolioGuildsServicePath(injectiveAddress string) string {
 func GetAccountPortfoliosGuildsServicePath(injectiveAddress string) string {
 	return fmt.Sprintf("/members/%v/portfolios", injectiveAddress)
 }
+
+// GetAccountMonthlyPortfoliosGuildsServicePath returns the URL path to the GuildsService service GetAccountMonthlyPortfolios HTTP endpoint.
+func GetAccountMonthlyPortfoliosGuildsServicePath(injectiveAddress string) string {
+	return fmt.Sprintf("/members/%v/monthly-portfolios", injectiveAddress)
+}

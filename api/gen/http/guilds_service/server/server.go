@@ -19,20 +19,21 @@ import (
 
 // Server lists the GuildsService service endpoint HTTP handlers.
 type Server struct {
-	Mounts                []*MountPoint
-	GetAllGuilds          http.Handler
-	GetSingleGuild        http.Handler
-	GetGuildMembers       http.Handler
-	GetGuildMasterAddress http.Handler
-	GetGuildDefaultMember http.Handler
-	EnterGuild            http.Handler
-	LeaveGuild            http.Handler
-	GetGuildMarkets       http.Handler
-	GetGuildPortfolios    http.Handler
-	GetAccountInfo        http.Handler
-	GetAccountPortfolio   http.Handler
-	GetAccountPortfolios  http.Handler
-	CORS                  http.Handler
+	Mounts                      []*MountPoint
+	GetAllGuilds                http.Handler
+	GetSingleGuild              http.Handler
+	GetGuildMembers             http.Handler
+	GetGuildMasterAddress       http.Handler
+	GetGuildDefaultMember       http.Handler
+	EnterGuild                  http.Handler
+	LeaveGuild                  http.Handler
+	GetGuildMarkets             http.Handler
+	GetGuildPortfolios          http.Handler
+	GetAccountInfo              http.Handler
+	GetAccountPortfolio         http.Handler
+	GetAccountPortfolios        http.Handler
+	GetAccountMonthlyPortfolios http.Handler
+	CORS                        http.Handler
 }
 
 // ErrorNamer is an interface implemented by generated error structs that
@@ -80,6 +81,7 @@ func New(
 			{"GetAccountInfo", "GET", "/members/{injective_address}"},
 			{"GetAccountPortfolio", "GET", "/members/{injective_address}/portfolio"},
 			{"GetAccountPortfolios", "GET", "/members/{injective_address}/portfolios"},
+			{"GetAccountMonthlyPortfolios", "GET", "/members/{injective_address}/monthly-portfolios"},
 			{"CORS", "OPTIONS", "/guilds"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}"},
 			{"CORS", "OPTIONS", "/guilds/{guildID}/members"},
@@ -92,20 +94,22 @@ func New(
 			{"CORS", "OPTIONS", "/members/{injective_address}"},
 			{"CORS", "OPTIONS", "/members/{injective_address}/portfolio"},
 			{"CORS", "OPTIONS", "/members/{injective_address}/portfolios"},
+			{"CORS", "OPTIONS", "/members/{injective_address}/monthly-portfolios"},
 		},
-		GetAllGuilds:          NewGetAllGuildsHandler(e.GetAllGuilds, mux, decoder, encoder, errhandler, formatter),
-		GetSingleGuild:        NewGetSingleGuildHandler(e.GetSingleGuild, mux, decoder, encoder, errhandler, formatter),
-		GetGuildMembers:       NewGetGuildMembersHandler(e.GetGuildMembers, mux, decoder, encoder, errhandler, formatter),
-		GetGuildMasterAddress: NewGetGuildMasterAddressHandler(e.GetGuildMasterAddress, mux, decoder, encoder, errhandler, formatter),
-		GetGuildDefaultMember: NewGetGuildDefaultMemberHandler(e.GetGuildDefaultMember, mux, decoder, encoder, errhandler, formatter),
-		EnterGuild:            NewEnterGuildHandler(e.EnterGuild, mux, decoder, encoder, errhandler, formatter),
-		LeaveGuild:            NewLeaveGuildHandler(e.LeaveGuild, mux, decoder, encoder, errhandler, formatter),
-		GetGuildMarkets:       NewGetGuildMarketsHandler(e.GetGuildMarkets, mux, decoder, encoder, errhandler, formatter),
-		GetGuildPortfolios:    NewGetGuildPortfoliosHandler(e.GetGuildPortfolios, mux, decoder, encoder, errhandler, formatter),
-		GetAccountInfo:        NewGetAccountInfoHandler(e.GetAccountInfo, mux, decoder, encoder, errhandler, formatter),
-		GetAccountPortfolio:   NewGetAccountPortfolioHandler(e.GetAccountPortfolio, mux, decoder, encoder, errhandler, formatter),
-		GetAccountPortfolios:  NewGetAccountPortfoliosHandler(e.GetAccountPortfolios, mux, decoder, encoder, errhandler, formatter),
-		CORS:                  NewCORSHandler(),
+		GetAllGuilds:                NewGetAllGuildsHandler(e.GetAllGuilds, mux, decoder, encoder, errhandler, formatter),
+		GetSingleGuild:              NewGetSingleGuildHandler(e.GetSingleGuild, mux, decoder, encoder, errhandler, formatter),
+		GetGuildMembers:             NewGetGuildMembersHandler(e.GetGuildMembers, mux, decoder, encoder, errhandler, formatter),
+		GetGuildMasterAddress:       NewGetGuildMasterAddressHandler(e.GetGuildMasterAddress, mux, decoder, encoder, errhandler, formatter),
+		GetGuildDefaultMember:       NewGetGuildDefaultMemberHandler(e.GetGuildDefaultMember, mux, decoder, encoder, errhandler, formatter),
+		EnterGuild:                  NewEnterGuildHandler(e.EnterGuild, mux, decoder, encoder, errhandler, formatter),
+		LeaveGuild:                  NewLeaveGuildHandler(e.LeaveGuild, mux, decoder, encoder, errhandler, formatter),
+		GetGuildMarkets:             NewGetGuildMarketsHandler(e.GetGuildMarkets, mux, decoder, encoder, errhandler, formatter),
+		GetGuildPortfolios:          NewGetGuildPortfoliosHandler(e.GetGuildPortfolios, mux, decoder, encoder, errhandler, formatter),
+		GetAccountInfo:              NewGetAccountInfoHandler(e.GetAccountInfo, mux, decoder, encoder, errhandler, formatter),
+		GetAccountPortfolio:         NewGetAccountPortfolioHandler(e.GetAccountPortfolio, mux, decoder, encoder, errhandler, formatter),
+		GetAccountPortfolios:        NewGetAccountPortfoliosHandler(e.GetAccountPortfolios, mux, decoder, encoder, errhandler, formatter),
+		GetAccountMonthlyPortfolios: NewGetAccountMonthlyPortfoliosHandler(e.GetAccountMonthlyPortfolios, mux, decoder, encoder, errhandler, formatter),
+		CORS:                        NewCORSHandler(),
 	}
 }
 
@@ -126,6 +130,7 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.GetAccountInfo = m(s.GetAccountInfo)
 	s.GetAccountPortfolio = m(s.GetAccountPortfolio)
 	s.GetAccountPortfolios = m(s.GetAccountPortfolios)
+	s.GetAccountMonthlyPortfolios = m(s.GetAccountMonthlyPortfolios)
 	s.CORS = m(s.CORS)
 }
 
@@ -143,6 +148,7 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountGetAccountInfoHandler(mux, h.GetAccountInfo)
 	MountGetAccountPortfolioHandler(mux, h.GetAccountPortfolio)
 	MountGetAccountPortfoliosHandler(mux, h.GetAccountPortfolios)
+	MountGetAccountMonthlyPortfoliosHandler(mux, h.GetAccountMonthlyPortfolios)
 	MountCORSHandler(mux, h.CORS)
 }
 
@@ -759,6 +765,58 @@ func NewGetAccountPortfoliosHandler(
 	})
 }
 
+// MountGetAccountMonthlyPortfoliosHandler configures the mux to serve the
+// "GuildsService" service "GetAccountMonthlyPortfolios" endpoint.
+func MountGetAccountMonthlyPortfoliosHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := HandleGuildsServiceOrigin(h).(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/members/{injective_address}/monthly-portfolios", f)
+}
+
+// NewGetAccountMonthlyPortfoliosHandler creates a HTTP handler which loads the
+// HTTP request and calls the "GuildsService" service
+// "GetAccountMonthlyPortfolios" endpoint.
+func NewGetAccountMonthlyPortfoliosHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeGetAccountMonthlyPortfoliosRequest(mux, decoder)
+		encodeResponse = EncodeGetAccountMonthlyPortfoliosResponse(encoder)
+		encodeError    = EncodeGetAccountMonthlyPortfoliosError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "GetAccountMonthlyPortfolios")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "GuildsService")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
 // MountCORSHandler configures the mux to serve the CORS endpoints for the
 // service GuildsService.
 func MountCORSHandler(mux goahttp.Muxer, h http.Handler) {
@@ -775,6 +833,7 @@ func MountCORSHandler(mux goahttp.Muxer, h http.Handler) {
 	mux.Handle("OPTIONS", "/members/{injective_address}", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/members/{injective_address}/portfolio", h.ServeHTTP)
 	mux.Handle("OPTIONS", "/members/{injective_address}/portfolios", h.ServeHTTP)
+	mux.Handle("OPTIONS", "/members/{injective_address}/monthly-portfolios", h.ServeHTTP)
 }
 
 // NewCORSHandler creates a HTTP handler which returns a simple 200 response.

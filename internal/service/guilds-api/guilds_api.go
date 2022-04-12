@@ -808,6 +808,130 @@ func (s *service) GetAccountPortfolio(ctx context.Context, payload *svc.GetAccou
 	}, nil
 }
 
+func (s *service) GetAccountMonthlyPortfolios(
+	ctx context.Context,
+	payload *svc.GetAccountMonthlyPortfoliosPayload,
+) (res *svc.GetAccountMonthlyPortfoliosResult, err error) {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
+	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
+	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("parse acc address error")
+		return nil, svc.MakeInvalidArg(err)
+	}
+
+	filter := model.AccountPortfoliosFilter{
+		InjectiveAddress: model.Address{AccAddress: address},
+	}
+	var (
+		startTime = time.UnixMilli(0)
+		endTime   = time.Now()
+	)
+
+	if payload.EndTime != nil {
+		endTime = time.UnixMilli(*payload.EndTime)
+		if endTime.After(time.Now()) {
+			err := errors.New("end_time cannot be after current time")
+
+			metrics.ReportFuncError(s.svcTags)
+			s.logger.WithField("end_time", endTime.String()).WithError(err).Error("invalid arg")
+			return nil, svc.MakeInvalidArg(err)
+		}
+		filter.EndTime = &endTime
+	}
+
+	if payload.StartTime != nil {
+		startTime = time.UnixMilli(*payload.StartTime)
+		filter.StartTime = &startTime
+	}
+
+	if startTime.After(endTime) {
+		err := errors.New("start_time should not be after end_time")
+
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("invalid arg")
+		return nil, svc.MakeInvalidArg(err)
+	}
+
+	portfolios, err := s.dbSvc.ListAccountPortfolios(ctx, filter)
+	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
+		s.logger.WithError(err).Error("list account portfolios error")
+		return nil, svc.MakeInternal(err)
+	}
+
+	if len(portfolios) == 0 {
+		return &svc.GetAccountMonthlyPortfoliosResult{}, nil
+	}
+
+	var result []*svc.MonthlyAccountPortfolio
+	startTime = portfolios[len(portfolios)-1].UpdatedAt.Add(-time.Second)
+
+	i := len(portfolios) - 1
+	for _, period := range monthlyTimes(startTime, endTime) {
+		var startPortfolio, endPortfolio *model.AccountPortfolio
+		for ; i >= 0; i-- {
+			if portfolios[i].UpdatedAt.After(period.StartTime) {
+				startPortfolio = portfolios[i]
+				break
+			}
+		}
+
+		for ; i >= 0; i-- {
+			if portfolios[i].UpdatedAt.After(period.EndTime) {
+				break
+			}
+			endPortfolio = portfolios[i]
+		}
+
+		// handle case when a month didn't contain any snapshots
+		if startPortfolio == nil || endPortfolio == nil || startPortfolio.UpdatedAt == endPortfolio.UpdatedAt {
+			continue
+		}
+
+		result = append(result, &svc.MonthlyAccountPortfolio{
+			Time:          uint64(startPortfolio.UpdatedAt.UnixMilli()),
+			BeginSnapshot: modelPortfolioToHTTP(startPortfolio),
+			EndSnapshot:   modelPortfolioToHTTP(endPortfolio),
+		})
+	}
+
+	// reverse
+	for i := 0; i < len(result)/2; i++ {
+		result[i], result[len(result)-i-1] = result[len(result)-i-1], result[i]
+	}
+
+	return &svc.GetAccountMonthlyPortfoliosResult{
+		Portfolios: result,
+	}, nil
+}
+
+func modelPortfolioToHTTP(p *model.AccountPortfolio) *svc.SingleAccountPortfolio {
+	if len(p.BankBalances) > 0 && p.BankBalances[0].Denom == config.DEMOM_INJ {
+		p.Balances = addInjBankToBalance(p.Balances, p.BankBalances[0])
+	}
+
+	var balances []*svc.Balance
+	for _, b := range p.Balances {
+		balances = append(balances, &svc.Balance{
+			Denom:            b.Denom,
+			PriceUsd:         b.PriceUSD,
+			TotalBalance:     b.TotalBalance.String(),
+			AvailableBalance: b.AvailableBalance.String(),
+			UnrealizedPnl:    b.UnrealizedPNL.String(),
+			MarginHold:       b.MarginHold.String(),
+		})
+	}
+	return &svc.SingleAccountPortfolio{
+		InjectiveAddress: p.InjectiveAddress.String(),
+		Balances:         balances,
+		UpdatedAt:        p.UpdatedAt.UnixMilli(),
+	}
+}
+
 func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAccountPortfoliosPayload) (res *svc.GetAccountPortfoliosResult, err error) {
 	doneFn := metrics.ReportFuncTiming(s.svcTags)
 	defer doneFn()
@@ -815,6 +939,7 @@ func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAcco
 
 	address, err := cosmtypes.AccAddressFromBech32(payload.InjectiveAddress)
 	if err != nil {
+		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Error("parse acc address error")
 		return nil, svc.MakeInvalidArg(err)
 	}
