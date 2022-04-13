@@ -92,8 +92,9 @@ type AccountPortfolio struct {
 }
 
 type GuildPortfolio struct {
-	GuildID  primitive.ObjectID `bson:"guild_id" json:"guild_id"`
-	Balances []*Balance         `bson:"balances" json:"balances"`
+	GuildID     primitive.ObjectID `bson:"guild_id" json:"guild_id"`
+	MemberCount int                `bson:"member_count" json:"member_count"`
+	Balances    []*Balance         `bson:"balances" json:"balances"`
 	// Store account's inj amount atm
 	BankBalances []*BankBalance `bson:"bank_balances" json:"bank_balances"`
 	// timestamp when this gets update
