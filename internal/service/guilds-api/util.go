@@ -22,6 +22,29 @@ type Period struct {
 	EndTime   time.Time
 }
 
+func modelPortfolioToHTTP(p *model.AccountPortfolio) *svc.SingleAccountPortfolio {
+	if len(p.BankBalances) > 0 && p.BankBalances[0].Denom == config.DEMOM_INJ {
+		p.Balances = addInjBankToBalance(p.Balances, p.BankBalances[0])
+	}
+
+	var balances []*svc.Balance
+	for _, b := range p.Balances {
+		balances = append(balances, &svc.Balance{
+			Denom:            b.Denom,
+			PriceUsd:         b.PriceUSD,
+			TotalBalance:     b.TotalBalance.String(),
+			AvailableBalance: b.AvailableBalance.String(),
+			UnrealizedPnl:    b.UnrealizedPNL.String(),
+			MarginHold:       b.MarginHold.String(),
+		})
+	}
+	return &svc.SingleAccountPortfolio{
+		InjectiveAddress: p.InjectiveAddress.String(),
+		Balances:         balances,
+		UpdatedAt:        p.UpdatedAt.UnixMilli(),
+	}
+}
+
 // list timestamp [startTime, ceilToMonth(endTime))
 func monthlyTimes(startTime, endTime time.Time) (result []*Period) {
 	current := startTime
