@@ -9,6 +9,7 @@ import (
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db"
 	"github.com/InjectiveLabs/injective-guilds-service/internal/db/model"
 	"github.com/InjectiveLabs/metrics"
+	"github.com/shopspring/decimal"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -429,7 +430,12 @@ func (s *MongoImpl) adjustMemberCount(
 	return s.guildCollection.UpdateOne(ctx, filter, upd)
 }
 
-func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model.Address, isDefaultMember bool) error {
+func (s *MongoImpl) AddMember(
+	ctx context.Context,
+	guildID string,
+	address model.Address,
+	initialPortfolio *model.AccountPortfolio, isDefaultMember bool,
+) error {
 	doneFn := metrics.ReportFuncTiming(s.svcTags)
 	defer doneFn()
 	metrics.ReportFuncCall(s.svcTags)
@@ -465,6 +471,36 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 			return nil, db.ErrAlreadyMember
 		}
 
+		limit := int64(1)
+		latestGuildPortfolios, err := s.ListGuildPortfolios(sessCtx, model.GuildPortfoliosFilter{
+			GuildID: guildID,
+			Limit:   &limit,
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		if len(latestGuildPortfolios) > 0 {
+			err = s.updateGuildPortfolio(sessCtx, latestGuildPortfolios[0], initialPortfolio, true)
+		} else {
+			guildPortfolio := &model.GuildPortfolio{
+				GuildID:      guildObjectID,
+				Balances:     initialPortfolio.Balances,
+				BankBalances: initialPortfolio.BankBalances,
+				UpdatedAt:    initialPortfolio.UpdatedAt,
+			}
+			err = s.AddGuildPortfolios(ctx, []*model.GuildPortfolio{guildPortfolio})
+		}
+		if err != nil {
+			return nil, err
+		}
+
+		initialPortfolio.GuildID = guildObjectID
+		err = s.AddAccountPortfolios(ctx, []*model.AccountPortfolio{initialPortfolio})
+		if err != nil {
+			return nil, err
+		}
+
 		return nil, nil
 	})
 
@@ -476,7 +512,57 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 	return nil
 }
 
-func (s *MongoImpl) updateGuildPortfolio(guildPorfolio *model.GuildPortfolio, accountPorfolio *model.AccountPortfolio, isAddition bool) error {
+func sumMul(a, b primitive.Decimal128, coef decimal.Decimal) primitive.Decimal128 {
+	dA, _ := decimal.NewFromString(a.String())
+	dB, _ := decimal.NewFromString(b.String())
+	result, _ := primitive.ParseDecimal128(dA.Add(dB.Mul(coef)).String())
+	return result
+}
+
+func (s *MongoImpl) updateGuildPortfolio(
+	ctx context.Context,
+	guildPorfolio *model.GuildPortfolio,
+	accountPorfolio *model.AccountPortfolio, isAddition bool,
+) error {
+	coef := decimal.NewFromInt(1)
+	if !isAddition {
+		coef = decimal.NewFromInt(-1)
+	}
+
+	// at most 6 denoms -> 36 loop times
+	for _, guildBalance := range guildPorfolio.Balances {
+		for _, accBalance := range accountPorfolio.Balances {
+			if guildBalance.Denom == accBalance.Denom {
+				guildBalance.AvailableBalance = sumMul(guildBalance.AvailableBalance, accBalance.AvailableBalance, coef)
+				guildBalance.TotalBalance = sumMul(guildBalance.TotalBalance, accBalance.TotalBalance, coef)
+				guildBalance.MarginHold = sumMul(guildBalance.MarginHold, accBalance.MarginHold, coef)
+				guildBalance.UnrealizedPNL = sumMul(guildBalance.UnrealizedPNL, accBalance.UnrealizedPNL, coef)
+			}
+		}
+	}
+
+	for _, guildBalance := range guildPorfolio.BankBalances {
+		for _, accBalance := range accountPorfolio.BankBalances {
+			if guildBalance.Denom == accBalance.Denom {
+				guildBalance.Balance = sumMul(guildBalance.Balance, accBalance.Balance, coef)
+			}
+		}
+	}
+
+	filter := bson.M{
+		"updated_at": guildPorfolio.UpdatedAt,
+	}
+
+	upd := bson.M{
+		"$set": guildPorfolio,
+	}
+
+	_, err := s.guildPortfolioCollection.UpdateOne(ctx, filter, upd)
+	if err != nil {
+		return err
+	}
+	// don't handle case number of document updated since there might be update with +0 for all balances
+
 	return nil
 }
 
@@ -492,7 +578,7 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 	}
 
 	_, err = s.session.WithTransaction(ctx, func(sessCtx mongo.SessionContext) (interface{}, error) {
-		deleteRes, err := s.deleteMember(ctx, guildObjectID, address)
+		deleteRes, err := s.deleteMember(sessCtx, guildObjectID, address)
 		if err != nil {
 			return nil, err
 		}
@@ -508,7 +594,7 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 		}
 
 		limit := int64(1)
-		latestAccountPortfolios, err := s.ListAccountPortfolios(ctx, model.AccountPortfoliosFilter{
+		latestAccountPortfolios, err := s.ListAccountPortfolios(sessCtx, model.AccountPortfoliosFilter{
 			InjectiveAddress: address,
 			Limit:            &limit,
 		})
@@ -517,7 +603,7 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 		}
 
 		if len(latestAccountPortfolios) > 0 {
-			latestGuildPortfolios, err := s.ListGuildPortfolios(ctx, model.GuildPortfoliosFilter{
+			latestGuildPortfolios, err := s.ListGuildPortfolios(sessCtx, model.GuildPortfoliosFilter{
 				GuildID: guildID,
 				Limit:   &limit,
 			})
@@ -526,14 +612,14 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 			}
 
 			if len(latestGuildPortfolios) > 0 && latestGuildPortfolios[0].UpdatedAt == latestAccountPortfolios[0].UpdatedAt {
-				err = s.updateGuildPortfolio(latestGuildPortfolios[0], latestAccountPortfolios[0], false)
+				err = s.updateGuildPortfolio(sessCtx, latestGuildPortfolios[0], latestAccountPortfolios[0], false)
 				if err != nil {
 					return nil, err
 				}
 			}
 		}
 
-		_, err = s.deletePortfolios(ctx, guildObjectID, address)
+		_, err = s.deletePortfolios(sessCtx, guildObjectID, address)
 		if err != nil {
 			return nil, err
 		}

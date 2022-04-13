@@ -563,18 +563,11 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	}
 
 	// add to database
-	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress}, false)
+	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress}, portfolio, false)
 	if err != nil {
 		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Errorln("cannot add member")
 		return nil, svc.MakeInternal(err)
-	}
-
-	// TODO: transaction
-	err = s.dbSvc.AddAccountPortfolios(ctx, []*model.AccountPortfolio{portfolio})
-	if err != nil {
-		// This account now joined guild, this error is not fatal, portfolio can be captured later
-		s.logger.WithError(err).Warningln("cannot write account portfolio to db")
 	}
 
 	joinStatus := "success"
