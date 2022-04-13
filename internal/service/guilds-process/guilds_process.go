@@ -227,8 +227,9 @@ func (p *GuildsProcess) captureMemberPortfolios(ctx context.Context) error {
 		if len(portfolios) == len(members) {
 			// update guild
 			guildPortfolio := &model.GuildPortfolio{
-				GuildID:   guild.ID,
-				UpdatedAt: now,
+				GuildID:     guild.ID,
+				UpdatedAt:   now,
+				MemberCount: len(members),
 				BankBalances: []*model.BankBalance{
 					{
 						Denom:    config.DEMOM_INJ,
