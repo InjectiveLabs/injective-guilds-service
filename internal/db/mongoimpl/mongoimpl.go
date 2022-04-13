@@ -476,6 +476,10 @@ func (s *MongoImpl) AddMember(ctx context.Context, guildID string, address model
 	return nil
 }
 
+func (s *MongoImpl) updateGuildPortfolio(guildPorfolio *model.GuildPortfolio, accountPorfolio *model.AccountPortfolio, isAddition bool) error {
+	return nil
+}
+
 func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address model.Address) error {
 	doneFn := metrics.ReportFuncTiming(s.svcTags)
 	defer doneFn()
@@ -501,6 +505,32 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 		_, err = s.adjustMemberCount(sessCtx, guildObjectID, -1)
 		if err != nil {
 			return nil, err
+		}
+
+		limit := int64(1)
+		latestAccountPortfolios, err := s.ListAccountPortfolios(ctx, model.AccountPortfoliosFilter{
+			InjectiveAddress: address,
+			Limit:            &limit,
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		if len(latestAccountPortfolios) > 0 {
+			latestGuildPortfolios, err := s.ListGuildPortfolios(ctx, model.GuildPortfoliosFilter{
+				GuildID: guildID,
+				Limit:   &limit,
+			})
+			if err != nil {
+				return nil, err
+			}
+
+			if len(latestGuildPortfolios) > 0 && latestGuildPortfolios[0].UpdatedAt == latestAccountPortfolios[0].UpdatedAt {
+				err = s.updateGuildPortfolio(latestGuildPortfolios[0], latestAccountPortfolios[0], false)
+				if err != nil {
+					return nil, err
+				}
+			}
 		}
 
 		_, err = s.deletePortfolios(ctx, guildObjectID, address)
@@ -575,6 +605,9 @@ func (s *MongoImpl) ListAccountPortfolios(
 
 	opts := &options.FindOptions{}
 	opts.SetSort(bson.M{"updated_at": -1})
+	if filter.Limit != nil {
+		opts.SetLimit(*filter.Limit)
+	}
 
 	cur, err := s.accountPortfolioCollection.Find(ctx, portfolioFilter, opts)
 	if err != nil {
