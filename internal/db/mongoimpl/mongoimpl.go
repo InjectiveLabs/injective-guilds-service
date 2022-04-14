@@ -612,7 +612,8 @@ func (s *MongoImpl) RemoveMember(ctx context.Context, guildID string, address mo
 				return nil, err
 			}
 
-			if len(latestGuildPortfolios) > 0 && latestGuildPortfolios[0].UpdatedAt == latestAccountPortfolios[0].UpdatedAt {
+			// TODO: Update snapshot timestamp upon join guild
+			if len(latestGuildPortfolios) > 0 {
 				err = s.updateGuildPortfolio(sessCtx, latestGuildPortfolios[0], latestAccountPortfolios[0], false)
 				if err != nil {
 					return nil, err
