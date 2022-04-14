@@ -92,7 +92,6 @@ type AccountPortfolio struct {
 }
 
 type GuildPortfolio struct {
-	ObjectID    primitive.ObjectID `bson:"_id,omitempty"`
 	GuildID     primitive.ObjectID `bson:"guild_id" json:"guild_id"`
 	MemberCount int                `bson:"member_count" json:"member_count"`
 	Balances    []*Balance         `bson:"balances" json:"balances"`
