@@ -298,7 +298,7 @@ func addGuildAction() {
 	}
 
 	log.Info("adding default member")
-	err = dbSvc.AddMember(ctx, id.Hex(), model.Address{AccAddress: defaultMember}, true)
+	err = dbSvc.AddMember(ctx, id.Hex(), model.Address{AccAddress: defaultMember}, portfolio, true)
 	if err != nil {
 		// TODO: Use transaction
 		log.Error(fmt.Sprintf("adding default member failed: %s. Going to revert ...", err.Error()))
@@ -307,10 +307,6 @@ func addGuildAction() {
 
 		log.Fatal("revert done. no guild added")
 	}
-
-	log.Info("add default member portfolio snapshot into db")
-	err = dbSvc.AddAccountPortfolios(ctx, []*model.AccountPortfolio{portfolio})
-	panicIf(err)
 
 	log.Info("update guild portfolio snapshot into db")
 	// guild portfolio balance now is first member's balance

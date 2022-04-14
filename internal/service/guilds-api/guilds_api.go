@@ -563,19 +563,13 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	}
 
 	// add to database
-	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress}, false)
+	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress}, portfolio, false)
 	if err != nil {
 		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Errorln("cannot add member")
 		return nil, svc.MakeInternal(err)
 	}
-
-	// TODO: transaction
-	err = s.dbSvc.AddAccountPortfolios(ctx, []*model.AccountPortfolio{portfolio})
-	if err != nil {
-		// This account now joined guild, this error is not fatal, portfolio can be captured later
-		s.logger.WithError(err).Warningln("cannot write account portfolio to db")
-	}
+	s.logger.WithField("injective_address", payload.InjectiveAddress).Info("new member joined guild")
 
 	joinStatus := "success"
 	return &svc.EnterGuildResult{
@@ -622,6 +616,11 @@ func (s *service) LeaveGuild(ctx context.Context, payload *svc.LeaveGuildPayload
 		s.logger.WithError(err).Error("cannot remove member on leave guild")
 		return nil, svc.MakeInternal(err)
 	}
+
+	s.logger.WithFields(log.Fields{
+		"injective_address": payload.InjectiveAddress,
+		"guild_id":          payload.GuildID,
+	}).Info("member left guild")
 
 	leaveStatus := "success"
 	return &svc.LeaveGuildResult{
@@ -871,7 +870,7 @@ func (s *service) GetAccountMonthlyPortfolios(
 	startTime = portfolios[len(portfolios)-1].UpdatedAt.Add(-time.Second)
 
 	i := len(portfolios) - 1
-	for _, period := range monthlyTimes(startTime, endTime) {
+	for _, period := range monthlyCheckpoints(startTime, endTime) {
 		var startPortfolio, endPortfolio *model.AccountPortfolio
 		for ; i >= 0; i-- {
 			if portfolios[i].UpdatedAt.After(period.StartTime) {
@@ -907,29 +906,6 @@ func (s *service) GetAccountMonthlyPortfolios(
 	return &svc.GetAccountMonthlyPortfoliosResult{
 		Portfolios: result,
 	}, nil
-}
-
-func modelPortfolioToHTTP(p *model.AccountPortfolio) *svc.SingleAccountPortfolio {
-	if len(p.BankBalances) > 0 && p.BankBalances[0].Denom == config.DEMOM_INJ {
-		p.Balances = addInjBankToBalance(p.Balances, p.BankBalances[0])
-	}
-
-	var balances []*svc.Balance
-	for _, b := range p.Balances {
-		balances = append(balances, &svc.Balance{
-			Denom:            b.Denom,
-			PriceUsd:         b.PriceUSD,
-			TotalBalance:     b.TotalBalance.String(),
-			AvailableBalance: b.AvailableBalance.String(),
-			UnrealizedPnl:    b.UnrealizedPNL.String(),
-			MarginHold:       b.MarginHold.String(),
-		})
-	}
-	return &svc.SingleAccountPortfolio{
-		InjectiveAddress: p.InjectiveAddress.String(),
-		Balances:         balances,
-		UpdatedAt:        p.UpdatedAt.UnixMilli(),
-	}
 }
 
 func (s *service) GetAccountPortfolios(ctx context.Context, payload *svc.GetAccountPortfoliosPayload) (res *svc.GetAccountPortfoliosResult, err error) {

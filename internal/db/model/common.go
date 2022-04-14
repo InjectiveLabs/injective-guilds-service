@@ -141,6 +141,7 @@ type AccountPortfoliosFilter struct {
 	InjectiveAddress Address
 	StartTime        *time.Time
 	EndTime          *time.Time
+	Limit            *int64
 }
 
 type GuildPortfoliosFilter struct {
