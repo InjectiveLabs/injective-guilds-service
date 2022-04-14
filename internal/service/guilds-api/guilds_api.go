@@ -870,7 +870,7 @@ func (s *service) GetAccountMonthlyPortfolios(
 	startTime = portfolios[len(portfolios)-1].UpdatedAt.Add(-time.Second)
 
 	i := len(portfolios) - 1
-	for _, period := range monthlyTimes(startTime, endTime) {
+	for _, period := range monthlyCheckpoints(startTime, endTime) {
 		var startPortfolio, endPortfolio *model.AccountPortfolio
 		for ; i >= 0; i-- {
 			if portfolios[i].UpdatedAt.After(period.StartTime) {

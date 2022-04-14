@@ -206,7 +206,7 @@ func (s *MongoImpl) DeleteGuild(ctx context.Context, guildID string) error {
 		filter := bson.M{
 			"_id": guildObjectID,
 		}
-		_, err := s.guildCollection.DeleteOne(ctx, filter)
+		_, err := s.guildCollection.DeleteOne(sessCtx, filter)
 		if err != nil {
 			return nil, err
 		}
@@ -215,17 +215,17 @@ func (s *MongoImpl) DeleteGuild(ctx context.Context, guildID string) error {
 			"guild_id": guildObjectID,
 		}
 
-		_, err = s.memberCollection.DeleteMany(ctx, filter)
+		_, err = s.memberCollection.DeleteMany(sessCtx, filter)
 		if err != nil {
 			return nil, err
 		}
 
-		_, err = s.accountPortfolioCollection.DeleteMany(ctx, filter)
+		_, err = s.accountPortfolioCollection.DeleteMany(sessCtx, filter)
 		if err != nil {
 			return nil, err
 		}
 
-		_, err = s.guildPortfolioCollection.DeleteMany(ctx, filter)
+		_, err = s.guildPortfolioCollection.DeleteMany(sessCtx, filter)
 		if err != nil {
 			return nil, err
 		}
@@ -489,14 +489,14 @@ func (s *MongoImpl) AddMember(
 				BankBalances: initialPortfolio.BankBalances,
 				UpdatedAt:    initialPortfolio.UpdatedAt,
 			}
-			err = s.AddGuildPortfolios(ctx, []*model.GuildPortfolio{guildPortfolio})
+			err = s.AddGuildPortfolios(sessCtx, []*model.GuildPortfolio{guildPortfolio})
 		}
 		if err != nil {
 			return nil, err
 		}
 
 		initialPortfolio.GuildID = guildObjectID
-		err = s.AddAccountPortfolios(ctx, []*model.AccountPortfolio{initialPortfolio})
+		err = s.AddAccountPortfolios(sessCtx, []*model.AccountPortfolio{initialPortfolio})
 		if err != nil {
 			return nil, err
 		}
@@ -512,6 +512,7 @@ func (s *MongoImpl) AddMember(
 	return nil
 }
 
+// return a + coef * b
 func sumMul(a, b primitive.Decimal128, coef decimal.Decimal) primitive.Decimal128 {
 	dA, _ := decimal.NewFromString(a.String())
 	dB, _ := decimal.NewFromString(b.String())
@@ -561,7 +562,7 @@ func (s *MongoImpl) updateGuildPortfolio(
 	if err != nil {
 		return err
 	}
-	// don't handle case number of document updated since there might be update with +0 for all balances
+	// don't handle case number of updated document == 0 since there might be update with +0 for all balances
 
 	return nil
 }

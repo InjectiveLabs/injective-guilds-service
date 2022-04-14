@@ -46,7 +46,7 @@ func modelPortfolioToHTTP(p *model.AccountPortfolio) *svc.SingleAccountPortfolio
 }
 
 // list timestamp [startTime, ceilToMonth(endTime))
-func monthlyTimes(startTime, endTime time.Time) (result []*Period) {
+func monthlyCheckpoints(startTime, endTime time.Time) (result []*Period) {
 	current := startTime
 	endTime = endTime.AddDate(0, 1, 0)
 
