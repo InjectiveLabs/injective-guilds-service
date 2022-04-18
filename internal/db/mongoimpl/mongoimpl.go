@@ -300,6 +300,38 @@ func (s *MongoImpl) GetSingleGuild(ctx context.Context, guildID string) (*model.
 	return &guild, nil
 }
 
+func (s *MongoImpl) SetGuildCap(ctx context.Context, guildID string, cap int) error {
+	doneFn := metrics.ReportFuncTiming(s.svcTags)
+	defer doneFn()
+	metrics.ReportFuncCall(s.svcTags)
+
+	guildObjectID, err := primitive.ObjectIDFromHex(guildID)
+	if err != nil {
+		return fmt.Errorf("cannot parse guildID: %w", err)
+	}
+
+	filter := bson.M{
+		"_id": guildObjectID,
+	}
+
+	upd := bson.M{
+		"$set": bson.M{
+			"capacity": cap,
+		},
+	}
+
+	updateRes, err := s.guildCollection.UpdateOne(ctx, filter, upd)
+	if err != nil {
+		return err
+	}
+
+	if updateRes.ModifiedCount == 0 {
+		return fmt.Errorf("not found guild to set cap")
+	}
+
+	return nil
+}
+
 func (s *MongoImpl) AddGuildPortfolios(ctx context.Context, portfolios []*model.GuildPortfolio) error {
 	doneFn := metrics.ReportFuncTiming(s.svcTags)
 	defer doneFn()
