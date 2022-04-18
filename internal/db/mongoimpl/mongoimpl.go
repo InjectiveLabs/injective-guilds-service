@@ -100,8 +100,8 @@ func (s *MongoImpl) EnsureIndex(ctx context.Context) error {
 	}
 
 	_, err = s.accountPortfolioCollection.Indexes().CreateMany(ctx, []mongo.IndexModel{
-		makeIndex(false, bson.D{{Key: "injective_address", Value: 1}}),
-		makeIndex(false, bson.D{{Key: "guild_id", Value: 1}}),
+		makeIndex(false, bson.D{{Key: "injective_address", Value: 1}, {Key: "updated_at", Value: -1}}),
+		makeIndex(false, bson.D{{Key: "guild_id", Value: 1}, {Key: "updated_at", Value: -1}}),
 		makeIndex(false, bson.D{{Key: "updated_at", Value: -1}}),
 	})
 	if err != nil {
@@ -109,7 +109,7 @@ func (s *MongoImpl) EnsureIndex(ctx context.Context) error {
 	}
 
 	_, err = s.guildPortfolioCollection.Indexes().CreateMany(ctx, []mongo.IndexModel{
-		makeIndex(false, bson.D{{Key: "guild_id", Value: 1}}),
+		makeIndex(false, bson.D{{Key: "guild_id", Value: 1}, {Key: "updated_at", Value: -1}}),
 		makeIndex(false, bson.D{{Key: "updated_at", Value: -1}}),
 	})
 	if err != nil {
