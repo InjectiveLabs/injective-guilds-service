@@ -20,6 +20,7 @@ type DBService interface {
 	ListGuildPortfolios(ctx context.Context, filter model.GuildPortfoliosFilter) ([]*model.GuildPortfolio, error)
 	// TODO: *primitive.ObjectID -> string
 	AddGuild(ctx context.Context, guild *model.Guild) (*primitive.ObjectID, error)
+	SetGuildCap(ctx context.Context, guildID string, cap int) error
 	AddGuildPortfolios(ctx context.Context, portfolios []*model.GuildPortfolio) error
 	DeleteGuild(ctx context.Context, guildID string) error
 
