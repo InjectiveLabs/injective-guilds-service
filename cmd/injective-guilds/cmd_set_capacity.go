@@ -29,7 +29,7 @@ func parseSetCapacityArg(c *cli.Cmd) {
 	})
 }
 
-func action() {
+func setCapacityAction() {
 	log.Info("connecting database")
 	ctx := context.Background()
 	dbSvc, err := mongoimpl.NewService(ctx, *dbURL, "guilds")
@@ -43,8 +43,7 @@ func action() {
 		panic(err)
 	}
 
-	id := guild.ID.Hex()
-	err = dbSvc.SetGuildCap(ctx, id, *capacity)
+	err = dbSvc.SetGuildCap(ctx, guild.ID.Hex(), *capacity)
 	panicIf(err)
 
 	log.Infof("🍺 updated guild %s (%s) member capacity to %d", guild.Name, guild.ID, *capacity)
@@ -55,6 +54,6 @@ func cmdSetCapacity(c *cli.Cmd) {
 	// guild id: --guild-id
 	// db url: --db-url
 	// capacity: --capacity
-	parseDeleteGuildArgs(c)
-	c.Action = deleteGuildAction
+	parseSetCapacityArg(c)
+	c.Action = setCapacityAction
 }

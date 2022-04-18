@@ -39,6 +39,7 @@ func main() {
 	app.Command("process", "start Guilds process, which takes portfolios snapshots and handle disqualification", cmdProcess)
 	app.Command("add-guild", "add a guild", cmdAddGuild)
 	app.Command("delete-guild", "delete a guild", cmdDeleteGuild)
+	app.Command("set-capacity", "set member capacity of a guild", cmdSetCapacity)
 
 	_ = app.Run(os.Args)
 }
