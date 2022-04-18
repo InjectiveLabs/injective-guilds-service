@@ -53,6 +53,8 @@ func action() {
 func cmdSetCapacity(c *cli.Cmd) {
 	// inputs:
 	// guild id: --guild-id
+	// db url: --db-url
+	// capacity: --capacity
 	parseDeleteGuildArgs(c)
 	c.Action = deleteGuildAction
 }
