@@ -887,7 +887,7 @@ func (s *service) GetAccountMonthlyPortfolios(
 		}
 
 		// handle case when a month didn't contain any snapshots
-		if endPortfolio == nil {
+		if startPortfolio == nil || endPortfolio == nil {
 			continue
 		}
 
