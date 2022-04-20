@@ -126,3 +126,34 @@ func GetGuildDenoms(guild *Guild) []string {
 	}
 	return denoms
 }
+
+func (a *AccountPortfolio) Copy() *AccountPortfolio {
+	newPortfolio := &AccountPortfolio{
+		GuildID:          a.GuildID,
+		InjectiveAddress: a.InjectiveAddress,
+		UpdatedAt:        a.UpdatedAt,
+		Balances:         make([]*Balance, len(a.Balances)),
+		BankBalances:     make([]*BankBalance, len(a.BankBalances)),
+	}
+
+	for i, b := range a.Balances {
+		newPortfolio.Balances[i] = &Balance{
+			Denom:    b.Denom,
+			PriceUSD: b.PriceUSD,
+
+			TotalBalance:     b.TotalBalance,
+			AvailableBalance: b.AvailableBalance,
+			UnrealizedPNL:    b.UnrealizedPNL,
+			MarginHold:       b.MarginHold,
+		}
+	}
+
+	for i, b := range a.BankBalances {
+		newPortfolio.BankBalances[i] = &BankBalance{
+			Denom:    b.Denom,
+			PriceUSD: b.PriceUSD,
+			Balance:  b.Balance,
+		}
+	}
+	return newPortfolio
+}

@@ -23,12 +23,14 @@ type Period struct {
 }
 
 func modelPortfolioToHTTP(p *model.AccountPortfolio) *svc.SingleAccountPortfolio {
-	if len(p.BankBalances) > 0 && p.BankBalances[0].Denom == config.DEMOM_INJ {
-		p.Balances = addInjBankToBalance(p.Balances, p.BankBalances[0])
+	portfolio := p.Copy()
+
+	if len(portfolio.BankBalances) > 0 && p.BankBalances[0].Denom == config.DEMOM_INJ {
+		portfolio.Balances = addInjBankToBalance(p.Balances, p.BankBalances[0])
 	}
 
 	var balances []*svc.Balance
-	for _, b := range p.Balances {
+	for _, b := range portfolio.Balances {
 		balances = append(balances, &svc.Balance{
 			Denom:            b.Denom,
 			PriceUsd:         b.PriceUSD,
