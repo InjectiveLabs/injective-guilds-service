@@ -324,11 +324,12 @@ func (p *exchangeProvider) GetGrants(ctx context.Context, granter, grantee strin
 		p.lcdAddr, granter, grantee,
 	)
 	resp, err := p.httpClient.Get(url)
-
 	if err != nil {
 		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: %w", err)
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode != http.StatusOK {
 		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("response bad status: %d", resp.StatusCode)
@@ -361,11 +362,12 @@ func (p *exchangeProvider) GetPriceUSD(ctx context.Context, coinIDs []string) ([
 		p.assetPriceAddr, coinList,
 	)
 	resp, err := p.httpClient.Get(url)
-
 	if err != nil {
 		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: %w", err)
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode != http.StatusOK {
 		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: bad status: %d", resp.StatusCode)
@@ -395,11 +397,12 @@ func (p *exchangeProvider) GetBankBalance(ctx context.Context, address string) (
 		p.lcdAddr, address,
 	)
 	resp, err := p.httpClient.Get(url)
-
 	if err != nil {
 		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: %w", err)
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode != http.StatusOK {
 		metrics.ReportFuncError(p.svcTags)
 		return nil, fmt.Errorf("request err: bad status: %d", resp.StatusCode)
