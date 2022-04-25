@@ -5,9 +5,11 @@ replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alp
 go 1.17
 
 require (
+	github.com/InjectiveLabs/metrics v0.0.1
 	github.com/InjectiveLabs/sdk-go v1.31.0
 	github.com/cosmos/cosmos-sdk v0.45.1
 	github.com/ethereum/go-ethereum v1.10.16
+	github.com/golang/mock v1.6.0
 	github.com/jawher/mow.cli v1.2.0
 	github.com/joho/godotenv v1.4.0
 	github.com/pkg/errors v0.9.1
@@ -25,7 +27,6 @@ require (
 require (
 	github.com/DataDog/datadog-go/v5 v5.1.0 // indirect
 	github.com/DataDog/zstd v1.4.5 // indirect
-	github.com/InjectiveLabs/metrics v0.0.1 // indirect
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/alexcesaro/statsd v2.0.0+incompatible // indirect
 	github.com/armon/go-metrics v0.3.9 // indirect
@@ -52,7 +53,6 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gofrs/uuid v4.2.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.3 // indirect
-	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/btree v1.0.0 // indirect
