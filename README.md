@@ -11,8 +11,11 @@ make install
 Run this once to update denom in newly created db
 
 ```
-make dev # this will start mongo + init replset
-injective-guilds update-denom 
+# this will start mongo + init replset
+make dev
+
+# copy .env.example to .env and fill values
+cp .env.example .env
 ```
 
 To manually create a guild:
