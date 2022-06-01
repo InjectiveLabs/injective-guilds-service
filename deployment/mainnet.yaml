@@ -18,7 +18,7 @@ services:
       # config main-net
       - GUILDS_DB_CONNECTION_URL=mongodb://mongo:27017
       - GUILDS_DB_NAME=guilds
-      - GUILDS_EXCHANGE_GRPC_URL=injective-exchange-api:9910
+      - GUILDS_EXCHANGE_GRPC_URL=k8s.mainnet.exchange.grpc.injective.network:443
       - GUILDS_LCD_URL=https://k8s.mainnet.lcd.injective.network
       - GUILDS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
       # stat
