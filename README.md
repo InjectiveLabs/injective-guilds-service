@@ -2,13 +2,13 @@
 
 An off-chain service for guilds-related queries
 
-To debug locally, first can install if we haven't get injective-guilds binary
+Install the injective-guilds binary
 
 ```
 make install
 ```
 
-Run this once to update denom in newly created db
+Run this once to update the denom in the newly created db
 
 ```
 # this will start mongo + init replset
@@ -18,15 +18,14 @@ make dev
 cp .env.example .env
 ```
 
-To manually create a guild:
-
-(There are too many params for now)
+To create a guild
 
 ```
 injective-guilds add-guild \
---derivative-id=0x8158e603fb80c4e417696b0e98765b4ca89dcf886d3b9b2b90dc15bfb1aebd51 --derivative-require=20 \ --derivative-id=0x1c79dac019f73e4060494ab1b4fcba734350656d6fc4d474f6a238c13c6f9ced --derivative-require=10 \
---name=Akukx --description "Akukx Thomas Guild" --master=inj1wng2ucn0ak3aw5gq9j7m2z88m5aznwntqnekuv \
---default-member=inj1kgpvzl2sjd527a7u5jj99j9pdple5050yavsd4 --exchange-url=sentry2.injective.network:9910 --db-url=mongodb://mongo:27017 --lcd-url=https://lcd.injective.network
+--derivative-id=0x54d4505adef6a5cef26bc403a33d595620ded4e15b9e2bc3dd489b714813366a --derivative-require=1000 \
+--capacity=150 --name "Hades Raiders" --description "Hades Raiders Guild" --master=inj14m8wrpeerjfjmutl7lzyvf48myx4lcrc75rtnl \
+--default-member=inj14rhj922slkuczyzu7ah45pm84904ujdnjlnjcc --exchange-url=k8s.mainnet.exchange.grpc.injective.network:443 \
+--db-url=mongodb://mongo:27017 --lcd-url=https://k8s.mainnet.lcd.injective.network
 ```
 
 To delete a guild
@@ -35,13 +34,13 @@ To delete a guild
 injective-guilds delete-guild --guild-id=<HEX_STRING>
 ```
 
-To start api/process:
+Start the api
 
 ```
 injective-guilds api
 ```
 
-On another terminal 
+Start the process (on another terminal)
 
 ```
 injective-guilds process
@@ -49,7 +48,7 @@ injective-guilds process
 
 ## Deploy service on a cloud instance:
 
-Step to bring the services up:
+Initialize the services:
 ```
 mkdir -p ~/injective
 cd injective && git clone https://github.com/InjectiveLabs/injective-guilds-service.git
@@ -64,16 +63,13 @@ APP_ENV=test docker-compose -f deployment/devnet.yaml up -d mongo
 APP_ENV=test docker-compose -f deployment/devnet.yaml up -d mongo-setup && sleep 10
 # up guilds apps
 APP_ENV=test docker-compose -f deployment/devnet.yaml up -d injective-guilds-api injective-guilds-process
-
-# Then create guilds
 ```
 
 Use these instructions (use injective devnet, we can replace with mainnet endpoints)
 
 ```
 1. docker exec -it injective-guilds-api
-2.
-To create a guild:
+2. To create a guild:
 example 1:
 
 injective-guilds add-guild \
