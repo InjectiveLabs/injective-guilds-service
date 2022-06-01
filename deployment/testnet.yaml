@@ -14,8 +14,8 @@ services:
       - GUILDS_LISTEN_ADDRESS=http://0.0.0.0:9930
       - GUILDS_DB_CONNECTION_URL=mongodb://mongo:27017
       - GUILDS_DB_NAME=guilds
-      - GUILDS_EXCHANGE_GRPC_URL=host.docker.internal:9910
-      - GUILDS_LCD_URL=https://testnet.lcd.injective.dev
+      - GUILDS_EXCHANGE_GRPC_URL=k8s.testnet.exchange.grpc.injective.network:443
+      - GUILDS_LCD_URL=https://k8s.testnet.lcd.injective.network
       - GUILDS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
       # stat
       - GUILDS_STATSD_AGENT=telegraf
@@ -41,8 +41,8 @@ services:
       - GUILDS_PROCESS_LOG_LEVEL=DEBUG
       - GUILDS_PROCESS_DB_CONNECTION_URL=mongodb://mongo:27017
       - GUILDS_PROCESS_DB_NAME=guilds
-      - GUILDS_PROCESS_EXCHANGE_GRPC_URL=host.docker.internal:9910
-      - GUILDS_PROCESS_LCD_URL=https://testnet.lcd.injective.dev
+      - GUILDS_PROCESS_EXCHANGE_GRPC_URL=k8s.testnet.exchange.grpc.injective.network:443
+      - GUILDS_PROCESS_LCD_URL=https://k8s.testnet.lcd.injective.network
       - GUILDS_PROCESS_ASSET_PRICE_URL=https://k8s.mainnet.asset.injective.network
 
       - GUILDS_PROCESS_PORTFOLIO_UPDATE_INTERVAL=1h
