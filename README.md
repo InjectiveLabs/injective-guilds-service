@@ -22,7 +22,7 @@ To create a guild
 
 ```
 injective-guilds add-guild --derivative-id=0x54d4505adef6a5cef26bc403a33d595620ded4e15b9e2bc3dd489b714813366a --derivative-require=1000 --capacity=150 --name "Hades Raiders" --description "Hades Raiders Guild" --master=inj14m8wrpeerjfjmutl7lzyvf48myx4lcrc75rtnl \
---default-member=inj14rhj922slkuczyzu7ah45pm84904ujdnjlnjcc --exchange-url=sentry2.injective.network:9910 --db-url=mongodb://mongo:27017 --lcd-url=https://k8s.mainnet.lcd.injective.network
+--default-member=inj14rhj922slkuczyzu7ah45pm84904ujdnjlnjcc --exchange-url=k8s.mainnet.exchange.grpc.injective.network:443 --db-url=mongodb://mongo:27017 --lcd-url=https://k8s.mainnet.lcd.injective.network
 ```
 
 To delete a guild
