@@ -24,8 +24,8 @@ To create a guild
 injective-guilds add-guild \
 --derivative-id=0x54d4505adef6a5cef26bc403a33d595620ded4e15b9e2bc3dd489b714813366a --derivative-require=1000 \
 --capacity=150 --name "Hades Raiders" --description "Hades Raiders Guild" --master=inj14m8wrpeerjfjmutl7lzyvf48myx4lcrc75rtnl \
---default-member=inj14rhj922slkuczyzu7ah45pm84904ujdnjlnjcc --exchange-url=k8s.mainnet.exchange.grpc.injective.network:443 \
---db-url=mongodb://mongo:27017 --lcd-url=https://k8s.mainnet.lcd.injective.network
+--default-member=inj14rhj922slkuczyzu7ah45pm84904ujdnjlnjcc --exchange-url=sentry0.injective.network:9910 \
+--db-url=mongodb://mongo:27017 --lcd-url=https://lcd.injective.network
 ```
 
 To delete a guild
@@ -80,8 +80,8 @@ docker exec -it injective-guilds-api injective-guilds add-guild \
 --name=Zeus --description "Akukx Guild" \
 --master=inj13q8u96uftm0d7ljcf6hdp0uj5tyqrwftmxllaq \
 --default-member=inj14au322k9munkmx5wrchz9q30juf5wjgz2cfqku \
---exchange-url=k8s.testnet.exchange.grpc.injective.network:443 --db-url=mongodb://mongo:27017 \
---lcd-url=https://k8s.testnet.lcd.injective.network
+--exchange-url=sentry1.injective.dev --db-url=mongodb://mongo:27017 \
+--lcd-url=https://testnet.lcd.injective.network
 
 Example 2
 
@@ -90,7 +90,7 @@ docker exec -it injective-guilds-api injective-guilds add-guild \
 --description "Injective guild" --spot-require=10/20 --master=inj1wng2ucn0ak3aw5gq9j7m2z88m5aznwntqnekuv \
 --default-member=inj1awx03zmnnlsjuvp7x8ac3lphw50p0nea6p2584 \
 --exchange-url=k8s.testnet.exchange.grpc.injective.network:443 --db-url=mongodb://mongo:27017 \
---lcd-url=https://k8s.testnet.lcd.injective.network
+--lcd-url=https://testnet.lcd.injective.network
 
 # delete a guild
 docker exec -it injective-guilds-api injective-guilds delete-guild --guild-id=<guild_id> --db-url=mongodb://mongo:27017
