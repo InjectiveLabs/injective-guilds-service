@@ -8,6 +8,23 @@ Install the injective-guilds binary
 make install
 ```
 
+Authorize the master from the default member through [MsgGrant](https://api.injective.exchange/#authz-msggrant) for the following messages:
+
+"/injective.exchange.v1beta1.MsgCreateSpotLimitOrder",
+"/injective.exchange.v1beta1.MsgCreateSpotMarketOrder",
+"/injective.exchange.v1beta1.MsgCancelSpotOrder",
+"/injective.exchange.v1beta1.MsgBatchUpdateOrders",
+"/injective.exchange.v1beta1.MsgBatchCancelSpotOrders",
+"/injective.exchange.v1beta1.MsgDeposit",
+"/injective.exchange.v1beta1.MsgWithdraw",
+"/injective.exchange.v1beta1.MsgCreateDerivativeLimitOrder",
+"/injective.exchange.v1beta1.MsgCreateDerivativeMarketOrder",
+"/injective.exchange.v1beta1.MsgCancelDerivativeOrder",
+"/injective.exchange.v1beta1.MsgBatchUpdateOrders",
+"/injective.exchange.v1beta1.MsgBatchCancelDerivativeOrders",
+"/injective.exchange.v1beta1.MsgDeposit",
+"/injective.exchange.v1beta1.MsgWithdraw"
+
 Run this once to update the denom in the newly created db
 
 ```
