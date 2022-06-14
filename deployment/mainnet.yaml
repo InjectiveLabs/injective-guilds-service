@@ -1,12 +1,9 @@
 version: "3.9"
-networks:
-  injective:
-    name: injective
 services:
   injective-guilds-api:
     container_name: injective-guilds-api
     image: injective-guilds:${APP_ENV}
-    build:
+    build: 
       context: ../
       dockerfile: Dockerfile
     extra_hosts:
@@ -15,7 +12,6 @@ services:
       - GUILDS_ENV=${APP_ENV}
       - GUILDS_LOG_LEVEL=DEBUG
       - GUILDS_LISTEN_ADDRESS=http://0.0.0.0:9930
-      # config main-net
       - GUILDS_DB_CONNECTION_URL=mongodb://mongo:27017
       - GUILDS_DB_NAME=guilds
       - GUILDS_EXCHANGE_GRPC_URL=k8s.mainnet.exchange.grpc.injective.network:443
@@ -32,8 +28,6 @@ services:
       - "9930:9930"
     command: injective-guilds api
     restart: always
-    networks:
-      - injective
   injective-guilds-process:
     build:
       context: ../
@@ -62,5 +56,20 @@ services:
       - GUILDS_PROCESS_STATSD_DISABLED=false
     command: injective-guilds process
     restart: always
-    networks:
-      - injective
+  # below mongo config is for dev/test env, not for production
+  # we already have a mongo setup on production
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - ./var/mongo/db:/data/db
+    command: mongod --replSet rs0 --port 27017 --bind_ip 0.0.0.0
+    restart: always
+  # # a trick to setup mongo replset
+  mongo-setup:
+    container_name: mongo-setup
+    depends_on:
+      - mongo
+    image: mongo
+    entrypoint: |
+      bash -c "sleep 10 && mongo --host mongo:27017 --eval 'rs.initiate()'"
