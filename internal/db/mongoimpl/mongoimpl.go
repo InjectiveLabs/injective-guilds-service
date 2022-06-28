@@ -467,6 +467,7 @@ func (s *MongoImpl) AddMember(
 	guildID string,
 	address model.Address,
 	initialPortfolio *model.AccountPortfolio, isDefaultMember bool,
+	params string,
 ) error {
 	doneFn := metrics.ReportFuncTiming(s.svcTags)
 	defer doneFn()

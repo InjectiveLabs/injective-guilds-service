@@ -533,6 +533,10 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 		return nil, svc.MakeInternal(fmt.Errorf("guild error: %w", err))
 	}
 
+	params := ""
+	if payload.Params != nil {
+		params = *payload.Params
+	}
 	// get portfolio
 	portfolio, err := s.portfolioHelper.CaptureSingleMemberPortfolio(
 		ctx,
@@ -563,7 +567,7 @@ func (s *service) EnterGuild(ctx context.Context, payload *svc.EnterGuildPayload
 	}
 
 	// add to database
-	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress}, portfolio, false)
+	err = s.dbSvc.AddMember(ctx, payload.GuildID, model.Address{AccAddress: accAddress}, portfolio, false, params)
 	if err != nil {
 		metrics.ReportFuncError(s.svcTags)
 		s.logger.WithError(err).Errorln("cannot add member")
