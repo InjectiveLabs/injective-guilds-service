@@ -17,6 +17,7 @@ var (
 	capacity          *int
 	masterAddr        *string
 	defaultMemberAddr *string
+	memberParams      *string
 
 	spotRequirements       *[]string
 	derivativeRequirements *[]string
