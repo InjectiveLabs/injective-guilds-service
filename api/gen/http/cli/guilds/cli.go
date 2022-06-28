@@ -318,7 +318,7 @@ Get master address of given guild
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-master-address --guild-id "Dolores aut sint voluptates est at."
+    %[1]s guilds-service get-guild-master-address --guild-id "Eum vel quia nemo et placeat."
 `, os.Args[0])
 }
 
@@ -329,7 +329,7 @@ Get default guild member
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-default-member --guild-id "Necessitatibus maxime enim vero."
+    %[1]s guilds-service get-guild-default-member --guild-id "Alias at magnam ut magnam."
 `, os.Args[0])
 }
 
@@ -342,8 +342,9 @@ Enter the guild
 
 Example:
     %[1]s guilds-service enter-guild --body '{
-      "injective_address": "Culpa in quae ut quia."
-   }' --guild-id "Iste eaque nesciunt."
+      "injective_address": "Iste eaque nesciunt.",
+      "params": "Provident odio deserunt."
+   }' --guild-id "Enim ab enim similique ipsa ut voluptatem."
 `, os.Args[0])
 }
 
@@ -355,7 +356,7 @@ Leave the guild, guildID
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service leave-guild --guild-id "Harum illo accusantium nobis quia nihil." --injective-address "Molestias iusto."
+    %[1]s guilds-service leave-guild --guild-id "Et eaque qui." --injective-address "Nulla et ipsum autem inventore sed maxime."
 `, os.Args[0])
 }
 
@@ -366,7 +367,7 @@ Get the guild markets
     -guild-id STRING: 
 
 Example:
-    %[1]s guilds-service get-guild-markets --guild-id "Magnam dolorem nostrum velit non ipsa."
+    %[1]s guilds-service get-guild-markets --guild-id "Aliquam aliquam cum cumque."
 `, os.Args[0])
 }
 
@@ -379,7 +380,7 @@ Get the guild markets
     -end-time INT64: 
 
 Example:
-    %[1]s guilds-service get-guild-portfolios --guild-id "Totam fugit possimus et nostrum voluptatem." --start-time 6149130476220960367 --end-time 8186644215274380022
+    %[1]s guilds-service get-guild-portfolios --guild-id "Rerum inventore ut." --start-time 6431764627704927984 --end-time 2948849279376133018
 `, os.Args[0])
 }
 
@@ -390,7 +391,7 @@ Get current account member status
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-info --injective-address "Inventore ut aut laboriosam occaecati."
+    %[1]s guilds-service get-account-info --injective-address "Accusantium modi."
 `, os.Args[0])
 }
 
@@ -401,7 +402,7 @@ Get current account portfolio snapshot
     -injective-address STRING: 
 
 Example:
-    %[1]s guilds-service get-account-portfolio --injective-address "Accusantium modi."
+    %[1]s guilds-service get-account-portfolio --injective-address "Quia omnis et nobis ab."
 `, os.Args[0])
 }
 
@@ -414,7 +415,7 @@ Get current account portfolios snapshots all the time
     -end-time INT64: 
 
 Example:
-    %[1]s guilds-service get-account-portfolios --injective-address "Odio a at facere." --start-time 2983499149443646458 --end-time 2324260857932492013
+    %[1]s guilds-service get-account-portfolios --injective-address "Corporis omnis vitae maxime aperiam." --start-time 368398946302755242 --end-time 7731842352685932931
 `, os.Args[0])
 }
 
@@ -427,6 +428,6 @@ Get current account portfolios monthly snapshots, including start_time, end_time
     -end-time INT64: 
 
 Example:
-    %[1]s guilds-service get-account-monthly-portfolios --injective-address "Corporis omnis vitae maxime aperiam." --start-time 368398946302755242 --end-time 7731842352685932931
+    %[1]s guilds-service get-account-monthly-portfolios --injective-address "Odio est dolorem sint eos." --start-time 3713714815008291278 --end-time 8233069734045214598
 `, os.Args[0])
 }

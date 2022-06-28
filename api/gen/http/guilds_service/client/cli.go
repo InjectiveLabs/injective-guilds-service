@@ -75,7 +75,7 @@ func BuildEnterGuildPayload(guildsServiceEnterGuildBody string, guildsServiceEnt
 	{
 		err = json.Unmarshal([]byte(guildsServiceEnterGuildBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"injective_address\": \"Culpa in quae ut quia.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"injective_address\": \"Iste eaque nesciunt.\",\n      \"params\": \"Provident odio deserunt.\"\n   }'")
 		}
 	}
 	var guildID string
@@ -84,6 +84,7 @@ func BuildEnterGuildPayload(guildsServiceEnterGuildBody string, guildsServiceEnt
 	}
 	v := &guildsservice.EnterGuildPayload{
 		InjectiveAddress: body.InjectiveAddress,
+		Params:           body.Params,
 	}
 	v.GuildID = guildID
 

@@ -68,6 +68,7 @@ type Balance struct {
 type EnterGuildPayload struct {
 	GuildID          string
 	InjectiveAddress string
+	Params           *string
 }
 
 // EnterGuildResult is the result type of the GuildsService service EnterGuild
@@ -232,6 +233,7 @@ type GuildMember struct {
 	IsDefaultGuildMember bool
 	Since                int64
 	GuildID              *string
+	Params               string
 }
 
 // LeaveGuildPayload is the payload type of the GuildsService service
