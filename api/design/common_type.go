@@ -102,8 +102,10 @@ var GuildMember = Type("GuildMember", func() {
 	Field(2, "is_default_guild_member", Boolean)
 	Field(3, "since", Int64)
 	Field(4, "guild_id", String)
+	Field(5, "params", String)
 
 	Required("injective_address")
 	Required("is_default_guild_member")
 	Required("since")
+	Required("params")
 })

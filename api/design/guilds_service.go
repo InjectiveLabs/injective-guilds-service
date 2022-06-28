@@ -138,6 +138,7 @@ var _ = Service("GuildsService", func() {
 		Payload(func() {
 			Field(0, "guildID", String)
 			Field(1, "injective_address", String)
+			Field(2, "params", String)
 
 			Required("guildID")
 			Required("injective_address")

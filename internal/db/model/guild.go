@@ -105,6 +105,7 @@ type GuildPortfolio struct {
 type GuildMember struct {
 	GuildID primitive.ObjectID `bson:"guild_id" json:"guild_id"`
 
+	Params               string    `bson:"params,omitempty" json:"params"`
 	InjectiveAddress     Address   `bson:"injective_address" json:"injective_address"`
 	IsDefaultGuildMember bool      `bson:"is_default_guild_member" json:"is_default_guild_member"` // json might not need here
 	Since                time.Time `bson:"since" json:"since"`
