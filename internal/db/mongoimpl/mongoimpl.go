@@ -398,6 +398,7 @@ func (s *MongoImpl) upsertMember(
 	guildID primitive.ObjectID,
 	address model.Address,
 	isDefaultMember bool,
+	params string,
 ) (*mongo.UpdateResult, error) {
 	doneFn := metrics.ReportFuncTiming(s.svcTags)
 	defer doneFn()
@@ -411,6 +412,7 @@ func (s *MongoImpl) upsertMember(
 			"guild_id":                guildID,
 			"is_default_guild_member": isDefaultMember,
 			"since":                   time.Now(),
+			"params":                  params,
 		},
 	}
 	updOpt := &options.UpdateOptions{}
@@ -467,6 +469,7 @@ func (s *MongoImpl) AddMember(
 	guildID string,
 	address model.Address,
 	initialPortfolio *model.AccountPortfolio, isDefaultMember bool,
+	params string,
 ) error {
 	doneFn := metrics.ReportFuncTiming(s.svcTags)
 	defer doneFn()
@@ -493,7 +496,7 @@ func (s *MongoImpl) AddMember(
 			return nil, err
 		}
 
-		upsertRes, err := s.upsertMember(sessCtx, guildObjectID, address, isDefaultMember)
+		upsertRes, err := s.upsertMember(sessCtx, guildObjectID, address, isDefaultMember, params)
 		if err != nil {
 			return nil, err
 		}

@@ -15,7 +15,8 @@ import (
 // EnterGuildRequestBody is the type of the "GuildsService" service
 // "EnterGuild" endpoint HTTP request body.
 type EnterGuildRequestBody struct {
-	InjectiveAddress string `form:"injective_address" json:"injective_address" xml:"injective_address"`
+	InjectiveAddress string  `form:"injective_address" json:"injective_address" xml:"injective_address"`
+	Params           *string `form:"params,omitempty" json:"params,omitempty" xml:"params,omitempty"`
 }
 
 // GetAllGuildsResponseBody is the type of the "GuildsService" service
@@ -633,6 +634,7 @@ type GuildMemberResponseBody struct {
 	IsDefaultGuildMember *bool   `form:"is_default_guild_member,omitempty" json:"is_default_guild_member,omitempty" xml:"is_default_guild_member,omitempty"`
 	Since                *int64  `form:"since,omitempty" json:"since,omitempty" xml:"since,omitempty"`
 	GuildID              *string `form:"guild_id,omitempty" json:"guild_id,omitempty" xml:"guild_id,omitempty"`
+	Params               *string `form:"params,omitempty" json:"params,omitempty" xml:"params,omitempty"`
 }
 
 // MarketResponseBody is used to define fields on response body types.
@@ -662,6 +664,7 @@ type MonthlyAccountPortfolioResponseBody struct {
 func NewEnterGuildRequestBody(p *guildsservice.EnterGuildPayload) *EnterGuildRequestBody {
 	body := &EnterGuildRequestBody{
 		InjectiveAddress: p.InjectiveAddress,
+		Params:           p.Params,
 	}
 	return body
 }
@@ -2074,6 +2077,9 @@ func ValidateGuildMemberResponseBody(body *GuildMemberResponseBody) (err error) 
 	}
 	if body.Since == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("since", "body"))
+	}
+	if body.Params == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("params", "body"))
 	}
 	return
 }

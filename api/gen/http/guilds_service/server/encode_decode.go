@@ -1099,6 +1099,7 @@ func marshalGuildsserviceGuildMemberToGuildMemberResponseBody(v *guildsservice.G
 		IsDefaultGuildMember: v.IsDefaultGuildMember,
 		Since:                v.Since,
 		GuildID:              v.GuildID,
+		Params:               v.Params,
 	}
 
 	return res

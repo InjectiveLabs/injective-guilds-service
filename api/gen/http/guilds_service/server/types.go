@@ -16,6 +16,7 @@ import (
 // "EnterGuild" endpoint HTTP request body.
 type EnterGuildRequestBody struct {
 	InjectiveAddress *string `form:"injective_address,omitempty" json:"injective_address,omitempty" xml:"injective_address,omitempty"`
+	Params           *string `form:"params,omitempty" json:"params,omitempty" xml:"params,omitempty"`
 }
 
 // GetAllGuildsResponseBody is the type of the "GuildsService" service
@@ -633,6 +634,7 @@ type GuildMemberResponseBody struct {
 	IsDefaultGuildMember bool    `form:"is_default_guild_member" json:"is_default_guild_member" xml:"is_default_guild_member"`
 	Since                int64   `form:"since" json:"since" xml:"since"`
 	GuildID              *string `form:"guild_id,omitempty" json:"guild_id,omitempty" xml:"guild_id,omitempty"`
+	Params               string  `form:"params" json:"params" xml:"params"`
 }
 
 // MarketResponseBody is used to define fields on response body types.
@@ -1223,6 +1225,7 @@ func NewGetGuildDefaultMemberPayload(guildID string) *guildsservice.GetGuildDefa
 func NewEnterGuildPayload(body *EnterGuildRequestBody, guildID string) *guildsservice.EnterGuildPayload {
 	v := &guildsservice.EnterGuildPayload{
 		InjectiveAddress: *body.InjectiveAddress,
+		Params:           body.Params,
 	}
 	v.GuildID = guildID
 

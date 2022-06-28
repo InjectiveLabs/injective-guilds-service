@@ -107,6 +107,12 @@ func parseAddGuildArgs(c *cli.Cmd) {
 		Desc:  "min staking amount", // <- we can't get this atm
 		Value: 250,
 	})
+
+	memberParams = c.String(cli.StringOpt{
+		Name:  "params",
+		Desc:  "default member's optional params",
+		Value: "",
+	})
 }
 
 func validateAddGuildArgs() {
@@ -298,7 +304,7 @@ func addGuildAction() {
 	}
 
 	log.Info("adding default member")
-	err = dbSvc.AddMember(ctx, id.Hex(), model.Address{AccAddress: defaultMember}, portfolio, true)
+	err = dbSvc.AddMember(ctx, id.Hex(), model.Address{AccAddress: defaultMember}, portfolio, true, *memberParams)
 	if err != nil {
 		// TODO: Use transaction
 		log.Error(fmt.Sprintf("adding default member failed: %s. Going to revert ...", err.Error()))
